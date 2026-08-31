@@ -11,6 +11,7 @@ type DashboardLayoutProps = {
 export default function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
+  console.log("[DashboardLayout] rendering");
   return (
     <ProtectedRoute>
     <div className="flex min-h-screen">

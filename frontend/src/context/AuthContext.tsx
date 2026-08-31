@@ -56,12 +56,13 @@ export function AuthProvider({
 
   useEffect(() => {
     const storedUser = getUser();
-
+console.log("[AuthContext mount] storedUser:", storedUser);
     if (storedUser) {
       setUser(storedUser);
     }
 
     setLoading(false);
+    console.log("[AuthContext mount] loading set to false");
   }, []);
 
   async function login(
