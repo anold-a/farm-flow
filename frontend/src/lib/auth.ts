@@ -2,7 +2,6 @@ import { User } from "@/types/auth";
 
 export function saveAuth(
   accessToken: string,
-  refreshToken: string,
   user: User
 ) {
   localStorage.setItem(
@@ -10,10 +9,7 @@ export function saveAuth(
     accessToken
   );
 
-  localStorage.setItem(
-    "refreshToken",
-    refreshToken
-  );
+  
 
   localStorage.setItem(
     "user",

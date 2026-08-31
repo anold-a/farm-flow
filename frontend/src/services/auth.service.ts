@@ -7,17 +7,9 @@ import {
 } from "@/types/auth";
 
 export const authService = {
-  login(data: LoginRequest) {
-    return apiFetch<AuthResponse>(
-      "/auth/login",
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-      }
-    );
-  },
-
-  register(data: RegisterRequest) {
+  async register(
+    data: RegisterRequest
+  ): Promise<AuthResponse> {
     return apiFetch<AuthResponse>(
       "/auth/register",
       {
@@ -27,9 +19,20 @@ export const authService = {
     );
   },
 
+  async login(
+    data: LoginRequest
+  ): Promise<AuthResponse> {
+    return apiFetch<AuthResponse>(
+      "/auth/login",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    );
+  },
+
   logout() {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
+    // Local authentication cleanup
+    // is handled by AuthContext.
   },
 };

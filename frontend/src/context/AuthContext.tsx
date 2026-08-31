@@ -72,7 +72,6 @@ export function AuthProvider({
 
     saveAuth(
       response.accessToken,
-      response.refreshToken,
       response.user
     );
 
@@ -87,7 +86,6 @@ export function AuthProvider({
 
     saveAuth(
       response.accessToken,
-      response.refreshToken,
       response.user
     );
 

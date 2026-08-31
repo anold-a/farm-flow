@@ -20,14 +20,12 @@ export async function apiFetch<T>(
     "application/json"
   );
 
-  const token =
-    options.token ??
-    localStorage.getItem("accessToken");
+  
 
-  if (token) {
+  if (options.token) {
     headers.set(
       "Authorization",
-      `Bearer ${token}`
+      `Bearer ${options.token}`
     );
   }
 
@@ -40,10 +38,11 @@ export async function apiFetch<T>(
   );
 
   if (!response.ok) {
+    const message = await response.text();
     throw new Error(
-      await response.text()
+      message || "Something went wrong."
     );
   }
 
-  return response.json();
+  return response.json() as Promise<T>;
 }
