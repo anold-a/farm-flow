@@ -57,4 +57,76 @@ export class UsersService {
   async validatePassword(password: string, hashedPassword: string) {
     return bcrypt.compare(password, hashedPassword);
   }
+
+  async findAll() {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async update(id: string, data: Partial<CreateUserDto>) {
+    const user = await this.findById(id);
+
+    const updateData: {
+      fullName?: string;
+      email?: string;
+      password?: string;
+      role?: 'ADMIN' | 'AGENT';
+    } = {};
+
+    if (data.fullName) {
+      updateData.fullName = data.fullName;
+    }
+
+    if (data.email) {
+      updateData.email = data.email;
+    }
+
+    if (data.password) {
+      updateData.password = await bcrypt.hash(data.password, 12);
+    }
+
+    if (data.role) {
+      updateData.role = data.role;
+    }
+
+    return this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: updateData,
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  async remove(id: string) {
+    await this.findById(id);
+
+    return this.prisma.user.delete({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+      },
+    });
+  }
 }
