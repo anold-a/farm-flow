@@ -20,27 +20,5 @@ export class AppController {
     };
   }
 
- @Post('dev/users')
- async createUser(
-  @Body()
-  body:{
-    fullName:string;
-    email:string;
-    password:string;
-  },
- ){
-    const user = await this.usersService.create({
-      fullName: body.fullName,
-      email: body.email,
-      password: body.password,
-    });
-
-    return {
-      id: user.id,
-      fullName: user.fullName,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-    };
- }
+ 
 }
