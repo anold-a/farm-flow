@@ -22,6 +22,11 @@ export const fieldService = {
       token: getAccessToken() ?? undefined,
     });
   },
+  getMyFieldById(id: string) {
+  return apiFetch<Field>(`/fields/my-fields/${id}`, {
+    token: getAccessToken() ?? undefined,
+  });
+},
 
   getById(id: string) {
     return apiFetch<Field>(`/fields/${id}`,{
