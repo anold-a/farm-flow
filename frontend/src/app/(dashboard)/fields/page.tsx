@@ -10,6 +10,7 @@ import FieldSearch from "@/components/field/FieldSearch";
 import FieldEmptyState from "@/components/field/FieldEmptyState";
 
 import { useFields } from "@/hooks/useFields";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function FieldsPage() {
   const {
@@ -18,8 +19,9 @@ export default function FieldsPage() {
     error,
   } = useFields();
 
-  // Temporary role until authentication
-  const role: "ADMIN" | "AGENT" = "ADMIN";
+
+  const { user } = useAuth();
+  const role = user?.role ?? "AGENT";
 
   const [search, setSearch] =
     useState("");
@@ -60,11 +62,13 @@ export default function FieldsPage() {
 
         </div>
 
+        {role === "ADMIN" && (
         <Link href="/fields/create">
           <Button>
             Register Field
           </Button>
         </Link>
+        )}
 
       </div>
 
@@ -91,11 +95,7 @@ export default function FieldsPage() {
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
         {filteredFields.map((field) => (
-          <FieldCard
-            key={field.id}
-            field={field}
-            role={role}
-          />
+          <FieldCard key={field.id} field={field} role={role} />
         ))}
 
       </div>

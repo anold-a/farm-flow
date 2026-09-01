@@ -137,4 +137,17 @@ export class UsersService {
       },
     });
   }
+
+  async findAgents() {
+    return this.prisma.user.findMany({
+      where: { role: 'AGENT' },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+      },
+      orderBy: { fullName: 'asc' },
+    });
+  }
 }

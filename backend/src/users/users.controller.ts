@@ -28,6 +28,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('agents')
+  findAgents() {
+    return this.usersService.findAgents();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findById(id);

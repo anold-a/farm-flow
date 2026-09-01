@@ -6,12 +6,15 @@ import FieldDetails from "@/components/field/FieldDetails";
 
 import { fieldService } from "@/services/field.service";
 import { Field } from "@/types/field";
+import { useAuth } from "@/hooks/useAuth";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 export default function FieldPage({ params }: PageProps) {
+
+  const { user } = useAuth();
 
 const unwrappedParams = use(params); 
 const fieldId = unwrappedParams.id;
@@ -25,8 +28,7 @@ const fieldId = unwrappedParams.id;
   const [error, setError] =
     useState("");
 
-  // Temporary role until authentication
-  const role: "ADMIN" | "AGENT" = "AGENT";
+  const role = user?.role ?? "AGENT";
 
   useEffect(() => {
     async function loadField() {

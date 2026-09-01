@@ -1,8 +1,12 @@
 import Link from "next/link";
 
+import { SetStateAction, useState } from "react";
+
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import StatusBadge from "./StatusBadge";
+
+import AssignAgentModal from "@/components/field/AssignAgentModal";
 
 import { Field } from "@/types/field";
 
@@ -12,9 +16,11 @@ interface Props {
 }
 
 export default function FieldDetails({
-  field,
+  field: initialField,
   role,
 }: Props) {
+  const [field, setField] = useState(initialField);
+  const [showAssignModal, setShowAssignModal] = useState(false);
   const updates = [
     "Irrigation completed",
     "Fertilizer applied",
@@ -75,10 +81,17 @@ export default function FieldDetails({
             </p>
 
             <p className="font-medium">
-              Jane Doe
+              {field.assignedAgent ? field.assignedAgent.fullName : "Unassigned"}
             </p>
           </div>
         </div>
+        {role === "ADMIN" && (
+          <div className="mt-4">
+            <Button type="button" onClick={() => setShowAssignModal(true)}>
+              {field.assignedAgent ? "Reassign Agent" : "Assign Agent"}
+            </Button>
+          </div>
+        )}
       </Card>
 
       <Card>
@@ -99,11 +112,13 @@ export default function FieldDetails({
       </Card>
 
       <div className="flex flex-wrap gap-3">
-        <Link href={`/fields/${field.id}/edit`}>
-          <Button>
-            Edit Field
-          </Button>
-        </Link>
+        {role === "ADMIN" && ( <>
+            <Link href={`/fields/${field.id}/edit`}>
+              <Button>Edit Field</Button>
+            </Link>
+            <Button>Delete Field</Button>
+          </>
+        )}
 
         <Link href={`/fields/${field.id}/updates/create`}>
           <Button>
@@ -111,12 +126,15 @@ export default function FieldDetails({
           </Button>
         </Link>
 
-        {role === "ADMIN" && (
-          <Button>
-            Delete Field
-          </Button>
-        )}
+
       </div>
+      {showAssignModal && (
+        <AssignAgentModal
+          field={field}
+          onClose={() => setShowAssignModal(false)}
+          onAssigned={(updatedField) => setField(updatedField)}
+        />
+      )}
     </div>
   );
 }
