@@ -89,4 +89,13 @@ export class FieldsController {
   ) {
     return this.fieldsService.assignAgent(fieldId, data.agentId, user);
   }
+
+  @Delete(':fieldId/assign')
+  @Roles('ADMIN')
+  unassignAgent(
+    @Param('fieldId') fieldId: string,
+    @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    return this.fieldsService.unassignAgent(fieldId, user);
+  }
 }

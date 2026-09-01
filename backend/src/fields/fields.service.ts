@@ -277,4 +277,34 @@ export class FieldsService {
       },
     });
   }
+
+  async unassignAgent(
+    fieldId: string,
+    currentUser: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    if (currentUser.role !== Role.ADMIN) {
+      throw new ForbiddenException('Only administrators can unassign agents');
+    }
+
+    const field = await this.prisma.field.findUnique({
+      where: { id: fieldId },
+    });
+
+    if (!field) {
+      throw new NotFoundException('Field not found');
+    }
+
+    return this.prisma.field.update({
+      where: { id: fieldId },
+      data: { assignedAgentId: null },
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+        assignedAgent: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+      },
+    });
+  }
 }
