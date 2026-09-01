@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards,Body,Get,Param } from '@nestjs/common';
+import { Controller, Post, UseGuards,Body,Get,Param, Patch, Delete, } from '@nestjs/common';
 
 import { FieldsService } from './fields.service';
 import { CreateFieldDto } from './dto/create-field.dto';
@@ -29,6 +29,21 @@ export class FieldsController {
     return this.fieldsService.create(data, user.id);
   }
 
+  @Get('my-fields')
+  @Roles('AGENT')
+  findMyFields(@CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' }) {
+    return this.fieldsService.findMyFields(user);
+  }
+
+  @Get('my-fields/:id')
+  @Roles('AGENT')
+  findMyFieldById(
+    @Param('id') id: string,
+    @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    return this.fieldsService.findMyFieldById(id, user);
+  }
+
   @Get()
   @Roles('ADMIN', 'AGENT')
   findAll(@CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' }) {
@@ -42,5 +57,24 @@ export class FieldsController {
     @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
   ) {
     return this.fieldsService.findOne(id, user);
+  }
+
+  @Patch(':id')
+  @Roles('ADMIN')
+  update(
+    @Param('id') id: string,
+    @Body() data: Partial<CreateFieldDto>,
+    @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    return this.fieldsService.update(id, data, user);
+  }
+
+  @Delete(':id')
+  @Roles('ADMIN')
+  remove(
+    @Param('id') id: string,
+    @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    return this.fieldsService.remove(id, user);
   }
 }

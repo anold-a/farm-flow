@@ -134,4 +134,104 @@ export class FieldsService {
 
     return field;
   }
+
+  async update(
+    id: string,
+    data: Partial<CreateFieldDto>,
+    currentUser: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    if (currentUser.role !== Role.ADMIN) {
+      throw new ForbiddenException('Only administrators can update fields');
+    }
+
+    const field = await this.prisma.field.findUnique({ where: { id } });
+
+    if (!field) {
+      throw new NotFoundException('Field not found');
+    }
+
+    if (data.assignedAgentId) {
+      const agent = await this.prisma.user.findUnique({
+        where: { id: data.assignedAgentId },
+      });
+
+      if (!agent) {
+        throw new BadRequestException('Assigned agent not found');
+      }
+
+      if (agent.role !== Role.AGENT) {
+        throw new BadRequestException(
+          'A field can only be assigned to an AGENT',
+        );
+      }
+    }
+
+    return this.prisma.field.update({
+      where: { id },
+      data,
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+        assignedAgent: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+      },
+    });
+  }
+
+  async remove(
+    id: string,
+    currentUser: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    if (currentUser.role !== Role.ADMIN) {
+      throw new ForbiddenException('Only administrators can delete fields');
+    }
+
+    const field = await this.prisma.field.findUnique({ where: { id } });
+
+    if (!field) {
+      throw new NotFoundException('Field not found');
+    }
+
+    return this.prisma.field.delete({ where: { id } });
+  }
+
+  async findMyFields(currentUser: { id: string; role: 'ADMIN' | 'AGENT' }) {
+    return this.prisma.field.findMany({
+      where: { assignedAgentId: currentUser.id },
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+        assignedAgent: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async findMyFieldById(
+    id: string,
+    currentUser: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    const field = await this.prisma.field.findUnique({
+      where: { id },
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+        assignedAgent: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+      },
+    });
+
+    if (!field || field.assignedAgentId !== currentUser.id) {
+      throw new NotFoundException('Field not found');
+    }
+
+    return field;
+  }
 }
