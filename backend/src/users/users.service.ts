@@ -51,6 +51,14 @@ export class UsersService {
         password: hashedPassword,
         role: data.role ?? 'AGENT',
       },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 

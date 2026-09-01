@@ -1,8 +1,27 @@
-import { Role} from "@prisma/client";
+import {
+  Role
+} from '@prisma/client';
 
-export class CreateUserDto{
-fullName:string;
-email:string;
-password:string;
-role?:Role;
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
+
+export class CreateUserDto {
+  @IsString()
+  @IsNotEmpty()
+  fullName: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(8)
+  password: string;
+
+  @IsIn(['ADMIN', 'AGENT'])
+  role?: Role;
 }
