@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards,Body } from '@nestjs/common';
+import { Controller, Post, UseGuards,Body,Get,Param } from '@nestjs/common';
 
 import { FieldsService } from './fields.service';
 import { CreateFieldDto } from './dto/create-field.dto';
@@ -27,5 +27,20 @@ export class FieldsController {
     },
   ) {
     return this.fieldsService.create(data, user.id);
+  }
+
+  @Get()
+  @Roles('ADMIN', 'AGENT')
+  findAll(@CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' }) {
+    return this.fieldsService.findAll(user);
+  }
+
+  @Get(':id')
+  @Roles('ADMIN', 'AGENT')
+  findOne(
+    @Param('id') id: string,
+    @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    return this.fieldsService.findOne(id, user);
   }
 }

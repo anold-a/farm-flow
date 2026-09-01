@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -78,5 +83,55 @@ export class FieldsService {
         },
       },
     });
+  }
+
+  async findAll(currentUser: { id: string; role: 'ADMIN' | 'AGENT' }) {
+    const where =
+      currentUser.role === Role.ADMIN
+        ? {}
+        : { assignedAgentId: currentUser.id };
+
+    return this.prisma.field.findMany({
+      where,
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+        assignedAgent: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async findOne(
+    id: string,
+    currentUser: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    const field = await this.prisma.field.findUnique({
+      where: { id },
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+        assignedAgent: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+      },
+    });
+
+    if (!field) {
+      throw new NotFoundException('Field not found');
+    }
+
+    if (
+      currentUser.role !== Role.ADMIN &&
+      field.assignedAgentId !== currentUser.id
+    ) {
+      throw new ForbiddenException('You do not have access to this field');
+    }
+
+    return field;
   }
 }
