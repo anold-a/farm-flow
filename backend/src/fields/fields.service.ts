@@ -234,4 +234,47 @@ export class FieldsService {
 
     return field;
   }
+
+  async assignAgent(
+    fieldId: string,
+    agentId: string,
+    currentUser: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    if (currentUser.role !== Role.ADMIN) {
+      throw new ForbiddenException('Only administrators can assign agents');
+    }
+
+    const field = await this.prisma.field.findUnique({
+      where: { id: fieldId },
+    });
+
+    if (!field) {
+      throw new NotFoundException('Field not found');
+    }
+
+    const agent = await this.prisma.user.findUnique({ where: { id: agentId } });
+
+    if (!agent) {
+      throw new BadRequestException('Agent not found');
+    }
+
+    if (agent.role !== Role.AGENT) {
+      throw new BadRequestException(
+        'A field can only be assigned to a user with role AGENT',
+      );
+    }
+
+    return this.prisma.field.update({
+      where: { id: fieldId },
+      data: { assignedAgentId: agent.id },
+      include: {
+        createdBy: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+        assignedAgent: {
+          select: { id: true, fullName: true, email: true, role: true },
+        },
+      },
+    });
+  }
 }

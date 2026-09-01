@@ -9,6 +9,8 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
+import { AssignFieldDto } from './dto/assign-field.dto';
+
 @Controller('fields')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class FieldsController {
@@ -76,5 +78,15 @@ export class FieldsController {
     @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
   ) {
     return this.fieldsService.remove(id, user);
+  }
+
+  @Post(':fieldId/assign')
+  @Roles('ADMIN')
+  assignAgent(
+    @Param('fieldId') fieldId: string,
+    @Body() data: AssignFieldDto,
+    @CurrentUser() user: { id: string; role: 'ADMIN' | 'AGENT' },
+  ) {
+    return this.fieldsService.assignAgent(fieldId, data.agentId, user);
   }
 }
