@@ -9,14 +9,47 @@ import {
 import { Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
-import { WeatherDto } from './dto/weather.dto';
+
+import {
+  CurrentWeatherDto,
+  DailyForecastDto,
+  WeatherAlertDto,
+  WeatherResponseDto,
+} from './dto/weather-response.dto';
 
 
 @Injectable()
 export class WeatherService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getByLocation(location: string): Promise<WeatherDto> {
+  private async getCoordinates(location: string, apiKey: string) {
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+      location,
+    )}&limit=1&appid=${apiKey}`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new BadGatewayException('Failed to resolve location');
+    }
+
+    const results = await response.json();
+
+    if (!results.length) {
+      throw new NotFoundException('Location not found');
+    }
+
+    return { lat: results[0].lat, lon: results[0].lon };
+  }
+
+  private deriveSeverity(event: string): 'LOW' | 'MEDIUM' | 'HIGH' {
+    const text = event.toLowerCase();
+    if (text.includes('warning')) return 'HIGH';
+    if (text.includes('watch')) return 'MEDIUM';
+    return 'LOW';
+  }
+
+  async getByLocation(location: string): Promise<WeatherResponseDto> {
     const apiKey = process.env.OPENWEATHER_API_KEY;
 
     if (!apiKey) {
@@ -25,9 +58,9 @@ export class WeatherService {
       );
     }
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-      location,
-    )}&appid=${apiKey}&units=metric`;
+    const { lat, lon } = await this.getCoordinates(location, apiKey);
+
+    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&exclude=minutely,hourly`;
 
     const response = await fetch(url);
 
@@ -37,20 +70,41 @@ export class WeatherService {
 
     const data = await response.json();
 
-    return {
+    const current: CurrentWeatherDto = {
       location,
-      current: {
-        temperature: data.main.temp,
-        humidity: data.main.humidity,
-        condition: data.weather[0]?.main ?? 'Unknown',
-      },
+      temperature: data.current.temp,
+      humidity: data.current.humidity,
+      rainfall: data.current.rain?.['1h'] ?? 0,
+      windSpeed: data.current.wind_speed,
+      condition: data.current.weather[0]?.main ?? 'Unknown',
     };
+
+    const forecast: DailyForecastDto[] = data.daily
+      .slice(0, 7)
+      .map((day: any) => ({
+        date: new Date(day.dt * 1000).toISOString().split('T')[0],
+        condition: day.weather[0]?.main ?? 'Unknown',
+        minimumTemperature: day.temp.min,
+        maximumTemperature: day.temp.max,
+        chanceOfRain: Math.round((day.pop ?? 0) * 100),
+      }));
+
+    const alerts: WeatherAlertDto[] = (data.alerts ?? []).map(
+      (alert: any, index: number) => ({
+        id: `${index}`,
+        title: alert.event,
+        description: alert.description,
+        severity: this.deriveSeverity(alert.event),
+      }),
+    );
+
+    return { current, forecast, alerts };
   }
 
   async getByField(
     fieldId: string,
     currentUser: AuthenticatedUser,
-  ): Promise<WeatherDto> {
+  ): Promise<WeatherResponseDto> {
     const field = await this.prisma.field.findUnique({
       where: { id: fieldId },
     });
