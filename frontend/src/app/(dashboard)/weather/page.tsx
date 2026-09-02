@@ -9,11 +9,7 @@ import WeatherStats from "@/components/weather/WeatherStats";
 import { useWeather } from "@/hooks/useWeather";
 
 export default function WeatherPage() {
-  const {
-    weather,
-    loading,
-    error,
-  } = useWeather();
+  const { fieldWeatherList, loading, error } = useWeather(); // CHANGED — was { weather, loading, error }
 
   if (loading) {
     return <WeatherSkeleton />;
@@ -21,76 +17,50 @@ export default function WeatherPage() {
 
   if (error) {
     return (
-      <div className="rounded-lg bg-red-100 p-4 text-red-700">
-        {error}
-      </div>
+      <div className="rounded-lg bg-red-100 p-4 text-red-700">{error}</div>
     );
   }
 
-  if (!weather) {
-    return (
-      <div>No weather information available.</div>
-    );
+  // CHANGED — was `if (!weather)`; now checks for an empty list instead of a null object
+  if (fieldWeatherList.length === 0) {
+    return <div>No fields available to show weather for.</div>;
   }
 
   return (
-    <div className="space-y-8">
-
+    <div className="space-y-12"> 
       <div>
-        <h1 className="text-3xl font-bold">
-          Weather Dashboard
-        </h1>
-
+        <h1 className="text-3xl font-bold">Weather Dashboard</h1>
         <p className="text-gray-500">
-          Current weather conditions and forecast.
-        </p>
+          Current weather conditions and forecast for your fields. </p>
       </div>
 
-      <CurrentWeatherCard
-        weather={weather.current}
-      />
+      
+      {fieldWeatherList.map(({ field, weather }) => (
+        <div key={field.id} className="space-y-6 border-t pt-8 first:border-t-0 first:pt-0">
+          <h2 className="text-2xl font-bold">{field.name}</h2> 
+          <CurrentWeatherCard weather={weather.current} /> 
+          <WeatherStats weather={weather.current} /> 
+          <div>
+            <h3 className="mb-4 text-xl font-semibold">7-Day Forecast</h3> 
+            <ForecastGrid forecasts={weather.forecast} /> 
+          </div>
 
-      <WeatherStats
-        weather={weather.current}
-      />
-
-      <div>
-
-        <h2 className="mb-4 text-2xl font-semibold">
-          7-Day Forecast
-        </h2>
-
-        <ForecastGrid
-          forecasts={weather.forecast}
-        />
-
-      </div>
-
-      <div>
-
-        <h2 className="mb-4 text-2xl font-semibold">
-          Weather Alerts
-        </h2>
-
-        <div className="space-y-4">
-
-          {weather.alerts.length === 0 ? (
-            <div className="rounded-lg border border-dashed p-6 text-center">
-              No active weather alerts.
+          <div>
+            <h3 className="mb-4 text-xl font-semibold">Weather Alerts</h3> 
+            <div className="space-y-4">
+              {weather.alerts.length === 0 ? (
+                <div className="rounded-lg border border-dashed p-6 text-center">
+                  No active weather alerts.
+                </div>
+              ) : (
+                weather.alerts.map((alert) => (
+                  <WeatherAlert key={alert.id} alert={alert} /> 
+                ))
+              )}
             </div>
-          ) : (
-            weather.alerts.map((alert) => (
-              <WeatherAlert
-                key={alert.id}
-                alert={alert}
-              />
-            ))
-          )}
-
+          </div>
         </div>
-
-      </div>
-
+      ))}
     </div>
   );
 }

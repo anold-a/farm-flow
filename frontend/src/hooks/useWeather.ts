@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { fieldService } from "@/services/field.service"; 
 import { weatherService } from "@/services/weather.service";
 import { WeatherResponse } from "@/types/weather";
+import { Field } from "@/types/field"; 
+import { useAuth } from "@/hooks/useAuth";
+
+interface FieldWeather { 
+  field: Field;
+  weather: WeatherResponse;
+}
 
 export function useWeather() {
-  const [weather, setWeather] =
-    useState<WeatherResponse | null>(null);
+  const { user } = useAuth();
+  const [fieldWeatherList, setFieldWeatherList] = useState<FieldWeather[]>([]);;
 
   const [loading, setLoading] =
     useState(true);
@@ -16,31 +23,33 @@ export function useWeather() {
     useState("");
 
   useEffect(() => {
-    async function loadWeather() {
+    async function loadFieldWeather() { 
       try {
-        const data =
-          await weatherService.getCurrentWeather();
+        const fields = await fieldService.getAll(); 
 
-        setWeather(data);
+        
+        const results = await Promise.all(
+          fields.map(async (field) => {
+            const weather = await weatherService.getWeatherByField(field.id);
+            return { field, weather };
+          }),
+        );
+
+        setFieldWeatherList(results); 
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError(
-            "Unable to load weather information."
-          );
+          setError("Failed to load weather.");
         }
       } finally {
         setLoading(false);
       }
     }
 
-    loadWeather();
+    loadFieldWeather();
   }, []);
 
-  return {
-    weather,
-    loading,
-    error,
-  };
+  return { fieldWeatherList, loading, error }; 
+        
 }

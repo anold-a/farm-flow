@@ -8,4 +8,10 @@ export const weatherService = {
       token: getAccessToken() ?? undefined,
     });
   },
+
+  getWeatherByField(fieldId: string) { 
+    return apiFetch<WeatherResponse>(`/weather/field/${fieldId}`, {
+      token: getAccessToken() ?? undefined,
+    });
+  },
 };
