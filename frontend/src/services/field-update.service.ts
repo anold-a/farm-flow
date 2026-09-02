@@ -1,4 +1,5 @@
 import { apiFetch } from "./api";
+import { getAccessToken } from "@/lib/auth";
 
 import {
   CreateFieldUpdateDto,
@@ -8,7 +9,9 @@ import {
 export const fieldUpdateService = {
   getByField(fieldId: string) {
     return apiFetch<FieldUpdate[]>(
-      `/fields/${fieldId}/updates`
+      `/field-updates/fields/${fieldId}/updates`,{
+      token: getAccessToken() ?? undefined,
+    }
     );
   },
 
@@ -18,6 +21,7 @@ export const fieldUpdateService = {
       {
         method: "POST",
         body: JSON.stringify(data),
+      token: getAccessToken() ?? undefined,
       }
     );
   },
