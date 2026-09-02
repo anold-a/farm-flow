@@ -17,9 +17,17 @@ import {
   WeatherResponseDto,
 } from './dto/weather-response.dto';
 
+const CACHE_TTL_MS = 10 * 60 * 1000;
+
+interface CacheEntry {
+  
+  data: WeatherResponseDto;
+  expiresAt: number;
+}
 
 @Injectable()
 export class WeatherService {
+  private cache = new Map<string, CacheEntry>();
   constructor(private readonly prisma: PrismaService) {}
 
   private async getCoordinates(location: string, apiKey: string) {
@@ -50,6 +58,15 @@ export class WeatherService {
   }
 
   async getByLocation(location: string): Promise<WeatherResponseDto> {
+
+const cacheKey = location.trim().toLowerCase();
+const cached = this.cache.get(cacheKey);
+
+if (cached && cached.expiresAt > Date.now()) {
+  
+  return cached.data; 
+}
+
     const apiKey = process.env.OPENWEATHER_API_KEY;
 
     if (!apiKey) {
@@ -98,7 +115,16 @@ export class WeatherService {
       }),
     );
 
-    return { current, forecast, alerts };
+
+
+    const result: WeatherResponseDto = { current, forecast, alerts }; 
+
+    this.cache.set(cacheKey, {
+      data: result,
+      expiresAt: Date.now() + CACHE_TTL_MS,
+    }); 
+
+    return result; 
   }
 
   async getByField(
