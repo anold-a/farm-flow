@@ -27,6 +27,8 @@ model User {
 
   createdFields  Field[] @relation("FieldCreatedBy")
   assignedFields Field[] @relation("FieldAssignedAgent")
+
+  fieldUpdates FieldUpdate[]
 }
 
 model Field {
@@ -43,6 +45,26 @@ model Field {
 
   assignedAgentId String?
   assignedAgent   User?   @relation("FieldAssignedAgent", fields: [assignedAgentId], references: [id])
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  fieldUpdates FieldUpdate[]
+}
+
+model FieldUpdate {
+  id String @id @default(uuid())
+
+  cropStage   String
+  notes       String
+  moisture    Float?
+  temperature Float?
+  humidity    Float?
+
+  fieldId String
+  field   Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

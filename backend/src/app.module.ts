@@ -6,9 +6,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FieldsModule } from './fields/fields.module';
+import { FieldUpdatesModule } from './field-updates/field-updates.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
