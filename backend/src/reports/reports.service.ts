@@ -44,6 +44,22 @@ export class ReportsService {
       (field) => field.status.toUpperCase() === 'ACTIVE',
     ).length;
 
+    const healthyFields = fields.filter(
+      (field) => field.status === 'Healthy',
+    ).length;
+
+    const needsAttentionFields = fields.filter(
+      (field) => field.status === 'Needs Attention',
+    ).length;
+
+    const criticalFields = fields.filter(
+      (field) => field.status === 'Critical',
+    ).length;
+
+    const harvestedFields = fields.filter(
+      (field) => field.status === 'Harvested',
+    ).length;
+
     const completedFields = fields.filter(
       (field) => field.status.toUpperCase() === 'COMPLETED',
     ).length;
@@ -115,6 +131,10 @@ export class ReportsService {
       statistics: {
         totalFields,
         totalAcreage,
+        healthyFields,
+        needsAttentionFields,
+        criticalFields,
+        harvestedFields,
         activeFields,
         completedFields,
         totalUpdates: fields.reduce(

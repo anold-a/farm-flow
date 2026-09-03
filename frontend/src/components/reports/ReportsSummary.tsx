@@ -30,8 +30,8 @@ export default function ReportsSummary({
 
       {role === "ADMIN" && (
         <ReportCard
-          title="Active Alerts"
-          value={statistics.activeAlerts}
+          title="Critical fields"
+          value={statistics.criticalFields}
         />
       )}
 

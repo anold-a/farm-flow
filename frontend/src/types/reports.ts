@@ -2,7 +2,7 @@ export interface ReportStatistics {
   totalFields: number;
   healthyFields: number;
   harvestedFields: number;
-  activeAlerts: number;
+  criticalFields: number;
 }
 
 export interface CropReportItem {
