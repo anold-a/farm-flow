@@ -47,11 +47,11 @@ export default function AgentReport({
                 </td>
 
                 <td>
-                  {agent.assignedFields}
+                  {agent.fieldCount}
                 </td>
 
                 <td>
-                  {agent.completedUpdates}
+                  {agent.updateCount}
                 </td>
               </tr>
             ))}

@@ -121,6 +121,8 @@ export class ReportsService {
         },
       });
 
+      console.log(JSON.stringify(users, null, 2));
+
       agents = users.map((agent) => ({
         id: agent.id,
         fullName: agent.fullName,

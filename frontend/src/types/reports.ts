@@ -23,6 +23,8 @@ export interface WeatherReportItem {
 export interface AgentReportItem {
   id: string;
   fullName: string;
+  fieldCount: number;
+  updateCount: number;
   assignedFields: number;
   completedUpdates: number;
 }
