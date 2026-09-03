@@ -21,7 +21,7 @@ export default function WeatherPage() {
     );
   }
 
-  // CHANGED — was `if (!weather)`; now checks for an empty list instead of a null object
+  
   if (fieldWeatherList.length === 0) {
     return <div>No fields available to show weather for.</div>;
   }

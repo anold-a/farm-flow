@@ -9,6 +9,7 @@ import WeatherReport from "@/components/reports/WeatherReport";
 import AgentReport from "@/components/reports/AgentReport";
 import ExportButtons from "@/components/reports/ExportButtons";
 import ReportsSkeleton from "@/components/reports/ReportsSkeleton";
+import { useAuth } from "@/hooks/useAuth";
 
 import { useReports } from "@/hooks/useReports";
 
@@ -19,7 +20,9 @@ export default function ReportsPage() {
     error,
   } = useReports();
 
-  const role: "ADMIN" | "AGENT" = "ADMIN";
+  const {user} = useAuth();
+
+ const role = user?.role ?? "AGENT";
 
   const [crop, setCrop] = useState("");
   const [period, setPeriod] = useState("30");
