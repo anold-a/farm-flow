@@ -11,9 +11,10 @@ import { WeatherService } from './weather/weather.service';
 import { WeatherController } from './weather/weather.controller';
 import { WeatherModule } from './weather/weather.module';
 import { ReportsModule } from './reports/reports.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule],
   controllers: [AppController, WeatherController],
   providers: [AppService, PrismaService, WeatherService],
 })

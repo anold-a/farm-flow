@@ -28,7 +28,8 @@ model User {
   createdFields  Field[] @relation("FieldCreatedBy")
   assignedFields Field[] @relation("FieldAssignedAgent")
 
-  fieldUpdates FieldUpdate[]
+  fieldUpdates  FieldUpdate[]
+  notifications Notification[]
 }
 
 model Field {
@@ -68,4 +69,19 @@ model FieldUpdate {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id String @id @default(uuid())
+
+  title   String
+  message String
+  type    String
+
+  isRead Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }
