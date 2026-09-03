@@ -15,9 +15,9 @@ export interface CropReportItem {
 }
 
 export interface WeatherReportItem {
-  date: string;
-  rainfall: number;
+  humidity: number;
   temperature: number;
+  recordedAt: string; 
 }
 
 export interface AgentReportItem {

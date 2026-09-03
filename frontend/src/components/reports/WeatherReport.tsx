@@ -28,7 +28,7 @@ export default function WeatherReport({
               </th>
 
               <th className="pb-3">
-                Rainfall
+                Humidity
               </th>
             </tr>
           </thead>
@@ -36,13 +36,11 @@ export default function WeatherReport({
           <tbody>
             {reports.map((report) => (
               <tr
-                key={report.date}
+                key={report.recordedAt}
                 className="border-b"
               >
                 <td className="py-3">
-                  {new Date(
-                    report.date
-                  ).toLocaleDateString()}
+                  {new Date(report.recordedAt).toLocaleDateString()}
                 </td>
 
                 <td>
@@ -50,7 +48,7 @@ export default function WeatherReport({
                 </td>
 
                 <td>
-                  {report.rainfall} mm
+                  {report.humidity}%
                 </td>
               </tr>
             ))}
