@@ -1,12 +1,15 @@
 import Card from "@/components/ui/Card";
 import { CropReportItem } from "@/types/reports";
+import { ReportStatistics } from "@/types/reports";
 
 interface Props {
   reports: CropReportItem[];
+  statistics: ReportStatistics;
 }
 
 export default function CropReport({
   reports,
+  statistics,
 }: Props) {
   return (
     <Card>
@@ -44,11 +47,11 @@ export default function CropReport({
                 </td>
 
                 <td>
-                  {report.fields}
+                  {report.fieldName}
                 </td>
 
                 <td>
-                  {report.averageAcreage}
+                  {statistics.averageAcreage}
                 </td>
               </tr>
             ))}

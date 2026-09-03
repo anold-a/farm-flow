@@ -64,6 +64,8 @@ export class ReportsService {
       (field) => field.status.toUpperCase() === 'COMPLETED',
     ).length;
 
+    const averageAcreage = totalFields > 0 ? totalAcreage / totalFields : 0;
+
     const crops = fields.map((field) => ({
       fieldId: field.id,
       fieldName: field.name,
@@ -135,6 +137,7 @@ export class ReportsService {
         needsAttentionFields,
         criticalFields,
         harvestedFields,
+        averageAcreage,
         activeFields,
         completedFields,
         totalUpdates: fields.reduce(

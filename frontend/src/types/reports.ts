@@ -3,12 +3,14 @@ export interface ReportStatistics {
   healthyFields: number;
   harvestedFields: number;
   criticalFields: number;
+  averageAcreage:number;
 }
 
 export interface CropReportItem {
   id: string;
   crop: string;
   fields: number;
+  fieldName:string;
   averageAcreage: number;
 }
 

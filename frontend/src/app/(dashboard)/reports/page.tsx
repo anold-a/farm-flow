@@ -87,6 +87,7 @@ export default function ReportsPage() {
 
       <CropReport
         reports={reports.crops}
+        statistics={reports.statistics}
       />
 
       <WeatherReport
