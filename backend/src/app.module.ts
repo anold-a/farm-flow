@@ -10,9 +10,10 @@ import { FieldUpdatesModule } from './field-updates/field-updates.module';
 import { WeatherService } from './weather/weather.service';
 import { WeatherController } from './weather/weather.controller';
 import { WeatherModule } from './weather/weather.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule],
   controllers: [AppController, WeatherController],
   providers: [AppService, PrismaService, WeatherService],
 })
