@@ -21,17 +21,6 @@ export default function NotificationsPage() {
   const [filter, setFilter] =
     useState("ALL");
 
-  if (loading) {
-    return <NotificationsSkeleton />;
-  }
-
-  if (error) {
-    return (
-      <div className="rounded-lg bg-red-100 p-4 text-red-700">
-        {error}
-      </div>
-    );
-  }
 
   
 
@@ -56,7 +45,18 @@ export default function NotificationsPage() {
       }
     }, [notifications, filter]);
 
-  
+  if (loading) {
+    return <NotificationsSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-lg bg-red-100 p-4 text-red-700">
+        {error}
+      </div>
+    );
+  }
+
 
   return (
     <div className="space-y-8">
