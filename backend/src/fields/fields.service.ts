@@ -8,10 +8,14 @@ import {
 import { Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateFieldDto } from './dto/create-field.dto';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class FieldsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+    ) {}
+  
 
   async create(data: CreateFieldDto, userId: string) {
     const user = await this.prisma.user.findUnique({
@@ -264,7 +268,8 @@ export class FieldsService {
       );
     }
 
-    return this.prisma.field.update({
+    const updatedField = await this.prisma.field.update({
+      
       where: { id: fieldId },
       data: { assignedAgentId: agent.id },
       include: {
@@ -276,6 +281,18 @@ export class FieldsService {
         },
       },
     });
+
+    await this.notificationsService.create(
+      
+      agent.id,
+      'New Field Assigned',
+      `You have been assigned to field ${field.name}.`,
+      'FIELD_ASSIGNED',
+    );
+
+
+
+    return updatedField;
   }
 
   async unassignAgent(
