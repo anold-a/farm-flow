@@ -11,7 +11,9 @@ import { useNotifications } from "@/hooks/useNotifications";
 
 export default function NotificationsPage() {
   const {
-    data,
+    notifications,
+    markAsRead,
+    unreadCount,
     loading,
     error,
   } = useNotifications();
@@ -31,46 +33,30 @@ export default function NotificationsPage() {
     );
   }
 
-  if (!data) {
-    return (
-      <div className="rounded-lg border border-dashed p-8 text-center">
-        No notifications found.
-      </div>
-    );
-  }
+  
 
   const filteredNotifications =
     useMemo(() => {
       switch (filter) {
         case "UNREAD":
-          return data.notifications.filter(
-            (n) => !n.read
+          return notifications.filter(
+            (n) => !n.isRead
           );
 
         case "FIELD":
         case "WEATHER":
         case "REPORT":
         case "SYSTEM":
-          return data.notifications.filter(
+          return notifications.filter(
             (n) => n.type === filter
           );
 
         default:
-          return data.notifications;
+          return notifications;
       }
-    }, [data.notifications, filter]);
+    }, [notifications, filter]);
 
-  function handleMarkAsRead(id: string) {
-    console.log("Mark notification:", id);
-
-    // Backend integration later
-  }
-
-  function handleMarkAllAsRead() {
-    console.log("Mark all notifications");
-
-    // Backend integration later
-  }
+  
 
   return (
     <div className="space-y-8">
@@ -93,15 +79,10 @@ export default function NotificationsPage() {
         <div className="flex items-center gap-4">
 
           <NotificationBadge
-            count={data.unreadCount}
+            count={unreadCount}
           />
 
-          <button
-            onClick={handleMarkAllAsRead}
-            className="rounded-lg border px-4 py-2 text-sm hover:bg-gray-100"
-          >
-            Mark All as Read
-          </button>
+        
 
         </div>
 
@@ -117,7 +98,7 @@ export default function NotificationsPage() {
           filteredNotifications
         }
         onMarkAsRead={
-          handleMarkAsRead
+          markAsRead
         }
       />
 

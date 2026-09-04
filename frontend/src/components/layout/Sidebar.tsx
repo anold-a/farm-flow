@@ -3,10 +3,14 @@
 import Link from "next/link";
 import Logo from "./Logo";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotifications";
 
 export default function Sidebar() {
   const {user} = useAuth();
   const role = user?.role ?? "AGENT";
+  const {
+  unreadCount,
+} = useNotifications();
   return (
     <aside className="w-64 border-r bg-white p-6">
       <Logo />
@@ -20,6 +24,17 @@ export default function Sidebar() {
         )}
         <Link href="/weather">Weather</Link>
         <Link href="/reports">Reports</Link>
+        <Link href="/notifications" className="relative">
+  <span className="text-xl">
+    🔔
+  </span>
+
+  {unreadCount > 0 && (
+    <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">
+      {unreadCount}
+    </span>
+  )}
+</Link>
         <Link href="/settings">Settings</Link>
       </nav>
     </aside>

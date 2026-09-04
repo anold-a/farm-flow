@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState,useCallback } from "react";
 
-import { notificationsService } from "@/services/notifications.service";
+import { notificationService } from "@/services/notifications.service";
 
 import {
-  NotificationsResponse,
+  Notification,
 } from "@/types/notifications";
 
 export function useNotifications() {
-  const [data, setData] =
-    useState<NotificationsResponse | null>(null);
+  const [notifications, setNotifications] =
+    useState<Notification[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -18,32 +18,58 @@ export function useNotifications() {
   const [error, setError] =
     useState("");
 
-  useEffect(() => {
-    async function loadNotifications() {
-      try {
-        const response =
-          await notificationsService.getNotifications();
 
-        setData(response);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(
-            "Unable to load notifications."
-          );
-        }
-      } finally {
-        setLoading(false);
+    const loadNotifications = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const data = await notificationService.getMine();
+      setNotifications(data);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unable to load notifications.");
       }
+    } finally {
+      setLoading(false);
     }
-
-    loadNotifications();
   }, []);
 
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  const markAsRead = async (notificationId: string) => {
+    try {
+      const updated = await notificationService.markAsRead(notificationId);
+
+      setNotifications((current) =>
+        current.map((notification) =>
+          notification.id === notificationId ? updated : notification,
+        ),
+      );
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unable to mark notification as read.");
+      }
+    }
+  };
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.isRead, 
+  ).length;
+
+
   return {
-    data,
+    notifications,
     loading,
     error,
+    unreadCount,
+    markAsRead,
+    refresh: loadNotifications,
   };
 }

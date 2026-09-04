@@ -13,7 +13,11 @@ export default function NotificationCard({
   onMarkAsRead,
 }: Props) {
   return (
-    <Card>
+    <Card  
+     className={
+        notification.isRead ? "bg-white" : "bg-green-50" 
+      }
+    >
       <div className="flex items-start justify-between gap-4">
 
         <div className="flex-1">
@@ -34,7 +38,7 @@ export default function NotificationCard({
 
         </div>
 
-        {!notification.read && (
+        {!notification.isRead && (
           <Button
             onClick={() =>
               onMarkAsRead(notification.id)

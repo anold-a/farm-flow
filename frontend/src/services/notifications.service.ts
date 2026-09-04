@@ -1,18 +1,23 @@
 import { apiFetch } from "./api";
-import { NotificationsResponse } from "@/types/notifications";
+import { getAccessToken } from "@/lib/auth";
+import { Notification} from "@/types/notifications";
 
-export const notificationsService = {
-  getNotifications() {
-    return apiFetch<NotificationsResponse>(
-      "/notifications"
+export const notificationService = {
+  getMine() {
+    return apiFetch<Notification[]>(
+      "/notifications",
+      {
+         token: getAccessToken() ?? undefined,
+      }
     );
   },
 
-  markAsRead(id: string) {
-    return apiFetch<void>(
-      `/notifications/${id}/read`,
+  markAsRead(notificationId: string) {
+    return apiFetch(
+      `/notifications/${notificationId}/read`,
       {
         method: "PATCH",
+         token: getAccessToken() ?? undefined,
       }
     );
   },
