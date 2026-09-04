@@ -7,7 +7,7 @@ export interface ReportStatistics {
 }
 
 export interface CropReportItem {
-  id: string;
+  fieldId: string;
   crop: string;
   fields: number;
   fieldName:string;

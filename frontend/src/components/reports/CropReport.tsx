@@ -39,7 +39,7 @@ export default function CropReport({
           <tbody>
             {reports.map((report) => (
               <tr
-                key={report.id}
+                key={report.fieldId}
                 className="border-b"
               >
                 <td className="py-3">
