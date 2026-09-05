@@ -4,9 +4,11 @@ import { useState } from "react";
 
 import UserTable from "@/components/users/UserTable";
 import { useUsers } from "@/hooks/useUsers";
+import CreateUserForm from "@/components/users/CreateUserForm";
+
 
 export default function UsersPage() {
-  const { users, loading, error } = useUsers();
+  const { users, loading, error,createUser } = useUsers();
   const [showCreateForm, setShowCreateForm] = useState(false); 
 
   
@@ -40,7 +42,12 @@ export default function UsersPage() {
 
       <UserTable users={users} />
 
-      {/* Create User form/modal wired in during Group 3 */}
+      {showCreateForm && ( // NEW
+        <CreateUserForm
+          onCreate={createUser}
+          onClose={() => setShowCreateForm(false)}
+        />
+      )}
     </div>
   );
 }
