@@ -1,8 +1,11 @@
 export interface DashboardStats {
+  totalUsers: number;  
   totalFields: number;
   activeFields: number;
+  completedFields: number;    
+  totalFieldUpdates: number; 
   totalAgents: number;
-  activeAlerts: number;
+  
 }
 
 export interface Activity {
