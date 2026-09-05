@@ -15,47 +15,35 @@ export default function QuickActions({
       </h2>
 
       <div className="flex flex-wrap gap-3">
-        <Link href="/fields/new">
-          <Button>
-            Register Field
-          </Button>
-        </Link>
-
-        <Link href="/updates/new">
-          <Button>
-            Add Update
-          </Button>
-        </Link>
-
-        <Link href="/weather">
-          <Button>
-            Weather
-          </Button>
-        </Link>
-
         {role === "ADMIN" && (
           <>
-            <Link href="/reports">
-              <Button>
-                View Reports
-              </Button>
+            <Link href="/users">
+              <Button>+ Add User</Button>
             </Link>
 
-            <Link href="/agents">
-              <Button>
-                Manage Agents
-              </Button>
+            <Link href="/fields/create">
+              <Button>+ Add Field</Button>
+            </Link>
+
+            <Link href="/reports">
+              <Button>View Reports</Button>
             </Link>
           </>
         )}
 
         {role === "AGENT" && (
-          <Link href="/fields">
-            <Button>
-              My Fields
-            </Button>
+          <Link href="/my-fields">
+            <Button>My Fields</Button>
           </Link>
         )}
+
+        <Link href="/weather">
+          <Button>Weather</Button>
+        </Link>
+
+        <Link href="/notifications">
+          <Button>View Notifications</Button>
+        </Link>
       </div>
     </section>
   );

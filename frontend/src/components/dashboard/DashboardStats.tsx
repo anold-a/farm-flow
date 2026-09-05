@@ -14,9 +14,22 @@ export default function DashboardStats({
   return (
     <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
+      {role === "ADMIN" && ( 
+        <DashboardCard title="Users" value={statistics.totalUsers} />
+      )}
+
+       {role === "ADMIN" && (
+        <DashboardCard title="Agents" value={statistics.totalAgents} />
+      )}
+
       <DashboardCard
         title="Fields"
         value={statistics.totalFields}
+      />
+
+      <DashboardCard
+        title="Completed Fields"
+        value={statistics.completedFields}
       />
 
       <DashboardCard
@@ -24,16 +37,11 @@ export default function DashboardStats({
         value={statistics.activeFields}
       />
 
-      {role === "ADMIN" && (
-        <DashboardCard
-          title="Agents"
-          value={statistics.totalAgents}
-        />
-      )}
+      
 
-      <DashboardCard
-        title="Weather Alerts"
-        value={statistics.activeAlerts}
+      <DashboardCard 
+        title="Field Updates"
+        value={statistics.totalFieldUpdates}
       />
 
     </div>

@@ -6,6 +6,7 @@ import QuickActions from "@/components/dashboard/QuickActions";
 import RecentUpdates from "@/components/dashboard/RecentUpdates";
 import WeatherOverview from "@/components/dashboard/WeatherOverview";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
+import { useAuth } from "@/hooks/useAuth";
 
 import { useDashboard } from "@/hooks/useDashboard";
 import { useWeather } from "@/hooks/useWeather";
@@ -18,13 +19,14 @@ export default function DashboardPage() {
   } = useDashboard();
 
   const {
-    weather,
+    fieldWeatherList,
     loading: weatherLoading,
     error: weatherError,
   } = useWeather();
 
-  // Temporary role until authentication is implemented
-  const role: "ADMIN" | "AGENT" = "ADMIN";
+  const { user } = useAuth(); 
+  
+  const role = user?.role ?? "AGENT";
 
   if (dashboardLoading || weatherLoading) {
     return <DashboardSkeleton />;
@@ -46,7 +48,9 @@ export default function DashboardPage() {
     );
   }
 
-  if (!dashboard || !weather) {
+   const firstFieldWeather = fieldWeatherList[0]?.weather;
+
+  if (!dashboard) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
         Dashboard information is unavailable.
@@ -66,11 +70,17 @@ export default function DashboardPage() {
 
       <div className="grid gap-8 lg:grid-cols-2">
 
-        <WeatherOverview
-          temperature={weather.current.temperature}
-          humidity={weather.current.humidity}
-          condition={weather.current.condition}
-        />
+        {firstFieldWeather ? ( 
+          <WeatherOverview
+            temperature={firstFieldWeather.current.temperature}
+            humidity={firstFieldWeather.current.humidity}
+            condition={firstFieldWeather.current.condition}
+          />
+        ) : (
+          <div className="rounded-xl border border-dashed p-6 text-center text-gray-500">
+            No fields available for a weather summary.
+          </div>
+        )}
 
         <RecentUpdates
           activities={dashboard.activities}
