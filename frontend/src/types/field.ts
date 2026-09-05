@@ -1,10 +1,12 @@
+export type UserRole = "ADMIN" | "AGENT";
+
 export type FieldStatus = string;
 
 export interface FieldUser {
   id: string;
   fullName: string;
   email: string;
-  role: "ADMIN" | "AGENT";
+  role: UserRole;
 }
 
 export interface Field {
