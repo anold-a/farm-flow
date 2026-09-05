@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode,useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -21,19 +21,28 @@ export default function RoleGuard({
     loading,
   } = useAuth();
 
+  useEffect(() => { 
+    if (loading) return;
+
+    if (!user) {
+      router.replace("/login");
+      return;
+    }
+
+    if (!allowedRoles.includes(user.role)) {
+      router.replace("/dashboard");
+    }
+  }, [loading, user, allowedRoles, router]);
+
   if (loading) {
     return null;
   }
 
-  if (!user) {
-    router.replace("/login");
-    return null;
+  if (!user || !allowedRoles.includes(user.role)) {
+    return null; 
   }
 
-  if (!allowedRoles.includes(user.role)) {
-    router.replace("/dashboard");
-    return null;
-  }
+  
 
   return children;
 }

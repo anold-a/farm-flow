@@ -24,6 +24,9 @@ export default function Sidebar() {
         )}
         <Link href="/weather">Weather</Link>
         <Link href="/reports">Reports</Link>
+        {role === "ADMIN" && ( 
+          <Link href="/users">Users</Link>
+        )}
         <Link href="/notifications" className="relative">
   <span className="text-xl">
     🔔

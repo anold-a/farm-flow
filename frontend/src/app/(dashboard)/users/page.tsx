@@ -5,6 +5,7 @@ import { useState } from "react";
 import UserTable from "@/components/users/UserTable";
 import { useUsers } from "@/hooks/useUsers";
 import CreateUserForm from "@/components/users/CreateUserForm";
+import RoleGuard from "@/components/auth/RoleGuard";
 
 
 export default function UsersPage() {
@@ -24,6 +25,7 @@ export default function UsersPage() {
   }
 
   return (
+    <RoleGuard allowedRoles={["ADMIN"]}>
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -49,5 +51,6 @@ export default function UsersPage() {
         />
       )}
     </div>
+    </RoleGuard>
   );
 }
