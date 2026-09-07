@@ -15,6 +15,9 @@ import { Field } from "@/types/field";
 import { FieldUpdate } from "@/types/field-update";
 import { fieldUpdateService } from "@/services/field-update.service";
 
+import { cropService } from "@/services/crop.service";
+import { Crop } from "@/types/crop";
+
 interface Props {
   field: Field;
   role: "ADMIN" | "AGENT";
@@ -30,8 +33,12 @@ export default function FieldDetails({
 const [updatesLoading, setUpdatesLoading] = useState(true); 
 const [updatesError, setUpdatesError] = useState("");
 
+const [activeCrop, setActiveCrop] = useState<Crop | null>(null);
+  const [cropLoading, setCropLoading] = useState(true);
+  const [cropError, setCropError] = useState("");
+
 useEffect(() => { 
-  async function loadUpdates() {
+  async function loadFieldData() {
     try {
       setUpdatesLoading(true);
       setUpdatesError("");
@@ -48,9 +55,21 @@ useEffect(() => {
     } finally {
       setUpdatesLoading(false);
     }
+
+try {
+        setCropLoading(true);
+        setCropError("");
+        const cropData = await cropService.getActiveByField(field.id);
+        setActiveCrop(cropData);
+      } catch (err) {
+        setCropError(err instanceof Error ? err.message : "Failed to load crop information.");
+      } finally {
+        setCropLoading(false);
+      }
+   
   }
 
-  loadUpdates();
+  loadFieldData();
 }, [field.id]); 
 
   return (
@@ -72,13 +91,33 @@ useEffect(() => {
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <p className="text-sm text-gray-500">
-              Crop
-            </p>
+            <p className="text-sm text-gray-500">Crop Status</p>
+            {cropLoading && <p className="font-medium text-gray-400">Loading crop...</p>}
 
-            <p className="font-medium">
-              {field.crop}
-            </p>
+            {cropLoading && <p className="font-medium text-gray-400">Loading crop...</p>}
+  
+ 
+  {!cropLoading && cropError && <p className="font-medium text-red-500">{cropError}</p>}
+  
+  
+  {!cropLoading && !cropError && !activeCrop && (
+    <p className="font-medium text-gray-400 mt-1 italic">No active crop planted</p>
+  )}
+  
+  
+  {!cropLoading && !cropError && activeCrop && (
+    <div className="mt-1">
+      <p className="font-semibold text-lg">
+        {activeCrop.name} <span className="text-sm font-normal text-gray-500">({activeCrop.variety})</span>
+      </p>
+      <p className="text-xs text-green-600 bg-green-50 inline-block px-2 py-0.5 rounded font-medium mt-1">
+        Stage: {activeCrop.growthStage}
+      </p>
+      <p className="text-xs text-gray-400 mt-1">
+        Planted: {new Date(activeCrop.plantingDate).toLocaleDateString()}
+      </p>
+    </div>
+  )}
           </div>
 
           <div>

@@ -5,16 +5,24 @@ import { Crop,CreateCropDto } from "@/types/crop";
 
 export const cropService = {
 
-  getActiveByField(){
-    return apiFetch<Crop>(`/:fieldId/crops/active`,{
+  getActiveByField(fieldId: string){
+    return apiFetch<Crop | null>(`/fields/${fieldId}/crops/active`,{
     token: getAccessToken() ?? undefined,
     })
   },
 
 
-  getHistoryByField(){
-      return apiFetch<Crop>(`/:fieldId/crops/history`,{
+  getHistoryByField(fieldId:string){
+      return apiFetch<Crop[]>(`/fields/${fieldId}/crops/history`,{
     token: getAccessToken() ?? undefined,
     })
-  }
+  },
+
+  create(fieldId: string, data: CreateCropDto) {
+    return apiFetch<Crop>("/crops", {
+      method: "POST",
+      body: JSON.stringify(data),
+       token: getAccessToken() ?? undefined
+    });
+  },
 }

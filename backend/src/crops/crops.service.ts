@@ -79,7 +79,7 @@ export class CropsService {
 }
 
 async findHistoryByField(fieldId: string, currentUser: AuthenticatedUser) {
-  if (currentUser.role === Role.ADMIN) {
+  if (currentUser.role !== Role.ADMIN) {
     throw new BadRequestException(
       'Only administrators can view crop history',
     );

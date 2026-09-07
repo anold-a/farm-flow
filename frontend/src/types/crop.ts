@@ -11,6 +11,7 @@ export type GrowthStage =
 
 
 export interface Crop {
+  id:string;
   name:string;
   variety:string;
   plantingDate:Date;
@@ -27,6 +28,5 @@ export interface CreateCropDto {
   variety: string;
   plantingDate:Date;
   expectedHarvestDate:Date;
-  growthStage:GrowthStage;
   
 }
