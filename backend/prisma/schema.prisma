@@ -50,6 +50,8 @@ model Field {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   fieldUpdates FieldUpdate[]
+
+  crops Crop[]
 }
 
 model FieldUpdate {
@@ -84,4 +86,32 @@ model Notification {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+}
+
+enum GrowthStage {
+  PLANTED
+  GERMINATION
+  VEGETATIVE
+  FLOWERING
+  FRUITING
+  HARVEST_READY
+  HARVESTED
+}
+
+model Crop {
+  id String @id @default(uuid())
+
+  name    String
+  variety String
+
+  plantingDate        DateTime
+  expectedHarvestDate DateTime
+
+  growthStage GrowthStage @default(PLANTED)
+
+  fieldId String 
+  field   Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
