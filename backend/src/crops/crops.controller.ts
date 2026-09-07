@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Body, UseGuards  } from '@nestjs/common';
+import { Controller, Post, Param, Body, UseGuards,Get  } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { CropsService } from './crops.service';
@@ -20,5 +20,26 @@ export class CropsController {
     @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.cropsService.create(data, fieldId, user.id);
+  }
+
+  @Roles('ADMIN', 'AGENT')
+  @Get('/:fieldId/crops/active')
+  findActiveByField(
+    @Param('fieldId')
+    fieldId: string,
+
+    @CurrentUser()
+    currentUser: AuthenticatedUser,
+  ) {
+    return this.cropsService.findActiveByField(fieldId, currentUser);
+  }
+
+  @Roles('ADMIN')
+  @Get('/:fieldId/crops/history')
+  findHistoryByField(
+    @Param('fieldId') fieldId: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.cropsService.findHistoryByField(fieldId, user);
   }
 }
