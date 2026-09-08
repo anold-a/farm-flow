@@ -1,9 +1,10 @@
 import DashboardCard from "./DashboardCard";
+import { CropStageBreakdown } from "./CropStageBreakdown"; 
 
-import { DashboardStats } from "@/types/dashboard";
+import { DashboardStats as IDashboardStats  } from "@/types/dashboard";
 
 interface Props {
-  statistics: DashboardStats;
+  statistics: IDashboardStats;
   role: "ADMIN" | "AGENT";
 }
 
@@ -43,6 +44,8 @@ export default function DashboardStats({
         title="Field Updates"
         value={statistics.totalFieldUpdates}
       />
+
+       <CropStageBreakdown cropStats={statistics.cropStats} />
 
     </div>
   );

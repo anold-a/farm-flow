@@ -1,3 +1,9 @@
+export interface CropStats {
+  
+  [growthStage: string]: number;
+}
+
+
 export interface DashboardStats {
   totalUsers: number;  
   totalFields: number;
@@ -5,6 +11,7 @@ export interface DashboardStats {
   completedFields: number;    
   totalFieldUpdates: number; 
   totalAgents: number;
+  cropStats: CropStats;
   
 }
 
@@ -17,5 +24,5 @@ export interface Activity {
 
 export interface DashboardSummary {
   stats: DashboardStats;
-  activities: Activity[];
+  activities: any[];
 }

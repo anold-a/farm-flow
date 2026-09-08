@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { ReportsService } from '../reports/reports.service';
 import { UsersService } from '../users/users.service';
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
@@ -29,7 +29,10 @@ export class DashboardService {
 
     
 
-    const activities = await this.getRecentActivity(currentUser);
+    const [activities, cropStats] = await Promise.all([
+      this.getRecentActivity(currentUser),
+      this.getCropStats(currentUser),
+    ]);
 
     return {
       stats: {
@@ -39,13 +42,13 @@ export class DashboardService {
         activeFields,
         completedFields,
         totalFieldUpdates: reports.statistics.totalUpdates,
+        cropStats,
       },
       activities,
     };
   }
 
   private async getRecentActivity(currentUser: AuthenticatedUser) {
-    
     const fieldUpdateWhere =
       currentUser.role === Role.ADMIN ? {} : { userId: currentUser.id };
 
@@ -59,7 +62,6 @@ export class DashboardService {
       },
     });
 
-    
     const recentNotifications = await this.prisma.notification.findMany({
       where: { userId: currentUser.id },
       orderBy: { createdAt: 'desc' },
@@ -80,12 +82,41 @@ export class DashboardService {
       createdAt: notification.createdAt.toISOString(),
     }));
 
-    
     return [...updateActivities, ...notificationActivities]
       .sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       )
       .slice(0, 5);
+  }
+
+  private async getCropStats(currentUser: AuthenticatedUser) {
+    const whereCondition: Prisma.CropWhereInput = {
+      growthStage: { not: 'HARVESTED' }, 
+    };
+
+    if (currentUser.role === Role.AGENT) {
+      whereCondition.field = {
+        assignedAgentId: currentUser.id,
+      };
+    }
+
+   
+    const stats = await this.prisma.crop.groupBy({
+      by: ['growthStage'],
+      where: whereCondition,
+      _count: {
+        _all: true, 
+      },
+    });
+
+   
+    return stats.reduce(
+      (acc, current) => {
+        acc[current.growthStage] = current._count._all;
+        return acc;
+      },
+      {} as { total: number; byStage: Record<string, number> },
+    );
   }
 }
