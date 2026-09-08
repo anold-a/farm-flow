@@ -14,10 +14,12 @@ import { ReportsModule } from './reports/reports.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { CropsModule } from './crops/crops.module';
+import { CropIntelligenceService } from './crop-intelligence/crop-intelligence.service';
+import { CropIntelligenceModule } from './crop-intelligence/crop-intelligence.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule],
   controllers: [AppController, WeatherController],
-  providers: [AppService, PrismaService, WeatherService],
+  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService],
 })
 export class AppModule {}
