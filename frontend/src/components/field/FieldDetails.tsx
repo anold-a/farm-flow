@@ -18,6 +18,9 @@ import { fieldUpdateService } from "@/services/field-update.service";
 import { cropService } from "@/services/crop.service";
 import { Crop } from "@/types/crop";
 
+import CropHealthCard from "./CropHealthCard";
+import { useCropIntelligence } from "@/hooks/useCropIntelligence";
+
 interface Props {
   field: Field;
   role: "ADMIN" | "AGENT";
@@ -36,6 +39,8 @@ const [updatesError, setUpdatesError] = useState("");
 const [activeCrop, setActiveCrop] = useState<Crop | null>(null);
   const [cropLoading, setCropLoading] = useState(true);
   const [cropError, setCropError] = useState("");
+
+  const { intelligence, loading: intelligenceLoading, error: intelligenceError } = useCropIntelligence(field.id);
 
 useEffect(() => { 
   async function loadFieldData() {
@@ -211,6 +216,10 @@ try {
   </ul>
 )}
       </Card>
+
+      {!intelligenceLoading && !intelligenceError && intelligence && (
+  <CropHealthCard intelligence={intelligence} />
+)}
 
       <div className="flex flex-wrap gap-3">
         {role === "ADMIN" && ( <>
