@@ -8,23 +8,25 @@ import {
   IsDate
 } from 'class-validator';
 
+import { Type } from 'class-transformer';
+
 export class CreateCropDto {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
   name: string;
+
+  @IsString()
+  @IsNotEmpty()
   variety: string;
 
-  
+  @Type(() => Date)
   @IsNotEmpty()
   @IsDate()
   plantingDate: Date;
 
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
-  expectedHarvestDate:Date;
+  expectedHarvestDate: Date;
 
-
-  @IsUUID()
-  currentUser: string;
 }

@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
 import { fieldUpdateService } from "@/services/field-update.service";
+import { cropService } from "@/services/crop.service";
+import { Crop } from "@/types/crop";
 
 interface Props {
   fieldId: string;
@@ -16,6 +18,7 @@ export default function FieldUpdateForm({
 }: Props) {
   const [cropStage, setCropStage] =
     useState("");
+    const [activeCrop, setActiveCrop] = useState<Crop | null>(null);
 
   const [moisture, setMoisture] =
     useState("");
@@ -49,6 +52,24 @@ export default function FieldUpdateForm({
 
     return "";
   }
+
+  useEffect(() => {
+    async function getActiveCrop() {
+      try {
+        const crop = await cropService.getActiveByField(fieldId);
+        setActiveCrop(crop);
+        if (crop) {
+          
+          setCropStage(crop.growthStage); 
+        }
+      } catch (err) {
+        console.error("Failed to load active crop", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getActiveCrop();
+  }, [fieldId]);
 
   async function handleSubmit(
     event: React.FormEvent<HTMLFormElement>
@@ -123,14 +144,27 @@ export default function FieldUpdateForm({
         </div>
       )}
 
-      <Input
-        label="Crop Stage"
-        value={cropStage}
-        onChange={(e) =>
-          setCropStage(e.target.value)
-        }
-        placeholder="Vegetative"
-      />
+     <label className="block text-sm font-medium text-gray-700">Current Crop Stage</label>
+      <select
+    value={cropStage}
+    onChange={(e) => setCropStage(e.target.value)}
+    className="w-full rounded border p-2 bg-white"
+    required
+  >
+    <option value="">-- Select Current Stage --</option>
+    <option value="PLANTED">Planted</option>
+    <option value="GERMINATION">Germination</option>
+    <option value="VEGETATIVE">Vegetative</option>
+    <option value="FLOWERING">Flowering</option>
+    <option value="FRUITING">Fruiting</option>
+    <option value="HARVEST_READY">Harvest Ready</option>
+    <option value="HARVESTED">Harvested</option>
+  </select>
+  {activeCrop && (
+    <p className="text-xs text-gray-400 italic">
+      Current baseline database stage: {activeCrop.growthStage}
+    </p>
+  )}
 
       <Input
         label="Moisture (%)"
