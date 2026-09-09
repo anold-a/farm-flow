@@ -16,10 +16,13 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { CropsModule } from './crops/crops.module';
 import { CropIntelligenceService } from './crop-intelligence/crop-intelligence.service';
 import { CropIntelligenceModule } from './crop-intelligence/crop-intelligence.module';
+import { AnalyticsService } from './analytics/analytics.service';
+import { AnalyticsController } from './analytics/analytics.controller';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule],
-  controllers: [AppController, WeatherController],
-  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule],
+  controllers: [AppController, WeatherController, AnalyticsController],
+  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService, AnalyticsService],
 })
 export class AppModule {}
