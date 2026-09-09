@@ -135,6 +135,64 @@ export class AnalyticsService {
   private async getAgentAnalytics(
     agentId: string,
   ): Promise<AnalyticsResponseDto> {
-    throw new Error('not implemented yet'); 
+    const fields = await this.prisma.field.findMany({
+      where: { assignedAgentId: agentId },
+    });
+
+    const fieldIds = fields.map((f) => f.id);
+
+    const totalFields = fields.length;
+    const totalAcreage = fields.reduce((sum, f) => sum + f.acreage, 0);
+    const completedFields = fields.filter(
+      (f) => f.status === 'Harvested',
+    ).length;
+    const needsCareFields = fields.filter(
+      (f) => f.status === 'Needs Attention' || f.status === 'Critical',
+    ).length;
+    const activeFields = totalFields - completedFields;
+
+    const updatesSubmitted = await this.prisma.fieldUpdate.count({
+      where: { userId: agentId },
+    });
+
+    const cropRows = await this.prisma.crop.groupBy({
+      by: ['name'],
+      where: { fieldId: { in: fieldIds }, growthStage: { not: 'HARVESTED' } },
+      _count: { _all: true },
+    });
+    const cropDistribution = cropRows.map((row) => ({
+      crop: row.name,
+      count: row._count._all,
+    }));
+
+    const stageRows = await this.prisma.crop.groupBy({
+      by: ['growthStage'],
+      where: { fieldId: { in: fieldIds }, growthStage: { not: 'HARVESTED' } },
+      _count: { _all: true },
+    });
+    const growthStageDistribution = this.buildStageDistribution(stageRows);
+
+    const updateTrends = await this.getUpdateTrends({
+      fieldId: { in: fieldIds },
+    });
+
+    return {
+      fieldStats: {
+        totalFields,
+        activeFields,
+        completedFields,
+        totalAcreage,
+        updatesSubmitted, 
+      },
+      cropDistribution,
+      fieldStatusBreakdown: {
+        active: activeFields,
+        completed: completedFields,
+        needsCare: needsCareFields,
+      },
+      updateTrends,
+      growthStageDistribution,
+      agentPerformance: null, 
+    };
   }
 }
