@@ -21,6 +21,9 @@ import { Crop } from "@/types/crop";
 import CropHealthCard from "./CropHealthCard";
 import { useCropIntelligence } from "@/hooks/useCropIntelligence";
 
+import RecommendationsCard from "./RecommendationsCard";
+import { useRecommendations } from "@/hooks/useRecommendations";
+
 interface Props {
   field: Field;
   role: "ADMIN" | "AGENT";
@@ -41,6 +44,7 @@ const [activeCrop, setActiveCrop] = useState<Crop | null>(null);
   const [cropError, setCropError] = useState("");
 
   const { intelligence, loading: intelligenceLoading, error: intelligenceError } = useCropIntelligence(field.id);
+  const { data: recommendations, loading: recLoading, error: recError } = useRecommendations(field.id);
 
 useEffect(() => { 
   async function loadFieldData() {
@@ -219,6 +223,10 @@ try {
 
       {!intelligenceLoading && !intelligenceError && intelligence && (
   <CropHealthCard intelligence={intelligence} />
+)}
+
+{!recLoading && !recError && recommendations && (
+  <RecommendationsCard data={recommendations} />
 )}
 
       <div className="flex flex-wrap gap-3">
