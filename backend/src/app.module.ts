@@ -19,10 +19,13 @@ import { CropIntelligenceModule } from './crop-intelligence/crop-intelligence.mo
 import { AnalyticsService } from './analytics/analytics.service';
 import { AnalyticsController } from './analytics/analytics.controller';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { RecommendationsService } from './recommendations/recommendations.service';
+import { RecommendationsController } from './recommendations/recommendations.controller';
+import { RecommendationsModule } from './recommendations/recommendations.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule],
-  controllers: [AppController, WeatherController, AnalyticsController],
-  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService, AnalyticsService],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule, RecommendationsModule],
+  controllers: [AppController, WeatherController, AnalyticsController, RecommendationsController],
+  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService, AnalyticsService, RecommendationsService],
 })
 export class AppModule {}

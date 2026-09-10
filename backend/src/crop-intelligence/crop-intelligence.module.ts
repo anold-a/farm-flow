@@ -8,5 +8,6 @@ import { WeatherModule } from '../weather/weather.module';
   imports: [PrismaModule, WeatherModule],
   controllers: [CropIntelligenceController],
   providers: [CropIntelligenceService],
+  exports: [CropIntelligenceService],
 })
 export class CropIntelligenceModule {}
