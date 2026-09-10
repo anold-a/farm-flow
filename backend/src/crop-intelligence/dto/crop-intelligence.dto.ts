@@ -8,6 +8,7 @@ export class cropIntelligenceDto {
   cropName: string;
   variety: string;
   growthStage: string;
+  weatherForecastRain: number | null;
   expectedGrowthStage: string;
   status: CropStatus;
   trend: CropTrend;
