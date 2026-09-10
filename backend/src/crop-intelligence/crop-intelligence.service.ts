@@ -87,6 +87,7 @@ export class CropIntelligenceService {
       cropName: crop.name,
       variety: crop.variety,
       growthStage: crop.growthStage,
+      weatherForecastRain,
       expectedGrowthStage,
       status,
       trend,
