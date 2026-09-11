@@ -8,10 +8,12 @@ import { CreateFieldUpdateDto } from './dto/create-field-update.dto';
 
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
 import { NotificationsService } from '../notifications/notifications.service';
+import { AlertsService } from 'src/alerts/alerts.service';
 
 @Injectable()
 export class FieldUpdatesService {
   constructor(
+    private readonly alertsService: AlertsService,
     private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService,
   ) {}
@@ -37,7 +39,6 @@ export class FieldUpdatesService {
     }
 
     const fieldUpdate = await this.prisma.fieldUpdate.create({
-      
       data: {
         cropStage: data.cropStage,
         notes: data.notes,
@@ -69,15 +70,20 @@ export class FieldUpdatesService {
     });
 
     await this.notificationsService.create(
-    
-      field.createdById, 
+      field.createdById,
       'New Field Update',
       `Agent ${fieldUpdate.user.fullName} submitted an update for ${field.name}.`,
       'FIELD_UPDATE',
     );
 
+    
+    await this.alertsService.evaluateField(data.fieldId);
+
+    
     return fieldUpdate;
   }
+
+  
 
   async findByField(fieldId: string, currentUser: AuthenticatedUser) {
     const field = await this.prisma.field.findUnique({
