@@ -22,9 +22,10 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { RecommendationsService } from './recommendations/recommendations.service';
 import { RecommendationsController } from './recommendations/recommendations.controller';
 import { RecommendationsModule } from './recommendations/recommendations.module';
+import { AlertsModule } from './alerts/alerts.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule, RecommendationsModule],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule, RecommendationsModule, AlertsModule],
   controllers: [AppController, WeatherController, AnalyticsController, RecommendationsController],
   providers: [AppService, PrismaService, WeatherService, CropIntelligenceService, AnalyticsService, RecommendationsService],
 })
