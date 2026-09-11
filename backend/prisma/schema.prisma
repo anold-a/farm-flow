@@ -51,7 +51,8 @@ model Field {
   updatedAt    DateTime      @updatedAt
   fieldUpdates FieldUpdate[]
 
-  crops Crop[]
+  crops  Crop[]
+  alerts Alert[]
 }
 
 model FieldUpdate {
@@ -109,8 +110,30 @@ model Crop {
 
   growthStage GrowthStage @default(PLANTED)
 
-  fieldId String 
+  fieldId String
   field   Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+model Alert {
+  id String @id @default(uuid())
+
+  fieldId String
+  field   Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  type     String
+  severity AlertSeverity
+  message  String
+
+  resolved Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
