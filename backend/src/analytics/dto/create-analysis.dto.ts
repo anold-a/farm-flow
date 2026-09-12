@@ -1,3 +1,10 @@
+export interface MoistureTrendPointDto {
+  day: string;
+  moisture: number | null;
+  temperature: number | null;
+}
+
+
 export interface FieldStatsDto {
   totalFields: number;
   activeFields: number;
@@ -45,5 +52,6 @@ export interface AnalyticsResponseDto {
   fieldStatusBreakdown: FieldStatusBreakdownDto;
   updateTrends: UpdateTrendItemDto[];
   growthStageDistribution: GrowthStageDistributionDto;
-  agentPerformance: AgentPerformanceItemDto[] | null; 
+  agentPerformance: AgentPerformanceItemDto[] | null;
+  moistureTrend: MoistureTrendPointDto[];
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
-import { AnalyticsResponseDto } from './dto/create-analysis.dto';
+import { AnalyticsResponseDto, MoistureTrendPointDto } from './dto/create-analysis.dto';
 
 @Injectable()
 export class AnalyticsService {
@@ -65,6 +65,8 @@ export class AnalyticsService {
       updatesSubmitted: agent.fieldUpdates.length,
     }));
 
+    const moistureTrend = await this.getMoistureTrend({});
+
     return {
       fieldStats: {
         totalFields,
@@ -81,6 +83,7 @@ export class AnalyticsService {
       updateTrends,
       growthStageDistribution,
       agentPerformance,
+      moistureTrend
     };
   }
 
@@ -115,13 +118,13 @@ export class AnalyticsService {
       select: { createdAt: true },
     });
 
-    const buckets = [0, 0, 0, 0]; 
+    const buckets = [0, 0, 0, 0];
     const now = Date.now();
 
     updates.forEach((update) => {
       const daysAgo =
         (now - update.createdAt.getTime()) / (1000 * 60 * 60 * 24);
-      const weekIndex = Math.min(3, Math.floor(daysAgo / 7)); 
+      const weekIndex = Math.min(3, Math.floor(daysAgo / 7));
       const bucketFromOldest = 3 - weekIndex;
       buckets[bucketFromOldest]++;
     });
@@ -175,6 +178,9 @@ export class AnalyticsService {
     const updateTrends = await this.getUpdateTrends({
       fieldId: { in: fieldIds },
     });
+    const moistureTrend = await this.getMoistureTrend({
+      assignedAgentId: agentId,
+    });
 
     return {
       fieldStats: {
@@ -182,7 +188,7 @@ export class AnalyticsService {
         activeFields,
         completedFields,
         totalAcreage,
-        updatesSubmitted, 
+        updatesSubmitted,
       },
       cropDistribution,
       fieldStatusBreakdown: {
@@ -192,7 +198,54 @@ export class AnalyticsService {
       },
       updateTrends,
       growthStageDistribution,
-      agentPerformance: null, 
+      agentPerformance: null,
+      moistureTrend,
     };
+  }
+
+  private async getMoistureTrend(fieldWhere: {
+    assignedAgentId?: string;
+  }): Promise<MoistureTrendPointDto[]> {
+    const fields = await this.prisma.field.findMany({
+      where: fieldWhere,
+      select: { id: true },
+    });
+    const fieldIds = fields.map((f) => f.id);
+
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+    const updates = await this.prisma.fieldUpdate.findMany({
+      where: {
+        fieldId: { in: fieldIds },
+        createdAt: { gte: fourteenDaysAgo },
+      },
+      select: { moisture: true, temperature: true, createdAt: true },
+      orderBy: { createdAt: 'asc' },
+    });
+
+   
+    const byDay = new Map<
+      string,
+      { moisture: number[]; temperature: number[] }
+    >();
+
+    updates.forEach((u) => {
+      const dayKey = u.createdAt.toISOString().split('T')[0];
+      if (!byDay.has(dayKey))
+        byDay.set(dayKey, { moisture: [], temperature: [] });
+      const bucket = byDay.get(dayKey)!;
+      if (u.moisture !== null) bucket.moisture.push(u.moisture);
+      if (u.temperature !== null) bucket.temperature.push(u.temperature);
+    });
+
+    const average = (arr: number[]) =>
+      arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+
+    return Array.from(byDay.entries()).map(([day, values]) => ({
+      day,
+      moisture: average(values.moisture),
+      temperature: average(values.temperature),
+    }));
   }
 }
