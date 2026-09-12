@@ -39,6 +39,12 @@ export interface AgentPerformanceItem {
   updatesSubmitted: number;
 }
 
+export interface MoistureTrendPoint {
+  day: string;
+  moisture: number | null;
+  temperature: number | null;
+}
+
 export interface AnalyticsResponse {
   fieldStats: FieldStats;
   cropDistribution: CropDistributionItem[];
@@ -46,4 +52,5 @@ export interface AnalyticsResponse {
   updateTrends: UpdateTrendItem[];
   growthStageDistribution: GrowthStageDistribution;
   agentPerformance: AgentPerformanceItem[] | null;
+  moistureTrend: MoistureTrendPoint[];
 }
