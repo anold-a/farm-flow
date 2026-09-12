@@ -11,6 +11,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useWeather } from "@/hooks/useWeather";
 
+import MoistureTrendChart from "@/components/analytics/MoistureTrendChart";
+import { useAnalytics } from "@/hooks/useAnalytics";
+
 export default function DashboardPage() {
   const {
     dashboard,
@@ -58,6 +61,8 @@ export default function DashboardPage() {
     );
   }
 
+  const { analytics } = useAnalytics();
+
   return (
     <div className="space-y-8">
 
@@ -86,7 +91,14 @@ export default function DashboardPage() {
           activities={dashboard.activities}
         />
 
+        
+
+
       </div>
+
+      {analytics && (
+  <MoistureTrendChart data={analytics.moistureTrend} />
+)}
 
       <QuickActions role={role} />
 
