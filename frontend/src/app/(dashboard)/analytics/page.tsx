@@ -3,6 +3,10 @@
 import DashboardCard from "@/components/dashboard/DashboardCard";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
+import MoistureTrendChart from "@/components/analytics/MoistureTrendChart";
+import CropDistributionChart from "@/components/analytics/CropDistributionChart";
+import FieldStatusChart from "@/components/analytics/FieldStatusChart";
+
 export default function AnalyticsPage() {
   const { analytics, loading, error } = useAnalytics();
 
@@ -36,7 +40,12 @@ export default function AnalyticsPage() {
           <DashboardCard title="Updates Submitted" value={analytics.fieldStats.updatesSubmitted} />
         )}
       </div>
-
+      <MoistureTrendChart data={analytics.moistureTrend} />
+      
+      <div className="grid gap-6 md:grid-cols-2">
+  <CropDistributionChart data={analytics.cropDistribution} />
+  <FieldStatusChart data={analytics.fieldStatusBreakdown} />
+</div>
       <div className="rounded-xl border bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-xl font-semibold">Crop Distribution</h2>
         <ul className="space-y-2">
