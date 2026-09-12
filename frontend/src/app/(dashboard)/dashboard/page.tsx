@@ -30,6 +30,7 @@ export default function DashboardPage() {
   const { user } = useAuth(); 
   
   const role = user?.role ?? "AGENT";
+  const { analytics } = useAnalytics();
 
   if (dashboardLoading || weatherLoading) {
     return <DashboardSkeleton />;
@@ -61,7 +62,7 @@ export default function DashboardPage() {
     );
   }
 
-  const { analytics } = useAnalytics();
+  
 
   return (
     <div className="space-y-8">

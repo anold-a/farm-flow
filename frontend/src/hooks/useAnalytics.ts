@@ -5,9 +5,10 @@ import { analyticsService } from "@/services/analytics.service";
 import { AnalyticsResponse } from "@/types/analytics";
 
 export function useAnalytics() {
-  const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
 
   useEffect(() => {
     async function load() {
