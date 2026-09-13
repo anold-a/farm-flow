@@ -155,4 +155,79 @@ export class ReportsService {
       agents,
     };
   }
+
+  async getFieldsReport(currentUser: AuthenticatedUser) {
+    const fieldWhere =
+      currentUser.role === Role.ADMIN
+        ? {}
+        : { assignedAgentId: currentUser.id };
+
+    const fields = await this.prisma.field.findMany({
+      where: fieldWhere,
+      include: { assignedAgent: { select: { fullName: true } } },
+    });
+
+    return fields.map((f) => ({
+      name: f.name,
+      location: f.location,
+      acreage: f.acreage,
+      status: f.status,
+      assignedAgent: f.assignedAgent?.fullName ?? 'Unassigned',
+    }));
+  }
+
+  async getCropsReport(currentUser: AuthenticatedUser) {
+    const fieldWhere =
+      currentUser.role === Role.ADMIN
+        ? {}
+        : { assignedAgentId: currentUser.id };
+
+    const fields = await this.prisma.field.findMany({
+      where: fieldWhere,
+      select: { id: true, name: true },
+    });
+    const fieldIds = fields.map((f) => f.id);
+    const fieldNameById = new Map(fields.map((f) => [f.id, f.name]));
+
+    const crops = await this.prisma.crop.findMany({
+      where: { fieldId: { in: fieldIds } },
+    });
+
+    return crops.map((c) => ({
+      field: fieldNameById.get(c.fieldId) ?? 'Unknown',
+      name: c.name,
+      variety: c.variety,
+      growthStage: c.growthStage,
+      plantingDate: c.plantingDate.toISOString().split('T')[0],
+      expectedHarvestDate: c.expectedHarvestDate.toISOString().split('T')[0],
+    }));
+  }
+
+  async getAlertsReport(currentUser: AuthenticatedUser) {
+    const fieldWhere =
+      currentUser.role === Role.ADMIN
+        ? {}
+        : { assignedAgentId: currentUser.id };
+
+    const fields = await this.prisma.field.findMany({
+      where: fieldWhere,
+      select: { id: true, name: true },
+    });
+    const fieldIds = fields.map((f) => f.id);
+    const fieldNameById = new Map(fields.map((f) => [f.id, f.name]));
+
+    const alerts = await this.prisma.alert.findMany({
+      where: { fieldId: { in: fieldIds } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return alerts.map((a) => ({
+      field: fieldNameById.get(a.fieldId) ?? 'Unknown',
+      type: a.type,
+      severity: a.severity,
+      message: a.message,
+      resolved: a.resolved,
+      createdAt: a.createdAt.toISOString(),
+    }));
+  }
 }
