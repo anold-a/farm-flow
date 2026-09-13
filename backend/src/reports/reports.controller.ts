@@ -9,6 +9,10 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
 
+import { Res } from '@nestjs/common';
+import type { Response } from 'express';
+import { convertToCSV } from './utils/csv.util';
+
 @Controller('reports')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ReportsController {
@@ -21,5 +25,57 @@ export class ReportsController {
     currentUser: AuthenticatedUser,
   ) {
     return this.reportsService.getReports(currentUser);
+  }
+
+  @Get('fields/export')
+  @Roles('ADMIN', 'AGENT')
+  async exportFields(
+    @CurrentUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ) {
+    const data = await this.reportsService.getFieldsReport(user);
+    const csv = convertToCSV(data);
+    res.header('Content-Type', 'text/csv');
+    res.attachment('fields-report.csv');
+    res.send(csv);
+  }
+
+  @Get('crops/export')
+  @Roles('ADMIN', 'AGENT')
+  async exportCrops(
+    @CurrentUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ) {
+    const data = await this.reportsService.getCropsReport(user);
+    const csv = convertToCSV(data);
+    res.header('Content-Type', 'text/csv');
+    res.attachment('crops-report.csv');
+    res.send(csv);
+  }
+
+  @Get('alerts/export')
+  @Roles('ADMIN', 'AGENT')
+  async exportAlerts(
+    @CurrentUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ) {
+    const data = await this.reportsService.getAlertsReport(user);
+    const csv = convertToCSV(data);
+    res.header('Content-Type', 'text/csv');
+    res.attachment('alerts-report.csv');
+    res.send(csv);
+  }
+
+  @Get('analytics/export')
+  @Roles('ADMIN', 'AGENT')
+  async exportAnalytics(
+    @CurrentUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ) {
+    const report = await this.reportsService.getReports(user);
+    const csv = convertToCSV(report.crops); 
+    res.header('Content-Type', 'text/csv');
+    res.attachment('analytics-report.csv');
+    res.send(csv);
   }
 }
