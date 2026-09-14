@@ -34,6 +34,14 @@ export class ReportsController {
     @Res() res: Response,
   ) {
     const data = await this.reportsService.getFieldsReport(user);
+
+    if (data.length === 0) {
+      res.header('Content-Type', 'text/csv');
+      res.attachment('fields-report.csv');
+      res.send('No data available for this report.');
+      return;
+    }
+
     const csv = convertToCSV(data);
     res.header('Content-Type', 'text/csv');
     res.attachment('fields-report.csv');
