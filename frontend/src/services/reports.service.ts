@@ -33,8 +33,5 @@ export const reportsService = {
     });
   },
 
-  exportFields: () => downloadCSV("/reports/fields/export", "fields-report.csv"),
-  exportCrops: () => downloadCSV("/reports/crops/export", "crops-report.csv"),
-  exportAlerts: () => downloadCSV("/reports/alerts/export", "alerts-report.csv"),
-  exportAnalytics: () => downloadCSV("/reports/analytics/export", "analytics-report.csv"),
+  exportCombined: () => downloadCSV("/reports/export", "smartseason-report.csv"),
 };

@@ -27,20 +27,18 @@ export default function ReportsPage() {
 
   const [crop, setCrop] = useState("");
   const [period, setPeriod] = useState("30");
-  const [exporting, setExporting] = useState<string | null>(null);
+  const [exportingCsv, setExportingCsv] = useState(false);
 
 
-  async function handleExport(type: "fields" | "crops" | "alerts" | "analytics") {
-  setExporting(type);
+  
+async function handleExportCsv() {
+  setExportingCsv(true);
   try {
-    if (type === "fields") await reportsService.exportFields();
-    if (type === "crops") await reportsService.exportCrops();
-    if (type === "alerts") await reportsService.exportAlerts();
-    if (type === "analytics") await reportsService.exportAnalytics();
+    await reportsService.exportCombined();
   } catch (err) {
     console.error("Export failed", err);
   } finally {
-    setExporting(null);
+    setExportingCsv(false);
   }
 }
 
@@ -81,13 +79,9 @@ export default function ReportsPage() {
         </div>
 
         <ExportButtons
-          onExportCsv={() =>
-            console.log("Export CSV")
-          }
-          onExportPdf={() =>
-            console.log("Export PDF")
-          }
-        />
+  onExportCsv={handleExportCsv} 
+  onExportPdf={() => alert("PDF export coming soon")} 
+/>
 
       </div>
 
