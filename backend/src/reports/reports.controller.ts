@@ -81,9 +81,45 @@ export class ReportsController {
     @Res() res: Response,
   ) {
     const report = await this.reportsService.getReports(user);
-    const csv = convertToCSV(report.crops); 
+    const csv = convertToCSV(report.crops);
     res.header('Content-Type', 'text/csv');
     res.attachment('analytics-report.csv');
+    res.send(csv);
+  }
+
+  @Get('export')
+  @Roles('ADMIN', 'AGENT')
+  async exportCombined(
+    @CurrentUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ) {
+    const [fields, crops, alerts, report] = await Promise.all([
+      this.reportsService.getFieldsReport(user),
+      this.reportsService.getCropsReport(user),
+      this.reportsService.getAlertsReport(user),
+      this.reportsService.getReports(user),
+    ]);
+
+    const sections: string[] = [];
+
+    sections.push('FIELDS');
+    sections.push(fields.length ? convertToCSV(fields) : 'No data available.');
+
+    sections.push('\nCROPS');
+    sections.push(crops.length ? convertToCSV(crops) : 'No data available.');
+
+    sections.push('\nALERTS');
+    sections.push(alerts.length ? convertToCSV(alerts) : 'No data available.');
+
+    sections.push('\nANALYTICS');
+    sections.push(
+      report.crops.length ? convertToCSV(report.crops) : 'No data available.',
+    );
+
+    const csv = sections.join('\n');
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('smartseason-report.csv');
     res.send(csv);
   }
 }

@@ -10,6 +10,7 @@ import AgentReport from "@/components/reports/AgentReport";
 import ExportButtons from "@/components/reports/ExportButtons";
 import ReportsSkeleton from "@/components/reports/ReportsSkeleton";
 import { useAuth } from "@/hooks/useAuth";
+import { reportsService } from "@/services/reports.service";
 
 import { useReports } from "@/hooks/useReports";
 
@@ -26,6 +27,23 @@ export default function ReportsPage() {
 
   const [crop, setCrop] = useState("");
   const [period, setPeriod] = useState("30");
+  const [exporting, setExporting] = useState<string | null>(null);
+
+
+  async function handleExport(type: "fields" | "crops" | "alerts" | "analytics") {
+  setExporting(type);
+  try {
+    if (type === "fields") await reportsService.exportFields();
+    if (type === "crops") await reportsService.exportCrops();
+    if (type === "alerts") await reportsService.exportAlerts();
+    if (type === "analytics") await reportsService.exportAnalytics();
+  } catch (err) {
+    console.error("Export failed", err);
+  } finally {
+    setExporting(null);
+  }
+}
+
 
   if (loading) {
     return <ReportsSkeleton />;
