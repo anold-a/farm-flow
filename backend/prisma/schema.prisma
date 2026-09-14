@@ -30,6 +30,7 @@ model User {
 
   fieldUpdates  FieldUpdate[]
   notifications Notification[]
+  auditLogs     AuditLog[]
 }
 
 model Field {
@@ -137,4 +138,17 @@ model Alert {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  action     String
+  resource   String
+  resourceId String
+
+  createdAt DateTime @default(now())
 }
