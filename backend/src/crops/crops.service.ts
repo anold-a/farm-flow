@@ -4,15 +4,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { calculateExpectedStage } from './utils/growth-stage.util';
 import { Role } from '@prisma/client';
 import { AuthenticatedUser } from 'src/auth/types/authenticated-user.type';
+import { AuditService } from '../audit/audit.service'; 
 
 @Injectable()
 export class CropsService {
-  constructor(private readonly prisma: PrismaService,
-    
-    ) {}
-  
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditService: AuditService,
+  ) {}
 
-  async create(data: CreateCropDto, fieldId: string,userId:string) {
+  async create(data: CreateCropDto, fieldId: string, userId: string) {
     const field = await this.prisma.field.findUnique({
       where: {
         id: fieldId,
@@ -37,67 +38,64 @@ export class CropsService {
       throw new BadRequestException('Only administrators can create a crop');
     }
 
-    
-
-    return this.prisma.crop.create({
+      const createdCrop = await this.prisma.crop.create({
       data: {
         name: data.name,
-        variety:data.variety,
-        plantingDate:data.plantingDate,
-        expectedHarvestDate:data.expectedHarvestDate,
-        fieldId:fieldId,
-        growthStage:calculateExpectedStage(data.plantingDate)
+        variety: data.variety,
+        plantingDate: data.plantingDate,
+        expectedHarvestDate: data.expectedHarvestDate,
+        fieldId: fieldId,
+        growthStage: calculateExpectedStage(data.plantingDate),
       },
+    });
+    await this.auditService.log(userId, 'CREATE', 'CROP', createdCrop.id); 
+     return createdCrop;
+  }
 
+  async findActiveByField(fieldId: string, currentUser: AuthenticatedUser) {
+    const field = await this.prisma.field.findUnique({
+      where: { id: fieldId },
+    });
+
+    if (!field) {
+      throw new BadRequestException('Field not found');
+    }
+
+    if (
+      currentUser.role === Role.AGENT &&
+      field.assignedAgentId !== currentUser.id
+    ) {
+      throw new BadRequestException('You do not have access to this field');
+    }
+
+    return this.prisma.crop.findFirst({
+      where: {
+        fieldId,
+        growthStage: { not: 'HARVESTED' },
+      },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
+  async findHistoryByField(fieldId: string, currentUser: AuthenticatedUser) {
+    if (currentUser.role !== Role.ADMIN) {
+      throw new BadRequestException(
+        'Only administrators can view crop history',
+      );
+    }
 
-  async findActiveByField(fieldId: string, currentUser: AuthenticatedUser) {
-  const field = await this.prisma.field.findUnique({
-    where: { id:fieldId},
-  });
+    const field = await this.prisma.field.findUnique({
+      where: { id: fieldId },
+    });
 
-  if (!field) {
-    throw new BadRequestException('Field not found');
+    if (!field) {
+      throw new BadRequestException('Field not found');
+    }
+
+    return this.prisma.crop.findMany({
+      where: { fieldId },
+      orderBy: { createdAt: 'desc' },
+    });
   }
-
-  if (
-    currentUser.role === Role.AGENT &&
-    field.assignedAgentId!== currentUser.id
-  ) {
-    throw new BadRequestException('You do not have access to this field');
-  }
-
-  return this.prisma.crop.findFirst({
-    where: {
-      fieldId,
-      growthStage: {  not: 'HARVESTED' },
-    },
-    orderBy: { createdAt: 'desc' },
-  });
 }
-
-async findHistoryByField(fieldId: string, currentUser: AuthenticatedUser) {
-  if (currentUser.role !== Role.ADMIN) {
-    throw new BadRequestException(
-      'Only administrators can view crop history',
-    );
-  }
-
-  const field = await this.prisma.field.findUnique({
-    where: { id:fieldId},
-  });
-
-  if (!field) {
-    throw new BadRequestException('Field not found');
-  }
-
-  return this.prisma.crop.findMany({
-    where: { fieldId },
-    orderBy: { createdAt: 'desc' },
-  });
-}
-    
-  }
 
