@@ -33,6 +33,9 @@ const { criticalCount } = useAlerts();
         {role === "ADMIN" && ( 
           <Link href="/analytics">Analytics</Link>
         )}
+        {role === "ADMIN" && ( 
+          <Link href="/audit-logs">Audit Logs</Link>
+        )}
         <Link href="/notifications" className="relative">
   <span className="text-xl">
     🔔
