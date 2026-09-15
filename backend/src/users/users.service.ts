@@ -67,8 +67,37 @@ export class UsersService {
       },
     });
 
-     await this.auditService.log(currentUser.id, 'CREATE', 'USER', newUser.id);
-      return newUser; 
+    await this.auditService.log(currentUser.id, 'CREATE', 'USER', newUser.id);
+    return newUser;
+  }
+
+  async register(data: CreateUserDto) {
+    const existingUser = await this.findByEmail(data.email);
+
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 12);
+
+    const newUser = await this.prisma.user.create({
+      data: {
+        fullName: data.fullName,
+        email: data.email,
+        password: hashedPassword,
+        role: 'AGENT',
+      },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return newUser;
   }
 
   async validatePassword(password: string, hashedPassword: string) {
@@ -90,7 +119,11 @@ export class UsersService {
     });
   }
 
-  async update(id: string, data: Partial<CreateUserDto>,currentUser: AuthenticatedUser,) {
+  async update(
+    id: string,
+    data: Partial<CreateUserDto>,
+    currentUser: AuthenticatedUser,
+  ) {
     const user = await this.findById(id);
 
     const updateData: {
@@ -134,11 +167,11 @@ export class UsersService {
       'UPDATE',
       'USER',
       updatedUser.id,
-    ); 
+    );
     return updatedUser;
   }
 
-  async remove(id: string, currentUser: AuthenticatedUser,) {
+  async remove(id: string, currentUser: AuthenticatedUser) {
     await this.findById(id);
 
     const removedUser = await this.prisma.user.delete({
@@ -151,7 +184,7 @@ export class UsersService {
         email: true,
         role: true,
       },
-    });   
+    });
     await this.auditService.log(currentUser.id, 'DELETE', 'USER', id);
 
     return removedUser;

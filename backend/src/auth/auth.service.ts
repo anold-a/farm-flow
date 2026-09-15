@@ -15,7 +15,7 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    const user = await this.usersService.create(registerDto);
+    const user = await this.usersService.register(registerDto);
 
     const payload = {
       sub: user.id,
