@@ -9,9 +9,15 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
+import { AuditService } from 'src/audit/audit.service';
+import { AuthenticatedUser } from 'src/auth/types/authenticated-user.type';
+
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditService: AuditService,
+  ) {}
 
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({
@@ -35,7 +41,7 @@ export class UsersService {
     return user;
   }
 
-  async create(data: CreateUserDto) {
+  async create(data: CreateUserDto, currentUser: AuthenticatedUser) {
     const existingUser = await this.findByEmail(data.email);
 
     if (existingUser) {
@@ -44,7 +50,7 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(data.password, 12);
 
-    return this.prisma.user.create({
+    const newUser = await this.prisma.user.create({
       data: {
         fullName: data.fullName,
         email: data.email,
@@ -60,6 +66,9 @@ export class UsersService {
         updatedAt: true,
       },
     });
+
+     await this.auditService.log(currentUser.id, 'CREATE', 'USER', newUser.id);
+      return newUser; 
   }
 
   async validatePassword(password: string, hashedPassword: string) {
@@ -81,7 +90,7 @@ export class UsersService {
     });
   }
 
-  async update(id: string, data: Partial<CreateUserDto>) {
+  async update(id: string, data: Partial<CreateUserDto>,currentUser: AuthenticatedUser,) {
     const user = await this.findById(id);
 
     const updateData: {
@@ -107,7 +116,7 @@ export class UsersService {
       updateData.role = data.role;
     }
 
-    return this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: {
         id: user.id,
       },
@@ -120,12 +129,19 @@ export class UsersService {
         createdAt: true,
       },
     });
+    await this.auditService.log(
+      currentUser.id,
+      'UPDATE',
+      'USER',
+      updatedUser.id,
+    ); 
+    return updatedUser;
   }
 
-  async remove(id: string) {
+  async remove(id: string, currentUser: AuthenticatedUser,) {
     await this.findById(id);
 
-    return this.prisma.user.delete({
+    const removedUser = await this.prisma.user.delete({
       where: {
         id,
       },
@@ -135,7 +151,10 @@ export class UsersService {
         email: true,
         role: true,
       },
-    });
+    });   
+    await this.auditService.log(currentUser.id, 'DELETE', 'USER', id);
+
+    return removedUser;
   }
 
   async findAgents() {

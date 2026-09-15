@@ -16,6 +16,8 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 import { CreateUserDto } from './dto/create-user.dto';
+import { AuthenticatedUser } from 'src/auth/types/authenticated-user.type';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -39,17 +41,17 @@ export class UsersController {
   }
 
   @Post()
-  create(@Body() data: CreateUserDto) {
-    return this.usersService.create(data);
+  create(@Body() data: CreateUserDto, @CurrentUser() user: AuthenticatedUser) {
+     return this.usersService.create(data, user);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: Partial<CreateUserDto>) {
-    return this.usersService.update(id, data);
+  update(@Param('id') id: string, @Body() data: Partial<CreateUserDto> , @CurrentUser() user: AuthenticatedUser,,) {
+    return this.usersService.update(id, data,user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  remove(@Param('id') id: string,@CurrentUser() user: AuthenticatedUser,) {
+    return this.usersService.remove(id,user);
   }
 }
