@@ -9,13 +9,15 @@ import { Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateFieldDto } from './dto/create-field.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+import { AuditService } from '../audit/audit.service'; 
 
 @Injectable()
 export class FieldsService {
-  constructor(private readonly prisma: PrismaService,
+  constructor(
+    private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService,
-    ) {}
-  
+    private readonly auditService: AuditService,
+  ) {}
 
   async create(data: CreateFieldDto, userId: string) {
     const user = await this.prisma.user.findUnique({
@@ -54,7 +56,7 @@ export class FieldsService {
       assignedAgentId = agent.id;
     }
 
-    return this.prisma.field.create({
+        const createdField = await this.prisma.field.create({
       data: {
         name: data.name,
         crop: data.crop,
@@ -87,6 +89,9 @@ export class FieldsService {
         },
       },
     });
+
+    await this.auditService.log(userId, 'CREATE', 'FIELD', createdField.id); 
+     return createdField;
   }
 
   async findAll(currentUser: { id: string; role: 'ADMIN' | 'AGENT' }) {
@@ -170,7 +175,7 @@ export class FieldsService {
       }
     }
 
-    return this.prisma.field.update({
+    const updatedField = await this.prisma.field.update({
       where: { id },
       data,
       include: {
@@ -182,6 +187,9 @@ export class FieldsService {
         },
       },
     });
+    await this.auditService.log(currentUser.id, 'UPDATE', 'FIELD', id);
+
+    return updatedField;
   }
 
   async remove(
@@ -198,7 +206,9 @@ export class FieldsService {
       throw new NotFoundException('Field not found');
     }
 
-    return this.prisma.field.delete({ where: { id } });
+    await this.prisma.field.delete({ where: { id } });
+     await this.auditService.log(currentUser.id, 'DELETE', 'FIELD', id); 
+     return field;
   }
 
   async findMyFields(currentUser: { id: string; role: 'ADMIN' | 'AGENT' }) {
@@ -269,7 +279,6 @@ export class FieldsService {
     }
 
     const updatedField = await this.prisma.field.update({
-      
       where: { id: fieldId },
       data: { assignedAgentId: agent.id },
       include: {
@@ -283,14 +292,13 @@ export class FieldsService {
     });
 
     await this.notificationsService.create(
-      
       agent.id,
       'New Field Assigned',
       `You have been assigned to field ${field.name}.`,
       'FIELD_ASSIGNED',
     );
 
-
+      await this.auditService.log(currentUser.id, 'ASSIGN', 'FIELD', fieldId);
 
     return updatedField;
   }
@@ -311,7 +319,7 @@ export class FieldsService {
       throw new NotFoundException('Field not found');
     }
 
-    return this.prisma.field.update({
+     const updatedField = await this.prisma.field.update({
       where: { id: fieldId },
       data: { assignedAgentId: null },
       include: {
@@ -323,5 +331,7 @@ export class FieldsService {
         },
       },
     });
+    await this.auditService.log(currentUser.id, 'REMOVE', 'FIELD', fieldId);
+     return updatedField;
   }
 }

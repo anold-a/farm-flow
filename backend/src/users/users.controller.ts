@@ -46,7 +46,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: Partial<CreateUserDto> , @CurrentUser() user: AuthenticatedUser,,) {
+  update(@Param('id') id: string, @Body() data: Partial<CreateUserDto> , @CurrentUser() user: AuthenticatedUser) {
     return this.usersService.update(id, data,user);
   }
 
