@@ -23,10 +23,13 @@ import { RecommendationsService } from './recommendations/recommendations.servic
 import { RecommendationsController } from './recommendations/recommendations.controller';
 import { RecommendationsModule } from './recommendations/recommendations.module';
 import { AlertsModule } from './alerts/alerts.module';
+import { AuditService } from './audit/audit.service';
+import { AuditController } from './audit/audit.controller';
+import { AuditModule } from './audit/audit.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule, RecommendationsModule, AlertsModule],
-  controllers: [AppController, WeatherController, AnalyticsController, RecommendationsController],
-  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService, AnalyticsService, RecommendationsService],
+  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule, RecommendationsModule, AlertsModule, AuditModule],
+  controllers: [AppController, WeatherController, AnalyticsController, RecommendationsController, AuditController],
+  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService, AnalyticsService, RecommendationsService, AuditService],
 })
 export class AppModule {}
