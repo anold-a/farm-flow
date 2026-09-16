@@ -48,7 +48,7 @@ export default function UsersPage() {
 
       <UserTable users={users} role={role} />
 
-      {showCreateForm && ( // NEW
+      {showCreateForm && ( 
         <CreateUserForm
           onCreate={createUser}
           onClose={() => setShowCreateForm(false)}

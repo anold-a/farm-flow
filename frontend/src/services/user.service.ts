@@ -35,5 +35,13 @@ export const userService = {
       method: "DELETE",
        token: getAccessToken() ?? undefined,
     });
-  }
+  },
+
+  update(id: string, data: Partial<CreateUserDto>) {
+  return apiFetch<User>(`/users/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    token: getAccessToken() ?? undefined,
+  });
+},
 };
