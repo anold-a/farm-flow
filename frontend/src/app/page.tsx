@@ -1,9 +1,14 @@
-import Image from "next/image";
+
+import HomeNav from "@/components/home/Nav";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+    <>
+    <HomeNav />
+    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans bg-#f5f5f6">
       
     </div>
+    </>
+    
   );
 }
