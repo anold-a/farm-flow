@@ -4,6 +4,7 @@ import { useState } from "react";
 import { User } from "@/types/user";
 import DeleteUserButton from "./DeleteUserButton";
 import { userService } from "@/services/user.service";
+import EditUserForm from "./EditUserForm";
 
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 export default function UserTable({users, role }: Props) {
 
   const [localUsers, setLocalUsers] = useState<User[]>(users);
+   const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const handleDeleteUser = async (id: string | number) => {
     try {
@@ -29,6 +31,14 @@ export default function UserTable({users, role }: Props) {
       alert("Could not delete user. Please try again.");
     }
   };
+
+  const handleUpdateUser = async (id: string, data: Partial<import("@/types/user").CreateUserDto>) => { // NEW
+    const updatedUser = await userService.update(id, data);
+    setLocalUsers((current) =>
+      current.map((u) => (u.id === id ? updatedUser : u)),
+    );
+  };
+
   if (localUsers.length === 0) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
@@ -68,7 +78,15 @@ export default function UserTable({users, role }: Props) {
               </td>
               <td className="p-3">
                 <div className="flex justify-center gap-3">
-    <span>View</span>
+    {role === "ADMIN" && ( 
+                    <button
+                      type="button"
+                      onClick={() => setEditingUser(user)}
+                      className="text-sm font-medium text-blue-600 hover:underline"
+                    >
+                      Edit
+                    </button>
+                  )}
 
     {role === "ADMIN" && (
       <DeleteUserButton
