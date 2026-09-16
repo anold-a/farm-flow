@@ -6,11 +6,15 @@ import UserTable from "@/components/users/UserTable";
 import { useUsers } from "@/hooks/useUsers";
 import CreateUserForm from "@/components/users/CreateUserForm";
 import RoleGuard from "@/components/auth/RoleGuard";
+import { useAuth } from "@/hooks/useAuth";
 
 
 export default function UsersPage() {
   const { users, loading, error,createUser } = useUsers();
   const [showCreateForm, setShowCreateForm] = useState(false); 
+
+  const { user } = useAuth();
+  const role = user?.role ?? "AGENT";
 
   
 
@@ -42,7 +46,7 @@ export default function UsersPage() {
         </button>
       </div>
 
-      <UserTable users={users} />
+      <UserTable users={users} role={role} />
 
       {showCreateForm && ( // NEW
         <CreateUserForm

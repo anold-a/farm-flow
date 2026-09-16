@@ -29,4 +29,11 @@ export const userService = {
       token: getAccessToken() ?? undefined,
     });
   },
+
+  delete(id: string | number): Promise<void>{
+   return apiFetch<void>(`/users/${id}`, {
+      method: "DELETE",
+       token: getAccessToken() ?? undefined,
+    });
+  }
 };
