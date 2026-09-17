@@ -1,3 +1,20 @@
+const fieldTiles = [
+  { name: "North Farm", status: "healthy" },
+  { name: "Green Valley", status: "attention" },
+  { name: "South Ridge", status: "healthy" },
+  { name: "East Basin", status: "critical" },
+  { name: "Lower Creek", status: "healthy" },
+  { name: "Highland", status: "healthy" },
+];
+
+const statusColor: Record<string, string> = {
+  healthy: "bg-emerald-500",
+  attention: "bg-field-gold",
+  critical: "bg-red-500",
+};
+
+
+
 export default function HeroSection() {
   return (
     <>
@@ -32,6 +49,20 @@ export default function HeroSection() {
           Built for cooperatives and agronomy teams managing multiple fields at once.
         </p>
       </div>
+
+      <div className="relative"> 
+          <div className="rounded-2xl border border-field-paper/10 bg-white/3 p-6 backdrop-blur-sm">
+            <p className="mb-4 text-sm text-field-paper/60">Field status, today</p>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {fieldTiles.map((tile) => (
+                <div key={tile.name} className="rounded-lg bg-field-paper/6 p-3">
+                  <span className={`inline-block h-2 w-2 rounded-full ${statusColor[tile.status]}`} />
+                  <p className="mt-2 truncate text-xs text-field-paper/80">{tile.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
     </section>
     </>
   );
