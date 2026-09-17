@@ -1,5 +1,6 @@
 
 import HomeNav from "@/components/home/Nav";
+import HeroSection from "@/components/marketing/HeroSection";
 
 import { Fraunces, IBM_Plex_Sans } from "next/font/google";
 
@@ -14,8 +15,8 @@ export default function Home() {
   return (
     <div className={`${fraunces.variable} ${plexSans.variable} h-full antialiased`}>
     <HomeNav />
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans bg-#f5f5f6">
-      
+    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans ">
+      <HeroSection />
     </div>
     </div>
     
