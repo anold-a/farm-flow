@@ -33,13 +33,13 @@ export default function HeroSection() {
         <div className="mt-10 flex flex-wrap items-center gap-4">
           
           <a  href="/register"
-            className="rounded-md bg-field-gold px-6 py-3 font-body text-sm font-medium text-field-dark transition hover:brightness-95"
+            className="rounded-md bg-field-gold px-6 py-3 font-body text-sm font-medium text-field-dark transition hover:brightness-95 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-field-gold"
           >
             Create your account
           </a>
           
           <a  href="/login"
-            className="text-sm font-medium text-field-paper/80 underline-offset-4 hover:underline"
+            className="text-sm font-medium text-field-paper/80 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-field-sky"
           >
             Sign in
           </a>
