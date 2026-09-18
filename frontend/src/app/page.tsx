@@ -5,6 +5,7 @@ import FeatureStrip from "@/components/marketing/FeatureStrip";
 import SystemFactsSection from "@/components/marketing/SystemFactsSection";
 import MissionVisionSection from "@/components/marketing/MissionVisionSection"; 
 import FAQSection from "@/components/marketing/FAQSection";
+import AboutCreatorSection from "@/components/marketing/AboutCreatorSection";
 
 import { Fraunces, IBM_Plex_Sans } from "next/font/google";
 
@@ -25,6 +26,7 @@ export default function Home() {
       <SystemFactsSection />
       <MissionVisionSection />
       <FAQSection /> 
+      <AboutCreatorSection />
     </div>
     </div>
     
