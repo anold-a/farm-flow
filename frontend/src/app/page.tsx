@@ -2,6 +2,7 @@
 import HomeNav from "@/components/home/Nav";
 import HeroSection from "@/components/marketing/HeroSection";
 import FeatureStrip from "@/components/marketing/FeatureStrip";
+import SystemFactsSection from "@/components/marketing/SystemFactsSection";
 
 import { Fraunces, IBM_Plex_Sans } from "next/font/google";
 
@@ -19,6 +20,7 @@ export default function Home() {
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans ">
       <HeroSection />
       <FeatureStrip />
+      <SystemFactsSection />
     </div>
     </div>
     
