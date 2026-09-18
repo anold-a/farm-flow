@@ -6,6 +6,8 @@ import SystemFactsSection from "@/components/marketing/SystemFactsSection";
 import MissionVisionSection from "@/components/marketing/MissionVisionSection"; 
 import FAQSection from "@/components/marketing/FAQSection";
 import AboutCreatorSection from "@/components/marketing/AboutCreatorSection";
+import GetInTouchSection from "@/components/marketing/GetInTouchSection";
+import Footer from "@/components/marketing/Footer";
 
 import { Fraunces, IBM_Plex_Sans } from "next/font/google";
 
@@ -27,6 +29,8 @@ export default function Home() {
       <MissionVisionSection />
       <FAQSection /> 
       <AboutCreatorSection />
+      <GetInTouchSection />
+      <Footer />
     </div>
     </div>
     

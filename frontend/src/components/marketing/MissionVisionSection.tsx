@@ -26,7 +26,7 @@ const items = [
 
 export default function MissionVisionSection() {
   return (
-    <section className="bg-field-paper/60 py-20">
+    <section className="bg-field-paper/60 py-20 w-full">
       <div className="mx-auto max-w-5xl px-6 lg:px-8">
         <p className="text-sm font-medium text-field-gold">Mission &amp; Vision</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">

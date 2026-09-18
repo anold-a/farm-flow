@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AboutCreatorSection() {
   return (
-    <section id="creator" className="bg-white py-20">
+    <section id="creator" className="bg-white py-20 w-full">
       <div className="mx-auto max-w-5xl px-6 lg:px-8">
         <p className="text-sm font-medium text-field-gold">About the Creator</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
