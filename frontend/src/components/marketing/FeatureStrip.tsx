@@ -49,7 +49,7 @@ export default function FeatureStrip() {
           {feature.detail} 
         </p>
 
-        <div className="mt-12 flex items-center justify-center gap-6"> {/* CHANGED: slideshow controls */}
+        <div className="mt-12 flex items-center justify-center gap-6">
 
           <button
             onClick={previousFeature} 
