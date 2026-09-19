@@ -1,11 +1,25 @@
 "use client";
 
 import { SecurityResponse } from "@/types/security";
+import { useSecurity } from "@/hooks/useSecurity";
 
+
+const permissionLabels: Record<keyof SecurityResponse["permissions"], string> = {
+  manageUsers: "Manage users",
+  manageFields: "Manage fields",
+  viewReports: "View reports",
+  viewAuditLogs: "View audit logs",
+  manageAssignedFields: "Manage assigned fields",
+};
 
 
 export default function SecurityPage() {
-  //data to be added
+
+  const { data, loading, error } = useSecurity();
+
+   if (loading) return <p>Loading security overview...</p>;
+  if (error) return <div className="rounded-lg bg-red-100 p-4 text-red-700">{error}</div>;
+  if (!data) return <div>No security data available.</div>;
 
   return (
     <div className="space-y-6">
