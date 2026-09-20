@@ -27,7 +27,7 @@ const items = [
 export default function MissionVisionSection() {
   return (
     <section id="mission" className="bg-field-paper/60 py-20 w-full">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <p className="text-sm font-medium text-field-gold">Mission &amp; Vision</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
           Why SmartSeason exists, and where it's headed

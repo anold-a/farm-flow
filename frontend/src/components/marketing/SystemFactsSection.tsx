@@ -48,7 +48,7 @@ export default function SystemFactsSection() {
   }, []);
   return (
     <section id="facts" ref={sectionRef} className=" py-20   bg-field-paper/70 w-full">
-      <div className="mx-auto max-w-5xl px-1 lg:px-1">
+      <div className="mx-auto max-w-6xl px-1 lg:px-1">
         <p className="text-sm font-medium text-field-gold">Stats</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
           What SmartSeason is built on

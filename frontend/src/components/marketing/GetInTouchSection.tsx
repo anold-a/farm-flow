@@ -26,7 +26,7 @@ function handleSubmit(e:React.FormEvent<HTMLFormElement>){
 
 return (
     <section id="contact" className="bg-white py-20 w-full">
-      <div className=" mx-auto max-w-5xl px-6 lg:px-8">
+      <div className=" mx-auto max-w-6xl px-6 lg:px-8">
         <p className="text-sm font-medium text-field-gold">Get In Touch</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
           Questions about SmartSeason? Reach out
