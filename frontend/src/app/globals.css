@@ -3,8 +3,6 @@
 @import "tailwindcss";
 
 
-@import "tailwindcss";
-
 @theme {
   --color-field-dark: #14231A;
   --color-field-gold: #D2A44C;

@@ -15,11 +15,11 @@ function FactCard({ target, suffix, label, active }: { target: number; suffix: s
   const count = useCountUp(target, active);
 
   return (
-    <div className="rounded-xl bg-field-dark px-6 py-8 text-center">
+    <div className="rounded-xl bg-white px-6 py-8 text-center">
       <p className="font-display text-3xl text-field-gold">
         {count}{suffix}
       </p>
-      <p className="mt-2 text-xs text-field-paper/70">{label}</p>
+      <p className="mt-2 text-xs text-field-dark/70">{label}</p>
     </div>
   );
 }
@@ -47,7 +47,7 @@ export default function SystemFactsSection() {
     return () => observer.disconnect();
   }, []);
   return (
-    <section id="facts" ref={sectionRef} className=" py-20   bg-field-paper/70 w-full">
+    <section id="facts" ref={sectionRef} className=" py-20   bg-field-paper/60 w-full">
       <div className="mx-auto max-w-6xl px-1 lg:px-1">
         <p className="text-sm font-medium text-field-gold">Stats</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
