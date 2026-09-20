@@ -35,7 +35,7 @@ export default function FeatureStrip() {
   const feature = features[current]; 
 
   return (
-    <section className="mt-0 flex min-h-screen w-full items-center justify-center bg-field-paper px-6 text-field-dark">
+    <section id="features" className="mt-0 flex min-h-screen w-full items-center justify-center bg-field-paper px-6 text-field-dark">
       <div className="w-full max-w-5xl text-center">
         <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-field-dark/50">
           SmartSeason Features

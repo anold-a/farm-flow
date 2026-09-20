@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function HomeNav() {
   return (
-    <nav className="rounded-lg fixed top-2 inset-x-0 z-50 flex h-16 w-[92%] max-w-6xl mx-auto items-center justify-between bg-[#f5f5f6] px-6 text-black shadow-md">
+    <nav className="rounded-lg fixed top-2 inset-x-0 z-50 flex h-16 w-[92%] max-w-6xl mx-auto items-center justify-between bg-white px-6 text-black shadow-md">
      
      <Image
      src="/agri1.svg"
@@ -15,11 +15,14 @@ export default function HomeNav() {
      
      />
   
-  <div className="flex items-center justify-center gap-4 ">
+  <div className="flex items-center justify-center gap-6 mr-10">
     <Link href="/">Mode</Link>
-   <Link href="/features">Features</Link>
-    <Link href="/about">About</Link>
-    <Link href="/faq">FAQ</Link>
+   <Link href="#features">Features</Link>
+    <Link href="#facts">App Facts</Link>
+     <Link href="#mission">Mission&Vision</Link>
+    <Link href="#faqs">FAQ</Link>
+    <Link href="#creator">About</Link>
+    <Link href="#contact">Get In Touch</Link>
   </div>
   
   <UserHome />
