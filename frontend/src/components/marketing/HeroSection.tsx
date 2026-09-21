@@ -1,10 +1,10 @@
-const fieldTiles = [
-  { name: "North Farm", status: "healthy" },
-  { name: "Green Valley", status: "attention" },
-  { name: "South Ridge", status: "healthy" },
-  { name: "East Basin", status: "critical" },
-  { name: "Lower Creek", status: "healthy" },
-  { name: "Highland", status: "healthy" },
+import Link from "next/link";
+
+const statusFacts = [
+  { label: "Soil moisture", status: "healthy" },
+  { label: "Crop stage", status: "healthy" },
+  { label: "Weather risk", status: "attention" },
+  { label: "Active alerts", status: "critical" },
 ];
 
 const statusColor: Record<string, string> = {
@@ -17,48 +17,49 @@ const statusColor: Record<string, string> = {
 
 export default function HeroSection() {
   return (
-    <>
-    <section className="w-full bg-linear-to-br from-[#673de6] via-[#471ea7] to-[#331c74] text-field-paper font-body">
-      <div className="flex flex-col items-center justify-center mx-auto max-w-full px-6 py-24 lg:px-8">
-        <h1 className="font-display   font-medium leading-[1.1] tracking-tight sm:text-6xl">
-          Track field condition <br/> before it becomes a problem.
+    
+    <section className="w-full bg-white px-6 py-24 text-gray-900 lg:px-8">
+      <div className=" mx-auto max-w-9xl rounded-3xl border border-gray-200 bg-emerald-50/40 px-8 py-16 text-center shadow-sm sm:px-16">
+        <h1 className="font-display text-4xl font-medium leading-[1.1] tracking-tight sm:text-6xl">
+          Track field conditions before they become a problem.
         </h1>
 
-        <p className="mt-6 max-w-md text-lg text-field-paper/75">
+        <p className=" mx-auto mt-6 max-w-xl text-lg text-gray-600">
           SmartSeason gives admins and field agents one shared view of soil
-          moisture, crop stage, and weather risk  so nothing gets caught
+          moisture, crop stage and weather risk  so nothing gets caught
           too late.
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           
-          <a  href="/register"
-            className="rounded-md bg-field-gold px-6 py-3 font-body text-sm font-medium text-field-dark transition hover:brightness-95 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-field-gold"
+          <Link  href="/register"
+            className="rounded-md bg-emerald-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-emerald-700 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
           >
-            Get Started
-          </a>
+            Create your free account
+          </Link>
           
         </div>
 
-        <p className="mt-8 text-sm text-field-paper/50">
+        <p className="mt-8 text-sm text-gray-500">
           Built for cooperatives and agronomy teams managing multiple fields at once.
         </p>
       </div>
 
-      <div className="relative"> 
-          <div className="rounded-2xl border border-field-paper/10 bg-white/3 p-6 backdrop-blur-sm">
-            <p className="mb-4 text-sm text-field-paper/60">Field status, today</p>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {fieldTiles.map((tile) => (
-                <div key={tile.name} className="rounded-lg bg-field-paper/6 p-3">
-                  <span className={`inline-block h-2 w-2 rounded-full ${statusColor[tile.status]}`} />
-                  <p className="mt-2 truncate text-xs text-field-paper/80">{tile.name}</p>
+      
+          <div className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4">
+              {statusFacts.map((fact) => (
+                <div key={fact.label} className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                  <span 
+                   className={`h-2 w-2 shrink-0 rounded-full ${statusColor[fact.status]}`}
+              aria-hidden
+                  />
+                  <p className="text-xs text-gray-600">{fact.label}</p>
                 </div>
               ))}
-            </div>
+          
           </div>
-        </div>
+        
     </section>
-    </>
+    
   );
 }
