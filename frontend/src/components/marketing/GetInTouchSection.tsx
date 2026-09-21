@@ -1,5 +1,5 @@
 "use client"
-
+import Link from "next/link"
 import { useState } from "react"
 import Button from "../ui/Button"
 import Input from "../ui/Input"
@@ -27,8 +27,8 @@ function handleSubmit(e:React.FormEvent<HTMLFormElement>){
 return (
     <section id="contact" className="bg-white py-20 w-full">
       <div className=" mx-auto max-w-6xl px-6 lg:px-8">
-        <p className="text-sm font-medium text-field-gold">Get In Touch</p>
-        <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
+        <p className="text-sm font-medium text-emerald-600">Get In Touch</p>
+        <h2 className="mt-2 font-display text-3xl text-gray-900 sm:text-4xl">
           Questions about SmartSeason? Reach out
         </h2>
 
@@ -51,7 +51,7 @@ return (
             />
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-field-dark">
+              <label className="mb-1 block text-sm font-medium text-gray-900">
                 Message
               </label>
               <textarea
@@ -59,8 +59,8 @@ return (
                 value={formData.message}
                 onChange={handleChange}
                 rows={5}
-                placeholder="Tell us what you're thinking..."
-                className="w-full rounded-md border border-field-dark/15 px-4 py-2 text-sm outline-none focus:border-field-gold"
+                placeholder="Yes,you.Tell me what you're thinking..."
+                className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm outline-none focus:border-emerald-600"
               />
             </div>
 
@@ -69,8 +69,8 @@ return (
             </Button>
           </form>
 
-          <div className="rounded-2xl border border-field-dark/10 bg-field-paper/40 p-8">
-            <p className="text-sm text-field-dark/60">Field status, right now</p>
+          <div className="rounded-2xl border border-gray-200 bg-emerald-50/40 p-8">
+            <p className="text-sm text-gray-500">Field status, right now</p>
             <div className="mt-4 grid grid-cols-3 gap-3">
               {["healthy", "healthy", "attention", "healthy", "critical", "healthy"].map(
                 (status, i) => (
@@ -80,7 +80,7 @@ return (
                       status === "healthy"
                         ? "bg-emerald-500/20"
                         : status === "attention"
-                          ? "bg-field-gold/25"
+                          ? "bg-amber-500/25"
                           : "bg-red-500/20"
                     }`}
                   />
@@ -88,9 +88,18 @@ return (
               )}
             </div>
 
-            <div className="mt-8 space-y-3 text-sm text-field-dark/70">
-              <p>@smartseason.app</p>
-              <p> iam-amani</p>
+            <div className="mt-8 space-y-3 text-sm text-gray-700">
+              <Link href="mailto:hello@smartseason.app" className="block hover:text-emerald-600"> 
+                hello@smartseason.app
+              </Link>
+              
+              <Link  href="https://github.com/iam-amani" 
+                target="_blank"
+                rel="noreferrer"
+                className="block hover:text-emerald-600"
+              >
+                github.com/iam-amani
+              </Link>
             </div>
           </div>
         </div>
