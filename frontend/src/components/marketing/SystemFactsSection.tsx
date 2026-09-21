@@ -6,7 +6,7 @@ import { useCountUp } from "@/hooks/useCountUp";
 
 const systemFacts = [
   { value: 7,suffix: "", label: "Crop growth stages tracked, from planting to harvest" },
-  { value: 3,suffix: "", label: "Alert severity levels — INFO, WARNING, CRITICAL" },
+  { value: 3,suffix: "", label: "Alert severity levels: INFO, WARNING, CRITICAL" },
   { value: 2, suffix: "",  label: "Distinct roles, each with its own view of the farm" },
   { value: 24, suffix: "/7", label: "Field conditions logged and monitored continuously" },
 ];
@@ -15,11 +15,11 @@ function FactCard({ target, suffix, label, active }: { target: number; suffix: s
   const count = useCountUp(target, active);
 
   return (
-    <div className="rounded-xl bg-white px-6 py-8 text-center">
-      <p className="font-display text-3xl text-field-gold">
+    <div className="rounded-xl border border-gray-200 bg-white px-6 py-8 text-center">
+      <p className="font-display text-3xl text-emerald-600">
         {count}{suffix}
       </p>
-      <p className="mt-2 text-xs text-field-dark/70">{label}</p>
+      <p className="mt-2 text-xs text-gray-600">{label}</p>
     </div>
   );
 }
@@ -47,15 +47,17 @@ export default function SystemFactsSection() {
     return () => observer.disconnect();
   }, []);
   return (
-    <section id="facts" ref={sectionRef} className=" py-20   bg-field-paper/60 w-full">
-      <div className="mx-auto max-w-6xl px-1 lg:px-1">
-        <p className="text-sm font-medium text-field-gold">Stats</p>
+    <section id="facts" ref={sectionRef} className="w-full bg-emerald-50/40 py-20">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <p className="text-sm font-medium text-emerald-600">Stats</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
           What SmartSeason is built on
         </h2>
         <div className="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {systemFacts.map((fact) => (
-            <FactCard  key={fact.label} target={fact.value} {...fact} active={inView} />
+            <FactCard  key={fact.label}  target={fact.value} suffix={fact.suffix}
+              label={fact.label}
+ active={inView} />
           ))}
         </div>
       </div>
