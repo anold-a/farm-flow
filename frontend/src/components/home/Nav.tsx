@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function HomeNav() {
   return (
-    <nav className="rounded-lg fixed top-2 inset-x-0 z-50 flex h-16 w-[92%] max-w-6xl mx-auto items-center justify-between bg-white px-6 text-black shadow-md">
+    <nav className="rounded-lg fixed top-2 inset-x-0 z-50 flex h-16 w-[94%] max-w-9xl mx-auto items-center justify-between bg-white px-6 text-black shadow-md">
      
      <Image
      src="/agri1.svg"

@@ -18,7 +18,7 @@ const statusColor: Record<string, string> = {
 export default function HeroSection() {
   return (
     
-    <section className="w-full bg-white px-6 py-24 text-gray-900 lg:px-8">
+    <section className="w-full bg-white px-6 pt-19 text-gray-900 lg:px-8">
       <div className=" mx-auto max-w-9xl rounded-3xl border border-gray-200 bg-emerald-50/40 px-8 py-16 text-center shadow-sm sm:px-16">
         <h1 className="font-display text-4xl font-medium leading-[1.1] tracking-tight sm:text-6xl">
           Track field conditions before they become a problem.
