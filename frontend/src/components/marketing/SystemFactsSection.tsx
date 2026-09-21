@@ -47,8 +47,8 @@ export default function SystemFactsSection() {
     return () => observer.disconnect();
   }, []);
   return (
-    <section id="facts" ref={sectionRef} className="w-full bg-emerald-50/40 py-20">
-      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+    <section id="facts" ref={sectionRef} className="w-full bg-emerald-50/40 py-10">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <p className="text-sm font-medium text-emerald-600">Stats</p>
         <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
           What SmartSeason is built on

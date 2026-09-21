@@ -8,7 +8,7 @@ const items = [
     label: "Mission",
     title: "Help farm teams catch problems before they cost a harvest",
     description:
-      "SmartSeason turns scattered field updates into role-based, actionable intelligence — so admins and agents always know which fields need attention, and why.",
+      "SmartSeason turns scattered field updates into role-based, actionable intelligence so admins and agents always know which fields need attention and why.",
   },
   {
     icon: (
@@ -20,35 +20,35 @@ const items = [
     label: "Vision",
     title: "A world where every field is watched, not guessed at",
     description:
-      "Farm management should move from guesswork to real-time awareness — moisture, growth stage, and weather working together to protect every harvest.",
+      "Farm management should move from guesswork to real-time awareness moisture, growth stage and weather working together to protect every harvest.",
   },
 ];
 
 export default function MissionVisionSection() {
   return (
-    <section id="mission" className="bg-field-paper/60 py-20 w-full">
+    <section id="mission" className="bg-emerald-50/40 py-20 w-full">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <p className="text-sm font-medium text-field-gold">Mission &amp; Vision</p>
-        <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
-          Why SmartSeason exists, and where it's headed
+        <p className="text-sm font-medium text-emerald-600">Mission &amp; Vision</p>
+        <h2 className="mt-2 font-display text-3xl text-gray-900 sm:text-4xl">
+          Why SmartSeason exists and where it's headed
         </h2>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           {items.map((item) => (
             <div
               key={item.label}
-              className="rounded-2xl border border-field-dark/10 bg-white p-8"
+              className="rounded-2xl border border-gray-200 bg-white p-8"
             >
-              <div className="flex items-center gap-2 text-field-gold">
+              <div className="flex items-center gap-2 text-emerald-600">
                 {item.icon}
                 <span className="text-sm font-medium">{item.label}</span>
               </div>
 
-              <h3 className="mt-4 font-display text-xl text-field-dark">
+              <h3 className="mt-4 font-display text-xl text-gray-900">
                 {item.title}
               </h3>
 
-              <p className="mt-3 text-sm text-field-dark/70">
+              <p className="mt-3 text-sm text-gray-600">
                 {item.description}
               </p>
             </div>
