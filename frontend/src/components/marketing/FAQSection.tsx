@@ -36,13 +36,13 @@ export default function FAQSection() {
   return (
     <section id="faqs" className="bg-white py-20 w-full">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <p className="text-sm font-medium text-field-gold">FAQs</p>
-        <h2 className="mt-2 font-display text-3xl text-field-dark sm:text-4xl">
+        <p className="text-sm font-medium text-emerald-600">FAQs</p>
+        <h2 className="mt-2 font-display text-3xl text-gray-900 sm:text-4xl">
           Questions about how SmartSeason works
         </h2>
 
         <div className="relative mt-10">
-          <div className="absolute left-0 top-0 h-full w-[3px] rounded-full bg-field-dark/10" aria-hidden />
+          <div className="absolute left-0 top-0 h-full w-0.75 rounded-full bg-gray-200" aria-hidden />
 
           <div className="space-y-3 pl-6">
             {faqs.map((faq, index) => {
@@ -51,7 +51,7 @@ export default function FAQSection() {
               return (
                 <div
                   key={faq.question}
-                  className="rounded-lg border border-field-dark/10 bg-field-paper/40"
+                  className="rounded-lg border border-gray-200 bg-gray-50"
                 >
                   <button
                     type="button"
@@ -59,20 +59,21 @@ export default function FAQSection() {
                     className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                     aria-expanded={isOpen}
                   >
-                    <span className="font-medium text-field-dark">
+                    <span className="font-medium text-gray-900">
                       {faq.question}
                     </span>
                     <span
-                      className={`shrink-0 text-field-dark/50 transition-transform ${
+                      className={`shrink-0 text-gray-400 transition-transform ${
                         isOpen ? "rotate-180" : ""
                       }`}
+                       aria-hidden
                     >
                       ⌄
                     </span>
                   </button>
 
                   {isOpen && (
-                    <p className="px-5 pb-4 text-sm text-field-dark/70">
+                    <p className="px-5 pb-4 text-sm text-gray-600">
                       {faq.answer}
                     </p>
                   )}
