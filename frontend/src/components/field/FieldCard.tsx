@@ -23,7 +23,7 @@ export default function FieldCard({
     <Card>
       <div className="space-y-4">
         <div>
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-display text-gray-900">
             {field.name}
           </h2>
 
