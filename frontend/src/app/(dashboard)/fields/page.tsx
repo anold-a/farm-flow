@@ -71,11 +71,11 @@ export default function FieldsPage() {
 
         <div>
 
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-display text-gray-900">
             Fields
           </h1>
 
-          <p className="text-gray-500">
+          <p className="text-gray-600">
             Manage registered farm fields.
           </p>
 
@@ -97,7 +97,7 @@ export default function FieldsPage() {
       />
 
       {loading && (
-        <p>Loading fields...</p>
+        <p className="text-gray-500">Loading fields...</p>
       )}
 
       {error && (
