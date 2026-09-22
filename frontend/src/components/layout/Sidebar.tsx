@@ -25,19 +25,31 @@ export default function Sidebar() {
 const { criticalCount } = useAlerts();
 const pathname = usePathname();
 
-const fieldsLink =
-  role === "ADMIN"
-    ? { href: "/fields", label: "Fields", icon: Sprout }
-    : { href: "/my-fields", label: "My Fields", icon: Sprout };
+const navigationLinks = [
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    
+    
+    role === "ADMIN"
+      ? { href: "/fields", label: "Fields", icon: Sprout }
+      : { href: "/my-fields", label: "My Fields", icon: Sprout },
+
+    { href: "/weather", label: "Weather", icon: CloudSun },
+    { href: "/reports", label: "Reports", icon: BarChart3 },
+
+    
+    ...(role === "ADMIN" 
+      ? [
+          { href: "/users", label: "Users", icon: Users },
+          { href: "/analytics", label: "Analytics", icon: LineChart },
+          { href: "/audit-logs", label: "Audit Logs", icon: FileSpreadsheet },
+        ]
+      : []
+    ),
+
+    { href: "/settings", label: "Settings", icon: Settings },
+  ];
 
 
-const adminLinks = [
-  { href: "/users", label: "Users", icon: Users },
-  { href: "/analytics", label: "Analytics", icon: LineChart },
-  { href: "/audit-logs", label: "Audit Logs", icon: FileSpreadsheet },
-];
-
-const FieldsIcon = fieldsLink.icon;
 
 
 function isActive(href: string) { 
@@ -56,7 +68,7 @@ function isActive(href: string) {
       <Logo />
 
       <nav className="mt-8 flex flex-col gap-4">
-        {navItems.slice(0, 1).map((item) => {
+        {navigationLinks.map((item) => {
           const Icon = item.icon;
           return (
             <Link key={item.href} href={item.href} className={linkClass(item.href)}>
@@ -65,32 +77,6 @@ function isActive(href: string) {
             </Link>
           );
         })}
-
-        <Link href={fieldsLink.href} className={linkClass(fieldsLink.href)}>
-          <span aria-hidden><FieldsIcon className="w-5 h-5" /></span>
-          {fieldsLink.label}
-        </Link>
-
-        {navItems.slice(1).map((item) => { 
-          const Icon = item.icon;
-          return(
-          <Link key={item.href} href={item.href} className={linkClass(item.href)}>
-            <span aria-hidden><Icon className="w-5 h-5" /></span>
-            {item.label}
-          </Link>
-          );
-          })}
-
-        {role === "ADMIN" &&
-          adminLinks.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link key={item.href} href={item.href} className={linkClass(item.href)}>
-                <span aria-hidden><Icon className="w-5 h-5" /></span>
-                {item.label}
-              </Link>
-            );
-          })}
 
         <Link href="/notifications" className={linkClass("/notifications")}>
           <span aria-hidden>
