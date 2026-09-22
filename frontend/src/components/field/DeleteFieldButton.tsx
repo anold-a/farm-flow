@@ -1,8 +1,19 @@
 import Button from "@/components/ui/Button";
 
-export default function DeleteFieldButton() {
+interface Props {
+  fieldId: string;
+  onDelete: (id: string) => void;
+}
+
+export default function DeleteFieldButton({ fieldId, onDelete }: Props) {
+  function handleDelete() {
+    const confirmed = confirm("Are you sure you want to delete this field?");
+    if (confirmed) {
+      onDelete(fieldId);
+    }
+  }
   return (
-    <Button>
+    <Button onClick={handleDelete}>
       Delete
     </Button>
   );

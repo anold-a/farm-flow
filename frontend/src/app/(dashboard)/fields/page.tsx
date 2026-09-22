@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import {useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 import Button from "@/components/ui/Button";
@@ -11,6 +11,7 @@ import FieldEmptyState from "@/components/field/FieldEmptyState";
 
 import { useFields } from "@/hooks/useFields";
 import { useAuth } from "@/hooks/useAuth";
+import { fieldService } from "@/services/field.service";
 
 export default function FieldsPage() {
   const {
@@ -18,6 +19,7 @@ export default function FieldsPage() {
     loading,
     error,
   } = useFields();
+   const [localFields, setLocalFields] = useState(fields);
 
 
   const { user } = useAuth();
@@ -27,7 +29,7 @@ export default function FieldsPage() {
     useState("");
 
   const filteredFields = useMemo(() => {
-    return fields.filter((field) => {
+    return localFields.filter((field) => {
       const keyword =
         search.toLowerCase();
 
@@ -43,7 +45,24 @@ export default function FieldsPage() {
           .includes(keyword)
       );
     });
-  }, [fields, search]);
+  }, [localFields, search]);
+
+
+  
+
+   useEffect(() => { 
+    setLocalFields(fields);
+  }, [fields]);
+
+  async function handleDeleteField(id: string) { 
+    try {
+      await fieldService.delete(id);
+      setLocalFields((current) => current.filter((f) => f.id !== id));
+    } catch (err) {
+      console.error("Failed to delete field:", err);
+      alert("Could not delete field. Please try again.");
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -95,7 +114,7 @@ export default function FieldsPage() {
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
         {filteredFields.map((field) => (
-          <FieldCard key={field.id} field={field} role={role} />
+          <FieldCard key={field.id} field={field} role={role} onDelete={handleDeleteField} />
         ))}
 
       </div>

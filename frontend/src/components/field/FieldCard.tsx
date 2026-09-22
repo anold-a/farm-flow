@@ -9,6 +9,7 @@ import { Field } from "@/types/field";
 interface Props {
   field: Field;
   role: "ADMIN" | "AGENT";
+  onDelete: (id: string) => void
 }
 
 
@@ -16,6 +17,7 @@ interface Props {
 export default function FieldCard({
    field,
   role,
+  onDelete
 }: Props) {
   return (
     <Card>
@@ -60,7 +62,7 @@ export default function FieldCard({
           </Link>
 
           {role === "ADMIN" && (
-            <DeleteFieldButton />
+            <DeleteFieldButton fieldId={field.id} onDelete={onDelete}/>
           )}
         </div>
       </div>
