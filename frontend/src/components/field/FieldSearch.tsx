@@ -16,8 +16,10 @@ export default function FieldSearch({
       value={value}
       onChange={(e) =>
         onChange(e.target.value)
+        
       }
-      className="w-full rounded-lg border p-3"
+      aria-label="Search fields"
+      className="w-full rounded-md border border-gray-300 text-sm outline-none focus:border-emerald-600 p-3"
     />
   );
 }

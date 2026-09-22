@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 export default function FieldEmptyState() {
   return (
     <div className="rounded-lg border border-dashed p-10 text-center">
-      <h2 className="text-2xl font-semibold">
+      <h2 className="text-2xl font-display text-gray-900">
         No fields found
       </h2>
 
