@@ -1,4 +1,5 @@
 import { CurrentWeather } from "@/types/weather";
+import Card from "@/components/ui/Card";
 
 interface Props {
   weather: CurrentWeather;
@@ -9,36 +10,26 @@ export default function WeatherStats({
 }: Props) {
   return (
     <div className="grid gap-4 md:grid-cols-3">
-
-      <div className="rounded-xl border bg-white p-5 shadow-sm">
+ 
+      <Card className="p-5">
         <p className="text-sm text-gray-500">
           Humidity
         </p>
 
-        <h2 className="mt-2 text-3xl font-bold">
+        <p className="mt-2 font-display text-3xl  text-emerald-600">
           {weather.humidity}%
-        </h2>
-      </div>
-
-      <div className="rounded-xl border bg-white p-5 shadow-sm">
-        <p className="text-sm text-gray-500">
-          Wind Speed
         </p>
+      </Card>
 
-        <h2 className="mt-2 text-3xl font-bold">
-          {weather.windSpeed} km/h
-        </h2>
-      </div>
+      <Card className="p-5">
+        <p className="text-sm text-gray-500">Wind Speed</p>
+        <p className="mt-2 font-display text-3xl text-emerald-600">{weather.windSpeed} km/h</p> 
+      </Card>
 
-      <div className="rounded-xl border bg-white p-5 shadow-sm">
-        <p className="text-sm text-gray-500">
-          Rainfall
-        </p>
-
-        <h2 className="mt-2 text-3xl font-bold">
-          {weather.rainfall} mm
-        </h2>
-      </div>
+      <Card className="p-5">
+        <p className="text-sm text-gray-500">Rainfall</p>
+        <p className="mt-2 font-display text-3xl text-emerald-600">{weather.rainfall} mm</p> 
+      </Card>
 
     </div>
   );
