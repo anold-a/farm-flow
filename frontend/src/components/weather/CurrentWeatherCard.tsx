@@ -1,4 +1,5 @@
 import { CurrentWeather } from "@/types/weather";
+import Card from "@/components/ui/Card";
 
 interface Props {
   weather: CurrentWeather;
@@ -8,12 +9,12 @@ export default function CurrentWeatherCard({
   weather,
 }: Props) {
   return (
-    <div className="rounded-xl border bg-white p-6 shadow-sm">
-      <h2 className="text-2xl font-bold">
+    <Card>
+      <h3 className="text-2xl font-display text-gray-900">
         Current Weather
-      </h2>
+      </h3>
 
-      <p className="mt-2 text-gray-500">
+      <p className="mt-1 text-gray-500">
         {weather.location}
       </p>
 
@@ -23,7 +24,7 @@ export default function CurrentWeatherCard({
             Temperature
           </p>
 
-          <p className="text-3xl font-bold">
+          <p className="text-3xl font-display text-emerald-600">
             {weather.temperature}°C
           </p>
         </div>
@@ -33,7 +34,7 @@ export default function CurrentWeatherCard({
             Condition
           </p>
 
-          <p className="text-lg font-semibold">
+          <p className="text-lg font-semibold text-gray-900">
             {weather.condition}
           </p>
         </div>
@@ -43,7 +44,7 @@ export default function CurrentWeatherCard({
             Humidity
           </p>
 
-          <p>{weather.humidity}%</p>
+          <p className="text-gray-900">{weather.humidity}%</p>
         </div>
 
         <div>
@@ -51,7 +52,7 @@ export default function CurrentWeatherCard({
             Wind Speed
           </p>
 
-          <p>{weather.windSpeed} km/h</p>
+          <p className="text-gray-900">{weather.windSpeed} km/h</p>
         </div>
 
         <div>
@@ -59,9 +60,9 @@ export default function CurrentWeatherCard({
             Rainfall
           </p>
 
-          <p>{weather.rainfall} mm</p>
+          <p className="text-gray-900">{weather.rainfall} mm</p>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
