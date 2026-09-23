@@ -2,6 +2,7 @@
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { FieldStatusBreakdown } from "@/types/analytics";
+import Card from "@/components/ui/Card";
 
 interface Props {
   data: FieldStatusBreakdown;
@@ -15,17 +16,17 @@ export default function FieldStatusChart({ data }: Props) {
   ];
 
   return (
-    <div className="rounded-xl border bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-xl font-semibold">Field Status</h2>
+    <Card>
+      <h2 className="mb-4 text-xl font-display text-gray-900">Field Status</h2>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="status" />
-          <YAxis allowDecimals={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb"  />
+          <XAxis dataKey="status" stroke="#6b7280"  />
+          <YAxis allowDecimals={false} stroke="#6b7280"  />
           <Tooltip />
-          <Bar dataKey="count" fill="#16a34a" />
+          <Bar dataKey="count" fill="#059669"/>
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </Card>
   );
 }
