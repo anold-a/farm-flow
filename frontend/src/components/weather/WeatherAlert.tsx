@@ -5,8 +5,8 @@ interface Props {
 }
 
 const alertStyles = {
-  LOW: "bg-yellow-50 border-yellow-300 text-yellow-700",
-  MEDIUM: "bg-orange-50 border-orange-400 text-orange-700",
+  LOW: "bg-amber-50 border-amber-200 text-amber-700",
+  MEDIUM: "bg-amber-50 border-amber-400 text-amber-800",
   HIGH: "bg-red-50 border-red-500 text-red-700",
 };
 
@@ -17,7 +17,7 @@ export default function WeatherAlert({
     <div
       className={`rounded-lg border p-4 ${alertStyles[alert.severity]}`}
     >
-      <h3 className="font-semibold">
+      <h3 className="font-display font-semibold">
         {alert.title}
       </h3>
 
