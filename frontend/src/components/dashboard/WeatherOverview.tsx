@@ -19,7 +19,7 @@ export default function WeatherOverview({
 
       <div className="flex items-center justify-between">
 
-        <h2 className="text-xl font-semibold">
+        <h2 className="text-xl font-display text-gray-900">
           Weather Overview
         </h2>
 
@@ -31,43 +31,19 @@ export default function WeatherOverview({
 
       </div>
 
-      <div className="mt-6 grid grid-cols-3 gap-6">
+      <div className="mt-6 flex items-end justify-between">
 
         <div>
-
           <p className="text-sm text-gray-500">
             Temperature
           </p>
-
-          <h3 className="text-3xl font-bold">
+          <h3 className="mt-1 font-display text-5xl text-emerald-600">
             {temperature}°C
           </h3>
-
         </div>
-
-        <div>
-
-          <p className="text-sm text-gray-500">
-            Condition
-          </p>
-
-          <h3 className="text-xl font-semibold">
-            {condition}
-          </h3>
-
-        </div>
-
-        <div>
-
-          <p className="text-sm text-gray-500">
-            Humidity
-          </p>
-
-          <h3 className="text-3xl font-bold">
-            {humidity}%
-          </h3>
-
-        </div>
+         <p className="text-right text-sm text-gray-600"> 
+          {condition}, {humidity}% humidity
+        </p>
 
       </div>
 
