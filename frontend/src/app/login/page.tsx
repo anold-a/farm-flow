@@ -28,7 +28,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <AuthCard title="SmartSeason Login">
+      <AuthCard title ="Sign in to your account">
         <LoginForm />
       </AuthCard>
     </AuthLayout>
