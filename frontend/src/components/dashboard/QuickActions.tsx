@@ -9,42 +9,23 @@ export default function QuickActions({
   role,
 }: Props) {
   return (
-    <section className="rounded-xl border bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-xl font-semibold">
-        Quick Actions
-      </h2>
+    <section className="flex flex-wrap items-center gap-3 rounded-2xl border border-gray-200 bg-white px-6 py-4">
+      <span className="mr-2 text-sm font-medium text-gray-500">Quick actions</span> 
 
-      <div className="flex flex-wrap gap-3">
         {role === "ADMIN" && (
           <>
-            <Link href="/users">
-              <Button>+ Add User</Button>
-            </Link>
-
-            <Link href="/fields/create">
-              <Button>+ Add Field</Button>
-            </Link>
-
-            <Link href="/reports">
-              <Button>View Reports</Button>
-            </Link>
+            <Link href="/users"><Button>Add User</Button></Link>
+            <Link href="/fields/create"><Button>Add Field</Button></Link>
+            <Link href="/reports"><Button>View Reports</Button></Link>
           </>
         )}
 
         {role === "AGENT" && (
-          <Link href="/my-fields">
-            <Button>My Fields</Button>
-          </Link>
+          <Link href="/my-fields"><Button>My Fields</Button></Link>
         )}
 
-        <Link href="/weather">
-          <Button>Weather</Button>
-        </Link>
-
-        <Link href="/notifications">
-          <Button>View Notifications</Button>
-        </Link>
-      </div>
+        <Link href="/weather"><Button>Weather</Button></Link>
+        <Link href="/notifications"><Button>View Notifications</Button></Link>
     </section>
   );
 }
