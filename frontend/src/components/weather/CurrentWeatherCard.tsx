@@ -1,5 +1,6 @@
 import { CurrentWeather } from "@/types/weather";
-import Card from "@/components/ui/Card";
+import { Section } from "lucide-react";
+
 
 interface Props {
   weather: CurrentWeather;
@@ -9,60 +10,17 @@ export default function CurrentWeatherCard({
   weather,
 }: Props) {
   return (
-    <Card>
-      <h3 className="text-2xl font-display text-gray-900">
-        Current Weather
-      </h3>
+    <section className="rounded-2xl border border-gray-200 bg-emerald-50/40 px-8 py-8">
+      <p className="text-sm text-gray-600">{weather.location}</p>
 
-      <p className="mt-1 text-gray-500">
-        {weather.location}
-      </p>
-
-      <div className="mt-6 grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-sm text-gray-500">
-            Temperature
-          </p>
-
-          <p className="text-3xl font-display text-emerald-600">
-            {weather.temperature}°C
-          </p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">
-            Condition
-          </p>
-
-          <p className="text-lg font-semibold text-gray-900">
-            {weather.condition}
-          </p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">
-            Humidity
-          </p>
-
-          <p className="text-gray-900">{weather.humidity}%</p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">
-            Wind Speed
-          </p>
-
-          <p className="text-gray-900">{weather.windSpeed} km/h</p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500">
-            Rainfall
-          </p>
-
-          <p className="text-gray-900">{weather.rainfall} mm</p>
-        </div>
+      <div className="mt-2 flex items-end gap-4">
+        <p className="font-display text-6xl text-emerald-700">{weather.temperature}°C</p> 
+        <p className="pb-2 text-lg text-gray-700">{weather.condition}</p> 
       </div>
-    </Card>
+
+      <p className="mt-4 text-sm text-gray-600"> 
+        {weather.humidity}% humidity · {weather.windSpeed} km/h wind · {weather.rainfall} mm rainfall
+      </p>
+    </section>
   );
 }
