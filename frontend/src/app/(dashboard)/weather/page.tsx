@@ -4,12 +4,12 @@ import CurrentWeatherCard from "@/components/weather/CurrentWeatherCard";
 import ForecastGrid from "@/components/weather/ForecastGrid";
 import WeatherAlert from "@/components/weather/WeatherAlert";
 import WeatherSkeleton from "@/components/weather/WeatherSkeleton";
-import WeatherStats from "@/components/weather/WeatherStats";
+
 
 import { useWeather } from "@/hooks/useWeather";
 
 export default function WeatherPage() {
-  const { fieldWeatherList, loading, error } = useWeather(); // CHANGED — was { weather, loading, error }
+  const { fieldWeatherList, loading, error } = useWeather(); 
 
   if (loading) {
     return <WeatherSkeleton />;
