@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useState } from "react"
 import Button from "../ui/Button"
 import Input from "../ui/Input"
+import Image from "next/image"
 
 
 export default function GetInTouchSection(){
@@ -70,26 +71,18 @@ return (
           </form>
 
           <div className="rounded-2xl border border-gray-200 bg-emerald-50/40 p-8">
-            <p className="text-sm text-gray-500">Field status, right now</p>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {["healthy", "healthy", "attention", "healthy", "critical", "healthy"].map(
-                (status, i) => (
-                  <div
-                    key={i}
-                    className={`h-14 rounded-lg ${
-                      status === "healthy"
-                        ? "bg-emerald-500/20"
-                        : status === "attention"
-                          ? "bg-amber-500/25"
-                          : "bg-red-500/20"
-                    }`}
-                  />
-                ),
-              )}
-            </div>
+           
+            <div className="relative w-100 h-100 shrink-0 sm:w-80 sm:h-50">
+          <Image 
+            src="/harvest.svg" 
+            alt="Customer care support graphic"
+            width={1680}
+            height={1680}
+          />
+        </div>
 
-            <div className="mt-8 space-y-3 text-sm text-gray-700">
-              <Link href="mailto:hello@smartseason.app" className="block hover:text-emerald-600"> 
+            <div className="mt-8  flex  space-y-3 text-sm text-gray-700">
+              <Link href="mailto:hello@smartseason.app" className="block mr-20 hover:text-emerald-600"> 
                 hello@smartseason.app
               </Link>
               
