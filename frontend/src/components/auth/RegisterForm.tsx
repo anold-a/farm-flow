@@ -26,6 +26,8 @@ export default function RegisterForm() {
   const [confirmPassword, setConfirmPassword] =
     useState("");
 
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+
   const [loading, setLoading] =
     useState(false);
 
@@ -61,6 +63,11 @@ export default function RegisterForm() {
       return;
     }
 
+    if (!acceptedTerms) { 
+      setError("You must accept the terms and conditions.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -85,10 +92,10 @@ export default function RegisterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4"
+      className="space-y-5"
     >
       <Input
-      label="name"
+      label="Full Name"
         placeholder="Full Name"
         value={fullName}
         onChange={(e) =>
@@ -97,7 +104,7 @@ export default function RegisterForm() {
       />
 
       <Input
-      label="email"
+      label="Email Address"
         type="email"
         placeholder="Email Address"
         value={email}
@@ -107,7 +114,7 @@ export default function RegisterForm() {
       />
 
       <Input
-      label="password"
+      label="Password"
         type="password"
         placeholder="Password"
         value={password}
@@ -117,7 +124,7 @@ export default function RegisterForm() {
       />
 
       <Input
-      label="password"
+      label="Confirm Password"
         type="password"
         placeholder="Confirm Password"
         value={confirmPassword}
@@ -128,6 +135,22 @@ export default function RegisterForm() {
         }
       />
 
+      <label className="flex items-start gap-2 text-sm text-gray-600"> 
+        <input
+          type="checkbox"
+          checked={acceptedTerms}
+          onChange={(e) => setAcceptedTerms(e.target.checked)}
+          className="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600"
+        />
+        <span>
+          I have read and accept the{" "}
+          <Link href="/terms" className="text-emerald-600 underline-offset-2 hover:underline">
+            terms and conditions
+          </Link>
+          .
+        </span>
+      </label>
+
       {error && (
         <p className="text-sm text-red-600">
           {error}
@@ -137,13 +160,14 @@ export default function RegisterForm() {
       <Button
         type="submit"
         disabled={loading}
+        className="w-full"
       >
         {loading
           ? "Creating Account..."
           : "Create Account"}
       </Button>
 
-      <p className="text-center text-sm">
+      <p className="text-center text-sm text-gray-600">
         Already have an account?{" "}
         <Link
           href="/login"
