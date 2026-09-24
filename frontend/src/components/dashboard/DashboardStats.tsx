@@ -12,40 +12,36 @@ export default function DashboardStats({
   statistics,
   role,
 }: Props) {
+
+  const ledgerRows = [ 
+    ...(role === "ADMIN" ? [{ label: "Users", value: statistics.totalUsers }] : []),
+    ...(role === "ADMIN" ? [{ label: "Agents", value: statistics.totalAgents }] : []),
+    { label: "Completed fields", value: statistics.completedFields },
+    { label: "Field updates", value: statistics.totalFieldUpdates },
+  ];
   return (
-    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6"> 
+        <p className="text-sm text-gray-500">Active Fields</p>
+        <p className="mt-2 font-display text-5xl text-emerald-600">{statistics.activeFields}</p>
+        <p className="mt-2 text-sm text-gray-500">out of {statistics.totalFields} total</p>
+      </div>
 
-      {role === "ADMIN" && ( 
-        <DashboardCard title="Users" value={statistics.totalUsers} />
-      )}
+      <div className="rounded-2xl border border-gray-200 bg-white p-6"> 
+        <div className="divide-y divide-gray-100">
+          {ledgerRows.map((row) => (
+            <div key={row.label} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+              <span className="text-sm text-gray-600">{row.label}</span>
+              <span className="font-display text-xl text-gray-900">{row.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-       {role === "ADMIN" && (
-        <DashboardCard title="Agents" value={statistics.totalAgents} />
-      )}
-
-      <DashboardCard
-        title="Fields"
-        value={statistics.totalFields}
-      />
-
-      <DashboardCard
-        title="Completed Fields"
-        value={statistics.completedFields}
-      />
-
-      <DashboardCard
-        title="Active Fields"
-        value={statistics.activeFields}
-      />
-
+      <div className="lg:col-span-2"> 
+        <CropStageBreakdown cropStats={statistics.cropStats} /> 
+      </div>
       
-
-      <DashboardCard 
-        title="Field Updates"
-        value={statistics.totalFieldUpdates}
-      />
-
-       <CropStageBreakdown cropStats={statistics.cropStats} />
 
     </div>
   );
