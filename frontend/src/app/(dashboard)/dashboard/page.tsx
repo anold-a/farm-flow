@@ -56,7 +56,7 @@ export default function DashboardPage() {
 
   if (!dashboard) {
     return (
-      <div className="rounded-lg border border-dashed p-8 text-center">
+      <div className="rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-500">
         Dashboard information is unavailable.
       </div>
     );
@@ -67,39 +67,27 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
 
-      <WelcomeBanner />
+      <WelcomeBanner stats={dashboard.stats} role={role}  />
 
-      <DashboardStats
-        statistics={dashboard.stats}
-        role={role}
-      />
+    <DashboardStats statistics={dashboard.stats} role={role} />
 
       <div className="grid gap-8 lg:grid-cols-2">
-
-        {firstFieldWeather ? ( 
+        {firstFieldWeather ? (
           <WeatherOverview
             temperature={firstFieldWeather.current.temperature}
             humidity={firstFieldWeather.current.humidity}
             condition={firstFieldWeather.current.condition}
           />
         ) : (
-          <div className="rounded-xl border border-dashed p-6 text-center text-gray-500">
+          <div className="rounded-2xl border border-dashed border-gray-300 p-6 text-center text-gray-500"> 
             No fields available for a weather summary.
           </div>
         )}
 
-        <RecentUpdates
-          activities={dashboard.activities}
-        />
-
-        
-
-
+        <RecentUpdates activities={dashboard.activities} />
       </div>
 
-      {analytics && (
-  <MoistureTrendChart data={analytics.moistureTrend} />
-)}
+      {analytics && <MoistureTrendChart data={analytics.moistureTrend} />}
 
       <QuickActions role={role} />
 
