@@ -20,7 +20,7 @@ export default function DashboardPage() {
   if (loading) return <p className="text-slate-500">Loading dashboard...</p>;
 
   return (
-    <div>
+    <div >
      
 
       <div className="grid grid-cols-3 gap-6">

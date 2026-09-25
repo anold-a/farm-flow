@@ -17,10 +17,10 @@ export default function DashboardLayout({
     <div className="flex min-h-screen bg-slate-950 text-slate-200">
       <Sidebar/>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 bg-slate-900  flex-col">
         <Navbar />
 
-        <main className="flex-1 bg-gray-50 p-6">
+        <main className="flex-1 bg-slate-950  p-6">
           {children}
         </main>
       </div>
