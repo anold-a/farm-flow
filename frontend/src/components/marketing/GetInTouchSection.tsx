@@ -41,6 +41,7 @@ return (
               value={formData.fullName}
               onChange={handleChange}
               placeholder="Your name"
+              className="bg-slate-800 border-slate-700 text-gray-900 placeholder-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20"
             />
             <Input
               label="Email"
@@ -49,6 +50,7 @@ return (
               value={formData.email}
               onChange={handleChange}
               placeholder="name@example.com"
+              className="bg-slate-800 border-slate-700 text-gray-900 placeholder-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20"
             />
 
             <div>
@@ -61,7 +63,7 @@ return (
                 onChange={handleChange}
                 rows={5}
                 placeholder="Yes,you.Tell me what you're thinking..."
-                className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm outline-none focus:border-emerald-600"
+                className="w-full rounded-md border bg-slate-800 px-4 py-2 text-sm outline-none focus:border-emerald-600"
               />
             </div>
 

@@ -71,11 +71,11 @@ export default function FieldsPage() {
 
         <div>
 
-          <h1 className="text-3xl font-display text-gray-900">
+          <h1 className="text-3xl font-display text-white">
             Fields
           </h1>
 
-          <p className="text-gray-600">
+          <p className="text-white">
             Manage registered farm fields.
           </p>
 
@@ -111,7 +111,7 @@ export default function FieldsPage() {
           <FieldEmptyState />
       )}
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full">
 
         {filteredFields.map((field) => (
           <FieldCard key={field.id} field={field} role={role} onDelete={handleDeleteField} />

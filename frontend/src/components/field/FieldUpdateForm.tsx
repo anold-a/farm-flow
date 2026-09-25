@@ -128,6 +128,7 @@ export default function FieldUpdateForm({
   }
 
   return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 md:p-8 shadow-xl backdrop-blur-sm max-w-3xl mx-auto w-full">
     <form
       onSubmit={handleSubmit}
       className="space-y-6"
@@ -173,6 +174,7 @@ export default function FieldUpdateForm({
         onChange={(e) =>
           setMoisture(e.target.value)
         }
+        className="bg-slate-800 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20"
       />
 
       <Input
@@ -182,6 +184,7 @@ export default function FieldUpdateForm({
         onChange={(e) =>
           setTemperature(e.target.value)
         }
+        className="bg-slate-800 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20"
       />
 
       <Input
@@ -191,6 +194,7 @@ export default function FieldUpdateForm({
         onChange={(e) =>
           setHumidity(e.target.value)
         }
+        className="bg-slate-800 border-slate-700 text-white placeholder-slate-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20"
       />
 
       <div className="space-y-2">
@@ -217,5 +221,6 @@ export default function FieldUpdateForm({
           : "Submit Update"}
       </Button>
     </form>
+    </div>
   );
 }

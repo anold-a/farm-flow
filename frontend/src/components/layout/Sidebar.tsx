@@ -70,7 +70,7 @@ function isActive(href: string) {
     }`;
   }
   return (
-    <aside className="sticky top-0 self-start  w-64 shrink-0 border-r border-slate-800 bg-slate-900 p-6 flex flex-col justify-between overflow-y-auto">
+    <aside className="sticky top-0 h-screen  w-64 shrink-0 border-r border-slate-800 bg-slate-900 p-6 flex flex-col  overflow-y-auto">
       <div className="flex items-center gap-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-md bg-emerald-500 text-sm font-display text-slate-900">S</div>
         <span className="font-display text-lg text-slate-100">SmartSeason</span>
