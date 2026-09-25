@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { alertService } from "@/services/alert.service";
 import { Alert } from "@/types/alert";
 
+
 export function useAlerts() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
