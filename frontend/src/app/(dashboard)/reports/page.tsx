@@ -49,7 +49,7 @@ async function handleExportCsv() {
 
   if (error) {
     return (
-      <div className="rounded-lg bg-red-100 p-4 text-red-700">
+      <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700 shadow-sm animate-fade-in">
         {error}
       </div>
     );
@@ -62,17 +62,17 @@ async function handleExportCsv() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-100 pb-5">
 
         <div>
 
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
             Reports & Analytics
           </h1>
 
-          <p className="text-gray-500">
+          <p className="text-sm text-gray-500 mt-1">
             Farm performance reports.
           </p>
 
@@ -97,14 +97,14 @@ async function handleExportCsv() {
         onPeriodChange={setPeriod}
       />
 
-      <CropReport
-        reports={reports.crops}
-        statistics={reports.statistics}
-      />
-
-      <WeatherReport
-        reports={reports.weather}
-      />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
+        <div className="lg:col-span-2">
+          <CropReport reports={reports.crops} statistics={reports.statistics} />
+        </div>
+        <div className="lg:col-span-1">
+          <WeatherReport reports={reports.weather} />
+        </div>
+      </div>
 
       {role === "ADMIN" && (
         <AgentReport

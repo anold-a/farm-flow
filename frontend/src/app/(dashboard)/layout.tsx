@@ -14,7 +14,7 @@ export default function DashboardLayout({
   console.log("[DashboardLayout] rendering");
   return (
     <ProtectedRoute>
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-slate-950 text-slate-200">
       <Sidebar/>
 
       <div className="flex flex-1 flex-col">
