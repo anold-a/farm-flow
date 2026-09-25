@@ -1,96 +1,57 @@
 "use client";
 
-import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
-import DashboardStats from "@/components/dashboard/DashboardStats";
-import QuickActions from "@/components/dashboard/QuickActions";
-import RecentUpdates from "@/components/dashboard/RecentUpdates";
-import WeatherOverview from "@/components/dashboard/WeatherOverview";
-import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
+
+import FieldOverviewGrid from "@/components/dashboard/FieldOverviewGrid";
+import CropStagesTimeline from "@/components/dashboard/CropStagesTimeline";
+import SystemAlertsPanel from "@/components/alerts/AlertCard"
+import UserManagementSummary from "@/components/dashboard/UserManagementSummary";
+import SensorDataSummary from "@/components/dashboard/SensorDataSummary";
+import DashboardWeatherWidget from "@/components/dashboard/DashboardWeatherWidget";
+import FieldPerformanceChart from "@/components/dashboard/FieldPerformanceChart";
+import FieldPlotMap from "@/components/dashboard/FieldPlotMap";
+import { useFieldOverview } from "@/hooks/useFieldOverview";
 import { useAuth } from "@/hooks/useAuth";
 
-import { useDashboard } from "@/hooks/useDashboard";
-import { useWeather } from "@/hooks/useWeather";
-
-import MoistureTrendChart from "@/components/analytics/MoistureTrendChart";
-import { useAnalytics } from "@/hooks/useAnalytics";
-
 export default function DashboardPage() {
-  const {
-    dashboard,
-    loading: dashboardLoading,
-    error: dashboardError,
-  } = useDashboard();
+  const { overview, loading } = useFieldOverview();
+  const { user } = useAuth();
+  const primaryField = overview[0];
 
-  const {
-    fieldWeatherList,
-    loading: weatherLoading,
-    error: weatherError,
-  } = useWeather();
-
-  const { user } = useAuth(); 
-  
-  const role = user?.role ?? "AGENT";
-  const { analytics } = useAnalytics();
-
-  if (dashboardLoading || weatherLoading) {
-    return <DashboardSkeleton />;
-  }
-
-  if (dashboardError) {
-    return (
-      <div className="rounded-lg bg-red-100 p-4 text-red-700">
-        {dashboardError}
-      </div>
-    );
-  }
-
-  if (weatherError) {
-    return (
-      <div className="rounded-lg bg-red-100 p-4 text-red-700">
-        {weatherError}
-      </div>
-    );
-  }
-
-   const firstFieldWeather = fieldWeatherList[0]?.weather;
-
-  if (!dashboard) {
-    return (
-      <div className="rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-500">
-        Dashboard information is unavailable.
-      </div>
-    );
-  }
-
-  
+  if (loading) return <p className="text-slate-500">Loading dashboard...</p>;
 
   return (
-    <div className="space-y-8">
+    <div>
+     
 
-      <WelcomeBanner stats={dashboard.stats} role={role}  />
+      <div className="grid grid-cols-3 gap-6">
+        <div className="col-span-2 space-y-6">
+          <FieldPlotMap overview={overview} />
+          {primaryField?.crop && (
+            <CropStagesTimeline
+              cropName={primaryField.crop.name}
+              plantingDate={primaryField.crop.plantingDate ? String(primaryField.crop.plantingDate) : ""}
+              currentStage={primaryField.crop.growthStage}
+            />
+          )}
+        </div>
 
-    <DashboardStats statistics={dashboard.stats} role={role} />
-
-      <div className="grid gap-8 lg:grid-cols-2">
-        {firstFieldWeather ? (
-          <WeatherOverview
-            temperature={firstFieldWeather.current.temperature}
-            humidity={firstFieldWeather.current.humidity}
-            condition={firstFieldWeather.current.condition}
-          />
-        ) : (
-          <div className="rounded-2xl border border-dashed border-gray-300 p-6 text-center text-gray-500"> 
-            No fields available for a weather summary.
-          </div>
-        )}
-
-        <RecentUpdates activities={dashboard.activities} />
+        <div className="space-y-6">
+          <FieldOverviewGrid />
+        </div>
       </div>
 
-      {analytics && <MoistureTrendChart data={analytics.moistureTrend} />}
+      <div className="mt-6 grid grid-cols-3 gap-6">
+        <div className="col-span-2 space-y-6">
+          <FieldPerformanceChart />
+          <SystemAlertsPanel />
+        </div>
 
-      <QuickActions role={role} />
-
+        <div className="space-y-6">
+          {user?.role === "ADMIN" && <UserManagementSummary />}
+          <SensorDataSummary overview={overview} />
+          <DashboardWeatherWidget />
+        </div>
+      </div>
     </div>
   );
 }
