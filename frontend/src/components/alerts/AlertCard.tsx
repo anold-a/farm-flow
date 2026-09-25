@@ -1,41 +1,38 @@
-import { Alert } from "@/types/alert";
-import Button from "@/components/ui/Button";
+"use client";
 
-interface Props {
-  alert: Alert;
-  onResolve: (id: string) => void;
-}
+import Link from "next/link";
+import { useAlerts } from "@/hooks/useAlerts";
 
-const severityStyles: Record<string, string> = {
-  CRITICAL: "border-red-400 bg-red-50 text-red-800",
-  WARNING: "border-yellow-400 bg-yellow-50 text-yellow-800",
-  INFO: "border-blue-300 bg-blue-50 text-blue-800",
-};
+const severityIcon: Record<string, string> = { CRITICAL: "", WARNING: "", INFO: "" };
 
-const severityIcon: Record<string, string> = {
-  CRITICAL: "🔴",
-  WARNING: "🟡",
-  INFO: "🔵",
-};
+export default function SystemAlertsPanel() {
+  const { alerts, loading } = useAlerts();
+  const recent = alerts.slice(0, 3);
 
-export default function AlertCard({ alert, onResolve }: Props) {
   return (
-    <div className={`rounded-lg border p-4 ${severityStyles[alert.severity]}`}>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="font-semibold">
-            {severityIcon[alert.severity]} {alert.field?.name ?? "Field"}
-          </p>
-          <p className="mt-1 text-sm">{alert.message}</p>
-          <p className="mt-2 text-xs opacity-70">
-            {new Date(alert.createdAt).toLocaleString()}
-          </p>
-        </div>
-
-        <Button type="button" onClick={() => onResolve(alert.id)}>
-          Resolve
-        </Button>
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-medium text-slate-400">Recent System Alerts</h2>
+        <Link href="/alerts" className="text-xs text-emerald-400 hover:underline">View all</Link>
       </div>
+
+      {loading ? (
+        <p className="mt-4 text-sm text-slate-500">Loading...</p>
+      ) : recent.length === 0 ? (
+        <p className="mt-4 text-sm text-slate-500">No active alerts.</p>
+      ) : (
+        <ul className="mt-4 space-y-3">
+          {recent.map((alert) => (
+            <li key={alert.id} className="flex items-start gap-2 text-sm">
+              <span aria-hidden>{severityIcon[alert.severity]}</span>
+              <div>
+                <p className="text-slate-200">{alert.message}</p>
+                <p className="text-xs text-slate-500">{alert.field?.name}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
