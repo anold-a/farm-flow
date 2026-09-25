@@ -9,7 +9,7 @@ export default function Navbar() {
   const {user} = useAuth();
    const { unreadCount } = useNotifications();
   return (
-    <header className="flex items-center justify-between p-4">
+    <header className="sticky top-0 z-50 w-full flex items-center justify-between p-4 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/40">
      <div className="flex items-center gap-3">
         <h1 className="font-display text-xl text-slate-100">SM</h1>
         <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs text-emerald-400">
