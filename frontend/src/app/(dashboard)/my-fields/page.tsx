@@ -24,7 +24,7 @@ export default function MyFieldsPage() {
   }, [fields, search]);
 
   return (
-    <div className="space-y-8">
+    <div className="">
       <div>
         <h1 className="text-3xl font-bold">My Fields</h1>
         <p className="text-gray-500">Fields assigned to you.</p>
@@ -40,11 +40,11 @@ export default function MyFieldsPage() {
 
       {!loading && filteredFields.length === 0 && <FieldEmptyState />}
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {filteredFields.map((field) => (
-          <FieldCard key={field.id} field={field} role="AGENT" />
-        ))}
-      </div>
+      <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full">
+  {filteredFields.map((field) => (
+    <FieldCard key={field.id} field={field} role="AGENT"  onDelete={() => {}}  />
+  ))}
+</div>
     </div>
   );
 }
