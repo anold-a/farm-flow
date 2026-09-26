@@ -226,7 +226,13 @@ try {
 )}
 
 {!recLoading && !recError && recommendations && (
-  <RecommendationsCard data={recommendations} />
+  <RecommendationsCard 
+  
+  data={{
+      ...recommendations,
+      recommendations: recommendations.recommendations.filter((item) => item.priority === "LOW"),
+    }}
+  />
 )}
 
       <div className="flex flex-wrap gap-3">
