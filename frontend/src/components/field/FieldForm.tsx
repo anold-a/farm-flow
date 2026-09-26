@@ -19,7 +19,6 @@ export default function FieldForm() {
       location: "",
       acreage: 0,
       status: "",
-      ownerId: "",
     });
 
   const [loading, setLoading] =
@@ -90,9 +89,6 @@ export default function FieldForm() {
 
       await fieldService.create({
         ...formData,
-
-        // temporary until authentication
-        ownerId: "TEMP_OWNER_ID",
       });
 
       setSuccess(
@@ -138,6 +134,7 @@ export default function FieldForm() {
         value={formData.name}
         onChange={handleChange}
         placeholder="North Farm"
+        className=""
       />
 
       <Input
@@ -146,6 +143,7 @@ export default function FieldForm() {
         value={formData.crop}
         onChange={handleChange}
         placeholder="Maize"
+        className=""
       />
 
       <Input
@@ -154,6 +152,7 @@ export default function FieldForm() {
         value={formData.location}
         onChange={handleChange}
         placeholder="Nakuru"
+        className=""
       />
 
       <Input
@@ -162,6 +161,7 @@ export default function FieldForm() {
         type="number"
         value={formData.acreage}
         onChange={handleChange}
+        className=""
       />
 
       <Input
@@ -170,6 +170,7 @@ export default function FieldForm() {
         value={formData.status}
         onChange={handleChange}
         placeholder="Healthy"
+        className=""
       />
 
       <Button

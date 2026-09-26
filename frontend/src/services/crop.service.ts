@@ -19,7 +19,7 @@ export const cropService = {
   },
 
   create(fieldId: string, data: CreateCropDto) {
-    return apiFetch<Crop>(`fields/${fieldId}/crops`, {
+    return apiFetch<Crop>(`/fields/${fieldId}/crops`, {
       method: "POST",
       body: JSON.stringify(data),
        token: getAccessToken() ?? undefined
