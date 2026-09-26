@@ -5,7 +5,7 @@ import { InputHTMLAttributes } from "react";
 interface Props
   extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  className:string;
+  className?:string;
 }
 
 export default function Input({

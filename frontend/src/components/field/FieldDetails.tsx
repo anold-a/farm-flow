@@ -160,10 +160,16 @@ try {
           </div>
         </div>
         {role === "ADMIN" && (
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap gap-3">
             <Button type="button" onClick={() => setShowAssignModal(true)}>
               {field.assignedAgent ? "Reassign Agent" : "Assign Agent"}
             </Button>
+             
+             <Link href={`/fields/${field.id}/crop/new`}>
+      <Button type="button">
+        Add Crop
+      </Button>
+    </Link>
           </div>
         )}
       </Card>
