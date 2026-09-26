@@ -2,54 +2,67 @@
 
 import AlertCard from "@/components/alerts/AlertCard";
 import { useAlerts } from "@/hooks/useAlerts";
-import { useRecommendations } from "@/hooks/useRecommendations";
-import { useParams } from "next/navigation";
+import { useAllRecommendations } from "@/hooks/useAllRecommendations";
 import { Alert } from "@/types/alert";
 
 export default function AlertsPage() {
-   const { fieldId } = useParams<{ fieldId: string }>();
+  
   const { alerts, loading: alertsLoading, error: alertsError, resolveAlert } = useAlerts();
-  const { data: recommendationData, loading: recommendationLoading } = useRecommendations(fieldId);
+  const { results: recommendationResults, loading: recommendationLoading } = useAllRecommendations();
 
   const loading = alertsLoading || recommendationLoading;
 
-  if (loading) return <p>Loading alerts...</p>;
+  if (loading) return <p className="text-gray-500">Loading alerts...</p>;
 
   if (alertsError) {
     return <div className="rounded-xl bg-red-950/40 border border-red-500/20 p-4 text-red-400">{alertsError}</div>;
   }
 
-  const escalatedRecommendations = recommendationData?.recommendations
+  const escalatedRecommendations: Alert[] = recommendationResults.flatMap((fieldRec) =>
+    fieldRec.recommendations
     .filter(item => item.priority === "HIGH" || item.priority === "MEDIUM")
     .map((item, index) => ({
-      id: `rec-alert-${index}`, 
+      id: `rec-alert-${fieldRec.fieldId}-${index}`, 
+      fieldId: fieldRec.fieldId,
+      field: { id: fieldRec.fieldId, name: fieldRec.fieldName },
+      type: "RECOMMENDATION",
       severity: (item.priority === "HIGH" ? "CRITICAL" : "WARNING") as Alert["severity"],
       message: `${item.situation} → ${item.recommendation}`,
-      field: { name: "Current Field" }, 
-      isRecommendation: true 
-    })) || [];
+      resolved:false,
+      createdAt: new Date().toISOString(), 
+      updatedAt: new Date().toISOString(),
+    }))
+    );
 
   
   const allAlerts = [...alerts, ...escalatedRecommendations];
 
+  async function handleResolve(id: string) {
+    if (id.startsWith("rec-alert-")) {
+      return;
+    }
+    await resolveAlert(id);
+  }
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Alerts</h1>
-        <p className="text-gray-500">Issues requiring your attention.</p>
+        <h1 className="text-3xl font-display text-gray-900">Alerts</h1>
+        <p className="mt-1 text-gray-600">Issues requiring your attention.</p>
       </div>
 
-      {allAlerts.map((alert) => {
-         const isRec = alert.id.toString().startsWith("rec-alert-");
-            return (
-              <AlertCard 
-                key={alert.id} 
-                {...(alert as any)} 
-               
-                onResolve={isRec ? async () => {} : resolveAlert} 
-              />
-            );
-      })}
+      {
+      allAlerts.length === 0 ? ( 
+        <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center text-gray-500">
+          No active alerts or high-priority recommendations.
+        </div>
+      ) : (
+      <div className="space-y-3">
+          {allAlerts.map((alert) => (
+            <AlertCard key={alert.id} alert={alert} onResolve={handleResolve} /> 
+            ))}
+        </div>
+      )}
     </div>
   );
 }
