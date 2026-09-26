@@ -102,8 +102,6 @@ try {
           <div>
             <p className="text-sm text-gray-500">Crop Status</p>
             {cropLoading && <p className="font-medium text-gray-400">Loading crop...</p>}
-
-            {cropLoading && <p className="font-medium text-gray-400">Loading crop...</p>}
   
  
   {!cropLoading && cropError && <p className="font-medium text-red-500">{cropError}</p>}

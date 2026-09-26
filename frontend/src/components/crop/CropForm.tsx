@@ -6,16 +6,24 @@ import Input from "@/components/ui/Input";
 import { cropService } from "@/services/crop.service";
 import { CreateCropDto } from "@/types/crop";
 
+
+interface CropFormData {
+  name: string;
+  variety: string;
+  plantingDate: string;
+  expectedHarvestDate: string;
+}
+
 interface CropFormProps { fieldId: string; }
 
 export default function CropForm({fieldId}:CropFormProps){
   const router = useRouter();
 
-  const [formData,setFormData] = useState<CreateCropDto>({
+  const [formData,setFormData] = useState<CropFormData>({
     name:"",
     variety: "", 
-    plantingDate: new Date(),
-    expectedHarvestDate: new Date(),
+    plantingDate: "",
+    expectedHarvestDate: "",
 
   });
 
@@ -30,7 +38,7 @@ export default function CropForm({fieldId}:CropFormProps){
     const {name,value} = event.target;
     setFormData((previous) =>({
       ...previous,
-      [name]:name === "plantingDate" || name === "expectedHarvestDate" ? new Date(value) : value,
+      [name]: value,
     }))
 
   }
@@ -52,7 +60,7 @@ export default function CropForm({fieldId}:CropFormProps){
       return "Expected harvest date is required.";
     }
 
-    if (formData.expectedHarvestDate <= formData.plantingDate) {
+    if (new Date(formData.expectedHarvestDate) <= new Date(formData.plantingDate)) {
       return "Expected harvest date must be after the planting date.";
     }
 
@@ -79,8 +87,12 @@ export default function CropForm({fieldId}:CropFormProps){
       setLoading(true);
 
       await cropService.create(
-        fieldId,
-         formData
+        fieldId,{
+  name: formData.name,
+  variety: formData.variety,
+  plantingDate: new Date(formData.plantingDate),
+  expectedHarvestDate: new Date(formData.expectedHarvestDate),
+}
       );
 
       setSuccess(
@@ -137,12 +149,12 @@ export default function CropForm({fieldId}:CropFormProps){
         placeholder="Arabica (SL28)"
         className=""
       />
-      
+
       <Input
         label="Planting Date"
         name="plantingDate"
         type="date"
-        value={formData.plantingDate .toISOString() .split("T")[0]}
+        value={formData.plantingDate}
         onChange={handleChange}
         className=""
       />
@@ -150,7 +162,8 @@ export default function CropForm({fieldId}:CropFormProps){
       <Input
         label="Expected Harvest Date"
         name="expectedHarvestDate"
-        value={formData.expectedHarvestDate .toISOString() .split("T")[0]}
+        type="date"
+        value={formData.expectedHarvestDate}
         onChange={handleChange}
         className=""
       />
