@@ -38,6 +38,31 @@ export class FieldUpdatesService {
       );
     }
 
+    const crop = await this.prisma.crop.findFirst({
+      where: {
+        fieldId:data.fieldId,
+        actualGrowthStage: {
+          not: 'HARVESTED',
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!crop) {
+      throw new NotFoundException('No active crop found for this field');
+    }
+
+    await this.prisma.crop.update({
+      where: {
+        id: crop.id,
+      },
+      data: {
+        actualGrowthStage: data.cropStage,
+      },
+    });
+
     const fieldUpdate = await this.prisma.fieldUpdate.create({
       data: {
         cropStage: data.cropStage,

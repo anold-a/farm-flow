@@ -6,15 +6,16 @@ import {
   IsUUID,
   Max,
   Min,
+  IsEnum,
 } from 'class-validator';
+import { GrowthStage } from '@prisma/client';
 
 export class CreateFieldUpdateDto {
   @IsUUID()
   fieldId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  cropStage: string;
+  @IsEnum(GrowthStage)
+  cropStage: GrowthStage;
 
   @IsString()
   @IsNotEmpty()

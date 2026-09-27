@@ -197,7 +197,7 @@ export class ReportsService {
       field: fieldNameById.get(c.fieldId) ?? 'Unknown',
       name: c.name,
       variety: c.variety,
-      growthStage: c.growthStage,
+      growthStage: c.actualGrowthStage,
       plantingDate: c.plantingDate.toISOString().split('T')[0],
       expectedHarvestDate: c.expectedHarvestDate.toISOString().split('T')[0],
     }));

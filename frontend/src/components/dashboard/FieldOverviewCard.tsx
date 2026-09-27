@@ -14,7 +14,7 @@ export default function FieldOverviewCard({ item }: { item: FieldOverview }) {
     <div className={`rounded-xl border p-4 ${tint}`}>
       <div className="flex items-center justify-between">
         <p className="font-display text-slate-100">{item.field.name}</p>
-        <span className="text-xs text-slate-400">{item.crop?.growthStage.replace("_", " ") ?? "No crop"}</span>
+        <span className="text-xs text-slate-400">{item.crop?.actualGrowthStage.replace("_", " ") ?? "No crop"}</span>
       </div>
 
       <p className="mt-1 text-xs text-slate-500">{item.crop?.name ?? "—"}</p>

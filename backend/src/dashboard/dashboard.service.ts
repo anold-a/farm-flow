@@ -92,7 +92,7 @@ export class DashboardService {
 
   private async getCropStats(currentUser: AuthenticatedUser) {
     const whereCondition: Prisma.CropWhereInput = {
-      growthStage: { not: 'HARVESTED' }, 
+      actualGrowthStage: { not: 'HARVESTED' }, 
     };
 
     if (currentUser.role === Role.AGENT) {
@@ -103,17 +103,17 @@ export class DashboardService {
 
    
     const stats = await this.prisma.crop.groupBy({
-      by: ['growthStage'],
+      by: ['actualGrowthStage'],
       where: whereCondition,
       _count: {
-        _all: true, 
+        _all: true,
       },
     });
 
    
     return stats.reduce(
       (acc, current) => {
-        acc[current.growthStage] = current._count._all;
+        acc[current.actualGrowthStage] = current._count._all;
         return acc;
       },
       {} as { total: number; byStage: Record<string, number> },

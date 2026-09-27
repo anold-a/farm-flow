@@ -32,7 +32,7 @@ export class AnalyticsService {
 
     const cropRows = await this.prisma.crop.groupBy({
       by: ['name'],
-      where: { growthStage: { not: 'HARVESTED' } },
+      where: { actualGrowthStage: { not: 'HARVESTED' } },
       _count: { _all: true },
     });
     const cropDistribution = cropRows.map((row) => ({
@@ -41,8 +41,8 @@ export class AnalyticsService {
     }));
 
     const stageRows = await this.prisma.crop.groupBy({
-      by: ['growthStage'],
-      where: { growthStage: { not: 'HARVESTED' } },
+      by: ['actualGrowthStage'],
+      where: { actualGrowthStage: { not: 'HARVESTED' } },
       _count: { _all: true },
     });
     const growthStageDistribution = this.buildStageDistribution(stageRows);
@@ -83,17 +83,26 @@ export class AnalyticsService {
       updateTrends,
       growthStageDistribution,
       agentPerformance,
-      moistureTrend
+      moistureTrend,
     };
   }
 
   private buildStageDistribution(
-    rows: { growthStage: string; _count: { _all: number } }[],
-  ) {
-    const map: Record<string, number> = {};
-    rows.forEach((row) => {
-      map[row.growthStage] = row._count._all;
-    });
+    rows: {
+    actualGrowthStage: string;
+    _count?: {
+      _all?: number;
+    } | true;
+  }[],
+) {
+  const map: Record<string, number> = {};
+
+  rows.forEach((row) => {
+    const count = typeof row._count === 'object' ? (row._count._all ?? 0) : 0;
+
+    map[row.actualGrowthStage] = count;
+  });
+
 
     return {
       planted: map['PLANTED'] ?? 0,
@@ -160,7 +169,7 @@ export class AnalyticsService {
 
     const cropRows = await this.prisma.crop.groupBy({
       by: ['name'],
-      where: { fieldId: { in: fieldIds }, growthStage: { not: 'HARVESTED' } },
+      where: { fieldId: { in: fieldIds }, actualGrowthStage: { not: 'HARVESTED' } },
       _count: { _all: true },
     });
     const cropDistribution = cropRows.map((row) => ({
@@ -169,8 +178,11 @@ export class AnalyticsService {
     }));
 
     const stageRows = await this.prisma.crop.groupBy({
-      by: ['growthStage'],
-      where: { fieldId: { in: fieldIds }, growthStage: { not: 'HARVESTED' } },
+      by: ['actualGrowthStage'],
+      where: {
+        fieldId: { in: fieldIds },
+        actualGrowthStage: { not: 'HARVESTED' },
+      },
       _count: { _all: true },
     });
     const growthStageDistribution = this.buildStageDistribution(stageRows);
@@ -224,7 +236,6 @@ export class AnalyticsService {
       orderBy: { createdAt: 'asc' },
     });
 
-   
     const byDay = new Map<
       string,
       { moisture: number[]; temperature: number[] }

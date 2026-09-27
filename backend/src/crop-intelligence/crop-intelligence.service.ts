@@ -8,7 +8,6 @@ import { Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { WeatherService } from '../weather/weather.service';
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
-import { calculateExpectedStage } from '../crops/utils/growth-stage.util';
 import { CropStatus, CropTrend, cropIntelligenceDto } from './dto/crop-intelligence.dto';
 
 @Injectable()
@@ -38,7 +37,7 @@ export class CropIntelligenceService {
     }
 
     const crop = await this.prisma.crop.findFirst({
-      where: { fieldId, growthStage: { not: 'HARVESTED' } },
+      where: { fieldId, actualGrowthStage: { not: 'HARVESTED' } },
       orderBy: { plantingDate: 'desc' },
     });
 
@@ -53,7 +52,7 @@ export class CropIntelligenceService {
     });
 
     const latestUpdate = recentUpdates[0] ?? null;
-    const expectedGrowthStage = calculateExpectedStage(crop.plantingDate);
+    const expectedGrowthStage = crop.expectedGrowthStage;
 
     let weatherForecastRain: number | null = null;
     try {
@@ -67,13 +66,13 @@ export class CropIntelligenceService {
     }
 
     const status = this.calculateStatus(
-      crop.growthStage,
+      crop.actualGrowthStage,
       expectedGrowthStage,
       latestUpdate,
     );
     const trend = this.calculateTrend(recentUpdates);
     const insights = this.generateInsights({
-      growthStage: crop.growthStage,
+      growthStage: crop.actualGrowthStage,
       expectedGrowthStage,
       latestUpdate,
       trend,
@@ -86,7 +85,7 @@ export class CropIntelligenceService {
       fieldName: field.name,
       cropName: crop.name,
       variety: crop.variety,
-      growthStage: crop.growthStage,
+      growthStage: crop.actualGrowthStage,
       weatherForecastRain,
       expectedGrowthStage,
       status,

@@ -118,7 +118,7 @@ try {
         {activeCrop.name} <span className="text-sm font-normal text-gray-500">({activeCrop.variety})</span>
       </p>
       <p className="text-xs text-green-600 bg-green-50 inline-block px-2 py-0.5 rounded font-medium mt-1">
-        Stage: {activeCrop.growthStage}
+        Stage: {activeCrop.actualGrowthStage}
       </p>
       <p className="text-xs text-gray-400 mt-1">
         Planted: {new Date(activeCrop.plantingDate).toLocaleDateString()}
