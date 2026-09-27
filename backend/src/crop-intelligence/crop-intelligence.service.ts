@@ -4,11 +4,12 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 
-import { Role } from '@prisma/client';
+import { GrowthStage, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { WeatherService } from '../weather/weather.service';
 import { AuthenticatedUser } from '../auth/types/authenticated-user.type';
-import { CropStatus, CropTrend, cropIntelligenceDto } from './dto/crop-intelligence.dto';
+import { CropStatus, CropTrend, cropIntelligenceDto,CropStageComparison } from './dto/crop-intelligence.dto';
+import { compareGrowthStages } from '../crops/utils/growth-stage.util';
 
 @Injectable()
 export class CropIntelligenceService {
@@ -53,6 +54,10 @@ export class CropIntelligenceService {
 
     const latestUpdate = recentUpdates[0] ?? null;
     const expectedGrowthStage = crop.expectedGrowthStage;
+    const stageComparison = compareGrowthStages(
+      expectedGrowthStage,
+      crop.actualGrowthStage,
+    );
 
     let weatherForecastRain: number | null = null;
     try {
@@ -88,6 +93,7 @@ export class CropIntelligenceService {
       growthStage: crop.actualGrowthStage,
       weatherForecastRain,
       expectedGrowthStage,
+      stageComparison,
       status,
       trend,
       metrics: {
@@ -100,26 +106,20 @@ export class CropIntelligenceService {
   }
 
   private calculateStatus(
-    actualStage: string,
-    expectedStage: string,
+    actualStage: GrowthStage,
+    expectedStage: GrowthStage,
     latestUpdate: {
       moisture: number | null;
       temperature: number | null;
       humidity: number | null;
     } | null,
   ): CropStatus {  
-    const stageOrder = [
-      'PLANTED',
-      'GERMINATION',
-      'VEGETATIVE',
-      'FLOWERING',
-      'FRUITING',
-      'HARVEST_READY',
-      'HARVESTED',
-    ];
-    const actualIndex = stageOrder.indexOf(actualStage);
-    const expectedIndex = stageOrder.indexOf(expectedStage);
-    const stageLag = expectedIndex - actualIndex; 
+    const stageComparison = compareGrowthStages(
+      expectedStage,
+      actualStage,
+    );
+
+    const stageLag = stageComparison === 'BEHIND' ? 1 : stageComparison === 'AHEAD' ? -1 : 0;
 
     let riskScore = 0;
 

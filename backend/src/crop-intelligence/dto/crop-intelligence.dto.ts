@@ -1,5 +1,6 @@
 export type CropStatus = 'HEALTHY' | 'NEEDS_ATTENTION' | 'AT_RISK';
 export type CropTrend = 'IMPROVING' | 'STABLE' | 'DECLINING' | 'UNKNOWN';
+export type CropStageComparison = 'BEHIND' | 'ON_TRACK' | 'AHEAD';
 
 export class cropIntelligenceDto {
   cropId: string;
@@ -10,6 +11,7 @@ export class cropIntelligenceDto {
   growthStage: string;
   weatherForecastRain: number | null;
   expectedGrowthStage: string;
+  stageComparison: CropStageComparison;
   status: CropStatus;
   trend: CropTrend;
   metrics: {

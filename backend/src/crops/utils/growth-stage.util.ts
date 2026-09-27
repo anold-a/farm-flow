@@ -1,10 +1,11 @@
+import { GrowthStage } from '@prisma/client';
+
 import {
   CROP_GROWTH_STAGES,
   DEFAULT_GROWTH_STAGES,
 } from '../growth-stage.config';
 
 export function calculateExpectedStage(cropName: string, plantingDate: Date) {
-  const currentDate = Date.now();
 
   const stages =
     CROP_GROWTH_STAGES[cropName.toLowerCase()] ?? DEFAULT_GROWTH_STAGES;
@@ -28,4 +29,33 @@ export function calculateExpectedStage(cropName: string, plantingDate: Date) {
   }
 
   return 'HARVEST_READY';
+}
+
+
+export function compareGrowthStages(
+  expectedStage: GrowthStage,
+  actualStage: GrowthStage,
+) {
+  const stageOrder: GrowthStage[] = [
+    'PLANTED',
+    'GERMINATION',
+    'VEGETATIVE',
+    'FLOWERING',
+    'FRUITING',
+    'HARVEST_READY',
+    'HARVESTED',
+  ];
+
+  const expectedIndex = stageOrder.indexOf(expectedStage);
+  const actualIndex = stageOrder.indexOf(actualStage);
+
+  if (actualIndex < expectedIndex) {
+    return 'BEHIND';
+  }
+
+  if (actualIndex > expectedIndex) {
+    return 'AHEAD';
+  }
+
+  return 'ON_TRACK';
 }
