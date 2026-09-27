@@ -1,31 +1,31 @@
-import {GrowthStage} from '@prisma/client';
+import {
+  CROP_GROWTH_STAGES,
+  DEFAULT_GROWTH_STAGES,
+} from '../growth-stage.config';
 
-export function calculateExpectedStage(plantingDate: Date): GrowthStage {
-  
+export function calculateExpectedStage(cropName: string, plantingDate: Date) {
   const currentDate = Date.now();
 
+  const stages =
+    CROP_GROWTH_STAGES[cropName.toLowerCase()] ?? DEFAULT_GROWTH_STAGES;
 
-  const difference = currentDate - Number(plantingDate);
+  const today = new Date();
 
-  const days = difference /(1000 * 60 * 60 * 24) ;
+  const differenceInMilliseconds = today.getTime() - plantingDate.getTime();
 
-  if (days < 0) {
-    throw new Error('Invalid Days');
-  } else if (days >= 0 && days < 7) {
-    return GrowthStage.PLANTED;
-  } else if (days >= 7 && days < 21) {
-    return GrowthStage.GERMINATION;
-  } else if (days >= 21 && days < 45) {
-    return GrowthStage.VEGETATIVE;
-  } else if (days >= 45 && days < 70) {
-    return GrowthStage.FLOWERING;
-  } else if (days >= 70 && days < 100) {
-    return GrowthStage.FRUITING;
-  } else if (days >= 100) {
-    return GrowthStage.HARVEST_READY;
-  } else {
-    return GrowthStage.PLANTED;
+  const daysSincePlanting = Math.floor(
+    differenceInMilliseconds / (1000 * 60 * 60 * 24),
+  );
+
+  let accumulatedDays = 0;
+
+  for (const stage of stages) {
+    accumulatedDays += stage.days;
+
+    if (daysSincePlanting < accumulatedDays) {
+      return stage.stage;
+    }
   }
 
-  
+  return 'HARVEST_READY';
 }

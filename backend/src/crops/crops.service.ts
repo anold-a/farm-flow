@@ -45,7 +45,7 @@ export class CropsService {
         plantingDate: data.plantingDate,
         expectedHarvestDate: data.expectedHarvestDate,
         fieldId: fieldId,
-        growthStage: calculateExpectedStage(data.plantingDate),
+        growthStage: calculateExpectedStage(data.name,data.plantingDate),
       },
     });
     await this.auditService.log(userId, 'CREATE', 'CROP', createdCrop.id); 
