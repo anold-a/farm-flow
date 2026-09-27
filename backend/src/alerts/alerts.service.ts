@@ -14,7 +14,7 @@ import {
   detectTemperatureAlerts,
   detectOverdueUpdateAlert,
   detectRainMoistureConflict,
-  
+  detectGrowthStageAlert,
 } from './alert.rules';
 import { AlertCandidate } from './dto/alert.dto';
 
@@ -40,6 +40,17 @@ export class AlertsService {
 
     const latest = recentUpdates[0];
     const latestUpdateDate = latest?.createdAt ?? null;
+    const crop = await this.prisma.crop.findFirst({
+      where: {
+        fieldId,
+        actualGrowthStage: {
+          not: 'HARVESTED',
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
     let chanceOfRain: number | null = null;
     try {
@@ -54,6 +65,12 @@ export class AlertsService {
       ...detectTemperatureAlerts(latest),
       ...detectOverdueUpdateAlert(latestUpdateDate),
       ...detectRainMoistureConflict(latest?.moisture ?? null, chanceOfRain),
+      ...(crop
+        ? detectGrowthStageAlert(
+            crop.expectedGrowthStage,
+            crop.actualGrowthStage,
+          )
+        : []),
     ];
 
     for (const candidate of candidates) {

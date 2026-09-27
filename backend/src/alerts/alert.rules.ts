@@ -1,7 +1,9 @@
-import { AlertCandidate, FieldUpdateSnapshot } from "./dto/alert.dto";
+import { AlertCandidate, FieldUpdateSnapshot } from './dto/alert.dto';
+import { compareGrowthStages } from '../crops/utils/growth-stage.util';
+import { GrowthStage } from '@prisma/client';
 
 export function detectMoistureAlerts(
-  recentUpdates: FieldUpdateSnapshot[], 
+  recentUpdates: FieldUpdateSnapshot[],
 ): AlertCandidate[] {
   const alerts: AlertCandidate[] = [];
   const latest = recentUpdates[0];
@@ -22,7 +24,6 @@ export function detectMoistureAlerts(
     }
   }
 
-  
   const lastThree = recentUpdates
     .slice(0, 3)
     .map((u) => u.moisture)
@@ -117,5 +118,27 @@ export function detectRainMoistureConflict(
       },
     ];
   }
+  return [];
+}
+
+export function detectGrowthStageAlert(
+  expectedStage: GrowthStage,
+  actualStage: GrowthStage,
+): AlertCandidate[] {
+  const comparison = compareGrowthStages(
+    expectedStage as any,
+    actualStage as any,
+  );
+
+  if (comparison === 'BEHIND') {
+    return [
+      {
+        type: 'CROP_BEHIND_EXPECTED_STAGE',
+        severity: 'WARNING',
+        message: `Crop is currently at ${actualStage}, but is expected to be at ${expectedStage}.`,
+      },
+    ];
+  }
+
   return [];
 }
