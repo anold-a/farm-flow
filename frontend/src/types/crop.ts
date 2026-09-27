@@ -16,7 +16,8 @@ export interface Crop {
   variety:string;
   plantingDate:Date;
   expectedHarvestDate:Date;
-  growthStage:GrowthStage;
+  expectedGrowthStage:GrowthStage;
+  actualGrowthStage: GrowthStage;
   fieldId:string;
   createdAt:string;
   updatedAt:string;

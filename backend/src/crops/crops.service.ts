@@ -45,7 +45,7 @@ export class CropsService {
         plantingDate: data.plantingDate,
         expectedHarvestDate: data.expectedHarvestDate,
         fieldId: fieldId,
-        growthStage: calculateExpectedStage(data.name,data.plantingDate),
+        expectedGrowthStage: calculateExpectedStage(data.name,data.plantingDate),
       },
     });
     await this.auditService.log(userId, 'CREATE', 'CROP', createdCrop.id); 
@@ -71,7 +71,7 @@ export class CropsService {
     return this.prisma.crop.findFirst({
       where: {
         fieldId,
-        growthStage: { not: 'HARVESTED' },
+        expectedGrowthStage: { not: 'HARVESTED' },
       },
       orderBy: { createdAt: 'desc' },
     });

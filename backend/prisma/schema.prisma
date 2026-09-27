@@ -109,7 +109,8 @@ model Crop {
   plantingDate        DateTime
   expectedHarvestDate DateTime
 
-  growthStage GrowthStage @default(PLANTED)
+  expectedGrowthStage GrowthStage @default(PLANTED)
+  actualGrowthStage   GrowthStage @default(PLANTED)
 
   fieldId String
   field   Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
