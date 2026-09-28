@@ -1,5 +1,6 @@
 export type CropStatus = "HEALTHY" | "NEEDS_ATTENTION" | "AT_RISK";
 export type CropTrend = "IMPROVING" | "STABLE" | "DECLINING" | "UNKNOWN";
+export type StageComparison =  "BEHIND" | "ON_TRACK" | "AHEAD";
 
 export interface CropIntelligence {
   cropId: string;
@@ -9,6 +10,7 @@ export interface CropIntelligence {
   variety: string;
   growthStage: string;
   expectedGrowthStage: string;
+  stageComparison:StageComparison;
   status: CropStatus;
   trend: CropTrend;
   metrics: {

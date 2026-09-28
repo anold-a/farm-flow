@@ -10,6 +10,12 @@ const statusStyles: Record<string, string> = {
   AT_RISK: "bg-red-50 text-red-700 border-red-300",
 };
 
+const stageComparisonStyles: Record<string, string> = {
+  BEHIND: "bg-red-50 text-red-700 border-red-300",
+  ON_TRACK: "bg-green-50 text-green-700 border-green-300",
+  AHEAD: "bg-blue-50 text-blue-700 border-blue-300",
+};
+
 export default function CropHealthCard({ intelligence }: Props) {
   return (
     <div className="space-y-4 rounded-xl border bg-white p-6 shadow-sm">
@@ -34,6 +40,33 @@ export default function CropHealthCard({ intelligence }: Props) {
           <p className="text-lg font-bold">{intelligence.metrics.humidity ?? "N/A"}%</p>
         </div>
       </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+  <div>
+    <p className="text-sm text-gray-500">Expected Stage</p>
+    <p className="text-lg font-bold">
+      {intelligence.expectedGrowthStage.replace("_", " ")}
+    </p>
+  </div>
+
+  <div>
+    <p className="text-sm text-gray-500">Actual Stage</p>
+    <p className="text-lg font-bold">
+      {intelligence.growthStage.replace("_", " ")}
+    </p>
+  </div>
+
+  <div>
+    <p className="text-sm text-gray-500">Stage Comparison</p>
+    <span
+      className={`inline-block rounded-full border px-3 py-1 text-sm font-semibold ${
+        stageComparisonStyles[intelligence.stageComparison]
+      }`}
+    >
+      {intelligence.stageComparison.replace("_", " ")}
+    </span>
+  </div>
+</div>
 
       <div>
         <h3 className="mb-2 font-semibold">💡 Insights</h3>
