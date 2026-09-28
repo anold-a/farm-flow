@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 export default function DashboardPage() {
   const { overview, loading } = useFieldOverview();
   const { user } = useAuth();
-  const primaryField = overview[0];
+  
 
   if (loading) return <p className="text-slate-500">Loading dashboard...</p>;
 
@@ -26,13 +26,20 @@ export default function DashboardPage() {
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
           <FieldPlotMap overview={overview} />
-          {primaryField?.crop && (
-            <CropStagesTimeline
-              cropName={primaryField.crop.name}
-              plantingDate={primaryField.crop.plantingDate ? String(primaryField.crop.plantingDate) : ""}
-              currentStage={primaryField.crop.actualGrowthStage}
-            />
-          )}
+          {overview
+  .filter((item) => item.crop)
+  .map((item) => (
+    <CropStagesTimeline
+      key={item.crop!.id}
+      cropName={item.crop!.name}
+      plantingDate={
+        item.crop!.plantingDate
+          ? String(item.crop!.plantingDate)
+          : ""
+      }
+      currentStage={item.crop!.actualGrowthStage}
+    />
+  ))}
         </div>
 
         <div className="space-y-6">
