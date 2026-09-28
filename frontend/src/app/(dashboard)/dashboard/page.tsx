@@ -3,7 +3,7 @@
 
 import FieldOverviewGrid from "@/components/dashboard/FieldOverviewGrid";
 import CropStagesTimeline from "@/components/dashboard/CropStagesTimeline";
-import SystemAlertsPanel from "@/components/alerts/AlertCard"
+import SystemAlertsPanel from "@/components/alerts/SystemAlertsPanel"
 import UserManagementSummary from "@/components/dashboard/UserManagementSummary";
 import SensorDataSummary from "@/components/dashboard/SensorDataSummary";
 import DashboardWeatherWidget from "@/components/dashboard/DashboardWeatherWidget";
