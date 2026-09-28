@@ -30,7 +30,7 @@ export default function DashboardPage() {
             <CropStagesTimeline
               cropName={primaryField.crop.name}
               plantingDate={primaryField.crop.plantingDate ? String(primaryField.crop.plantingDate) : ""}
-              currentStage={primaryField.crop.growthStage}
+              currentStage={primaryField.crop.actualGrowthStage}
             />
           )}
         </div>
