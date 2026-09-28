@@ -11,6 +11,7 @@ export function generateRecommendations(
   
   if (moisture !== null && moisture < 15) {
     recommendations.push({
+      type: 'CRITICAL_MOISTURE',
       situation: 'Soil moisture is critically low.',
       recommendation:
         'Irrigate the field immediately and monitor soil moisture closely over the next few days.',
@@ -18,6 +19,7 @@ export function generateRecommendations(
     });
   } else if (moisture !== null && moisture < 30) {
     recommendations.push({
+      type: 'LOW_MOISTURE',
       situation: 'Soil moisture is low.',
       recommendation:
         'Irrigate the field and monitor soil moisture closely over the next few days.',
@@ -28,6 +30,7 @@ export function generateRecommendations(
   
   if (temperature !== null && temperature > 35) {
     recommendations.push({
+      type: 'HIGH_TEMPERATURE',
       situation: 'Temperature is unusually high.',
       recommendation:
         'Increase monitoring frequency and consider additional irrigation to offset heat stress.',
@@ -38,6 +41,7 @@ export function generateRecommendations(
   
   if (intelligence.stageComparison === 'BEHIND') {
     recommendations.push({
+      type: 'CROP_BEHIND_EXPECTED_STAGE',
       situation: `Crop is behind schedule: currently ${intelligence.growthStage}, expected ${intelligence.expectedGrowthStage}.`,
       recommendation:
         'Inspect the field to determine why crop development is behind the expected stage and take appropriate action.',
@@ -53,6 +57,7 @@ export function generateRecommendations(
     moisture > 70
   ) {
     recommendations.push({
+      type: 'FLOOD_RISK',
       situation:
         'Heavy rainfall is expected and field moisture is already high.',
       recommendation:
@@ -64,6 +69,7 @@ export function generateRecommendations(
   
   if (intelligence.trend === 'DECLINING') {
     recommendations.push({
+      type: 'DECLINING_CONDITIONS',
       situation: 'Recent field updates show declining conditions over time.',
       recommendation:
         'Inspect the field in person to identify the cause before conditions worsen further.',
@@ -74,6 +80,7 @@ export function generateRecommendations(
   
   if (recommendations.length === 0) {
     recommendations.push({
+      type: 'NORMAL_CONDITIONS',
       situation: 'Conditions are within normal ranges.',
       recommendation: 'Continue current field management practices.',
       priority: 'LOW',
