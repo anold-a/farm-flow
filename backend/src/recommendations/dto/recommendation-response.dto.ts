@@ -1,6 +1,7 @@
 export type RecommendationPriority = 'LOW' | 'MEDIUM' | 'HIGH';
 
 export interface RecommendationItemDto {
+  type: string;
   situation: string;
   recommendation: string;
   priority: RecommendationPriority;
