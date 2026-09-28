@@ -1,38 +1,52 @@
 "use client";
 
-import Link from "next/link";
-import { useAlerts } from "@/hooks/useAlerts";
+import { Alert } from "@/types/alert";
 
-const severityIcon: Record<string, string> = { CRITICAL: "", WARNING: "", INFO: "" };
+interface Props {
+  alert: Alert;
+  onResolve: (id: string) => void;
+}
 
-export default function SystemAlertsPanel() {
-  const { alerts, loading } = useAlerts();
-  const recent = alerts.slice(0, 3);
+const severityStyles: Record<string, string> = {
+  CRITICAL: "border-red-300 bg-red-50 text-red-700",
+  WARNING: "border-yellow-300 bg-yellow-50 text-yellow-700",
+  INFO: "border-blue-300 bg-blue-50 text-blue-700",
+};
 
+export default function AlertCard({ alert, onResolve }: Props) {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm font-medium text-slate-400">Recent System Alerts</h2>
-        <Link href="/alerts" className="text-xs text-emerald-400 hover:underline">View all</Link>
-      </div>
+    <div
+      className={`rounded-xl border p-4 ${
+        severityStyles[alert.severity]
+      }`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-semibold">
+            {alert.severity}
+          </p>
 
-      {loading ? (
-        <p className="mt-4 text-sm text-slate-500">Loading...</p>
-      ) : recent.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-500">No active alerts.</p>
-      ) : (
-        <ul className="mt-4 space-y-3">
-          {recent.map((alert) => (
-            <li key={alert.id} className="flex items-start gap-2 text-sm">
-              <span aria-hidden>{severityIcon[alert.severity]}</span>
-              <div>
-                <p className="text-slate-200">{alert.message}</p>
-                <p className="text-xs text-slate-500">{alert.field?.name}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+          <p className="mt-1">
+            {alert.message}
+          </p>
+
+          {alert.field?.name && (
+            <p className="mt-1 text-sm opacity-70">
+              Field: {alert.field.name}
+            </p>
+          )}
+        </div>
+
+        {!alert.resolved && (
+          <button
+            type="button"
+            onClick={() => onResolve(alert.id)}
+            className="rounded-lg border border-current px-3 py-1 text-sm font-medium hover:bg-white/50"
+          >
+            Resolve
+          </button>
+        )}
+      </div>
     </div>
   );
 }
