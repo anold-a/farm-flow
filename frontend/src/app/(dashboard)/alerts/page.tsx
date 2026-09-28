@@ -18,21 +18,35 @@ export default function AlertsPage() {
     return <div className="rounded-xl bg-red-950/40 border border-red-500/20 p-4 text-red-400">{alertsError}</div>;
   }
 
-  const escalatedRecommendations: Alert[] = recommendationResults.flatMap((fieldRec) =>
+  const escalatedRecommendations: Alert[] = recommendationResults.flatMap(
+  (fieldRec) =>
     fieldRec.recommendations
-    .filter(item => item.priority === "HIGH" || item.priority === "MEDIUM")
-    .map((item, index) => ({
-      id: `rec-alert-${fieldRec.fieldId}-${index}`, 
-      fieldId: fieldRec.fieldId,
-      field: { id: fieldRec.fieldId, name: fieldRec.fieldName },
-      type: "RECOMMENDATION",
-      severity: (item.priority === "HIGH" ? "CRITICAL" : "WARNING") as Alert["severity"],
-      message: `${item.situation} → ${item.recommendation}`,
-      resolved:false,
-      createdAt: new Date().toISOString(), 
-      updatedAt: new Date().toISOString(),
-    }))
-    );
+      .filter(
+        (item) =>
+          (item.priority === "HIGH" || item.priority === "MEDIUM") &&
+          !alerts.some(
+            (alert) =>
+              alert.fieldId === fieldRec.fieldId &&
+             alert.type === item.type,
+          ),
+      )
+      .map((item, index) => ({
+        id: `rec-alert-${fieldRec.fieldId}-${index}`,
+        fieldId: fieldRec.fieldId,
+        field: {
+          id: fieldRec.fieldId,
+          name: fieldRec.fieldName,
+        },
+        type: "RECOMMENDATION",
+        severity: (
+          item.priority === "HIGH" ? "CRITICAL" : "WARNING"
+        ) as Alert["severity"],
+        message: `${item.situation} → ${item.recommendation}`,
+        resolved: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })),
+);
 
   
   const allAlerts = [...alerts, ...escalatedRecommendations];
