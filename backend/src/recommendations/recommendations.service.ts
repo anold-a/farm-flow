@@ -28,6 +28,9 @@ export class RecommendationsService {
       fieldId: intelligence.fieldId,
       cropId: intelligence.cropId,
       status: intelligence.status,
+      expectedGrowthStage: intelligence.expectedGrowthStage,
+      actualGrowthStage: intelligence.growthStage,
+      stageComparison: intelligence.stageComparison,
       recommendations,
     };
   }
