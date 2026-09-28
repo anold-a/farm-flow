@@ -47,9 +47,7 @@ const [activeCrop, setActiveCrop] = useState<Crop | null>(null);
 
   const { intelligence, loading: intelligenceLoading, error: intelligenceError } = useCropIntelligence(field.id);
   const { data: recommendations, loading: recLoading, error: recError } = useRecommendations(field.id);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [alertsLoading, setAlertsLoading] = useState(true);
-  const [alertsError, setAlertsError] = useState("");
+  
 
 useEffect(() => { 
   async function loadFieldData() {
@@ -81,19 +79,7 @@ try {
         setCropLoading(false);
       }
 
-try {
-  setAlertsLoading(true);
-  setAlertsError("");
 
-  const alertData = await alertService.getForField(field.id);
-  setAlerts(alertData);
-} catch (err) {
-  setAlertsError(
-    err instanceof Error ? err.message : "Failed to load alerts."
-  );
-} finally {
-  setAlertsLoading(false);
-}
    
   }
 
@@ -244,57 +230,7 @@ try {
 )}
       </Card>
 
-      <Card>
-  <h2 className="mb-4 text-xl font-semibold">
-    Alerts
-  </h2>
-
-  {alertsLoading && (
-    <p className="text-gray-500">Loading alerts...</p>
-  )}
-
-  {!alertsLoading && alertsError && (
-    <div className="rounded-lg bg-red-100 p-4 text-red-700">
-      {alertsError}
-    </div>
-  )}
-
-  {!alertsLoading && !alertsError && alerts.length === 0 && (
-    <p className="text-gray-500">
-      No alerts for this field.
-    </p>
-  )}
-
-  {!alertsLoading && !alertsError && alerts.length > 0 && (
-    <ul className="space-y-3">
-      {alerts.map((alert) => (
-        <li
-          key={alert.id}
-          className="rounded-lg border p-4"
-        >
-          <div className="flex items-center justify-between">
-            <p className="font-semibold">
-              {alert.type.replaceAll("_", " ")}
-            </p>
-
-            <span className="text-sm font-medium">
-              {alert.severity}
-            </span>
-          </div>
-
-          <p className="mt-2 text-sm text-gray-700">
-            {alert.message}
-          </p>
-
-          <p className="mt-2 text-xs text-gray-400">
-            {new Date(alert.createdAt).toLocaleString()}
-          </p>
-        </li>
-      ))}
-    </ul>
-  )}
-</Card>
-
+      
       {!intelligenceLoading && !intelligenceError && intelligence && (
   <CropHealthCard intelligence={intelligence} />
 )}

@@ -36,12 +36,12 @@ export function generateRecommendations(
   }
 
   
-  if (intelligence.growthStage !== intelligence.expectedGrowthStage) {
+  if (intelligence.stageComparison === 'BEHIND') {
     recommendations.push({
-      situation: `Crop is recorded as ${intelligence.growthStage}, but is expected to be at ${intelligence.expectedGrowthStage} based on planting date.`,
+      situation: `Crop is behind schedule: currently ${intelligence.growthStage}, expected ${intelligence.expectedGrowthStage}.`,
       recommendation:
-        'Verify the recorded growth stage and perform any field activity appropriate for the current stage.',
-      priority: 'MEDIUM',
+        'Inspect the field to determine why crop development is behind the expected stage and take appropriate action.',
+      priority: 'HIGH',
     });
   }
 
