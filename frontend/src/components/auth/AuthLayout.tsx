@@ -48,39 +48,22 @@ export default function AuthLayout({ children }: Props) {
           </div>
 
           
-          <div className="w-full max-w-md space-y-6 text-center z-10 mt-4">
-            <div>
-              <p className="font-display text-2xl font-bold tracking-tight text-white drop-shadow-sm">
-                Know your fields at a glance
-              </p>
-              <p className="mt-2 text-sm text-emerald-100">
-                Every field's status, in one place — the moment you sign in.
-              </p>
-            </div>
+          <div className="relative flex-1 overflow-hidden bg-emerald-50">
+  <div className="absolute inset-0 bg-emerald-900/5" />
 
-            
-            <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-md p-6 text-left shadow-inner">
-              <p className="text-xs font-semibold uppercase tracking-wider text-emerald-200 mb-4">Live Field Dashboard</p>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {fieldTiles.map((tile) => (
-                  <div key={tile.name} className="rounded-lg bg-white/90 p-3 shadow-sm border border-emerald-100 transition hover:scale-[1.02] duration-200">
-                    <div className="flex items-center gap-2">
-                      <span className={`h-2 w-2 shrink-0 rounded-full ${statusColor[tile.status]}`} aria-hidden />
-                      <span className="text-[10px] font-bold uppercase text-gray-400">{tile.status}</span>
-                    </div>
-                    <p className="mt-2 truncate text-xs font-semibold text-gray-800">{tile.name}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+  <div className="relative z-10 flex h-full items-center justify-center p-10">
+    <Image
+      src="/layout.svg"
+      alt="Smart farming"
+      className="w-full max-w-xl"
+      width={250}
+      height={250}
+    />
+  </div>
+</div>
 
           
-          <div className="absolute bottom-4 right-4 opacity-15 pointer-events-none">
-            <svg width="120" height="120" viewBox="0 0 100 100" fill="currentColor" className="text-white">
-              <path d="M50 15C30 15 15 30 15 50s15 35 35 35 35-15 35-35S70 15 50 15zm0 60C36.2 75 25 63.8 25 50S36.2 25 50 25s25 11.2 25 25-11.2 25-25 25z"/>
-            </svg>
-          </div>
+          
         </div>
 
       </div>
