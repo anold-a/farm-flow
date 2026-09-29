@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+
 import Link from "next/link";
 
 import Input from "@/components/ui/Input";
@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginForm() {
-  const router = useRouter();
+  
 
   const { login } = useAuth();
 
@@ -54,10 +54,10 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6">
+    <div className="w-full max-w-md mx-auto space-y-4">
     <form
       onSubmit={handleSubmit}
-      className="space-y-4"
+      className="space-y-3.5"
     >
       <Input
       label="Email Address"
@@ -107,7 +107,7 @@ export default function LoginForm() {
       <Button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-emerald-500 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-emerald-500 disabled:opacity-50"
+        className="w-full rounded-lg bg-emerald-500 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-emerald-500 disabled:opacity-50"
       >
         {loading
           ? "Signing In..."
@@ -115,7 +115,7 @@ export default function LoginForm() {
       </Button>
 
       <p className="text-center text-sm text-gray-600 mt-4">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link
           href="/register"
           className="font-semibold text-emerald-500 hover:underline"
