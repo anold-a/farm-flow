@@ -43,7 +43,7 @@ export function useNotifications() {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      const updated = await notificationService.markAsRead(notificationId);
+     const updated = (await notificationService.markAsRead(notificationId)) as Notification;
 
       setNotifications((current) =>
         current.map((notification) =>

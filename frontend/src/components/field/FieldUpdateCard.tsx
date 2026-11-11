@@ -44,7 +44,7 @@ export default function FieldUpdateCard({
         </p>
 
         <p className="text-xs text-gray-400">
-          Updated by {update.user.fullName}
+          Updated by {update.user?.fullName ?? "Unknown"}
         </p>
       </div>
     </div>

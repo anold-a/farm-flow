@@ -6,8 +6,17 @@ import DeleteFieldButton from "./DeleteFieldButton";
 import { Field } from "@/types/field";
 
 
+export interface FieldCardData {
+  id: string;
+  name: string;
+  crop: string;
+  location: string;
+  acreage: number;
+  status: string;
+}
+
 interface Props {
-  field: Field;
+  field: FieldCardData;
   role: "ADMIN" | "AGENT";
   onDelete: (id: string) => void
 }

@@ -1,6 +1,6 @@
-import FieldCard from "./FieldCard";
+import FieldCard,{FieldCardData} from "./FieldCard";
 
-const fields = [
+const fields:FieldCardData[] = [
   {
     id: "1",
     name: "North Farm",
@@ -8,7 +8,7 @@ const fields = [
     location: "Nakuru",
     acreage: 15,
     status: "Healthy",
-    agent: "Jane Doe",
+    
   },
   {
     id: "2",
@@ -17,17 +17,24 @@ const fields = [
     location: "Eldoret",
     acreage: 8,
     status: "Needs Attention",
-    agent: "John Smith",
+    
   },
 ];
 
-export default function FieldList() {
+interface Props {
+  role: "ADMIN" | "AGENT";
+  onDelete: (id: string) => void;
+}
+
+export default function FieldList({ role, onDelete }: Props) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {fields.map((field) => (
         <FieldCard
           key={field.id}
           field={field}
+          role={role}
+          onDelete={onDelete}
         />
       ))}
     </div>

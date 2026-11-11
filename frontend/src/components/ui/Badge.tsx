@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 type BadgeProps = {
   children: ReactNode;
-  className:string;
+  className?:string;
 };
 
 export default function Badge({

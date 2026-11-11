@@ -60,7 +60,7 @@ export default function FieldUpdateForm({
         setActiveCrop(crop);
         if (crop) {
           
-          setCropStage(crop.growthStage); 
+          setCropStage(crop.actualGrowthStage); 
         }
       } catch (err) {
         console.error("Failed to load active crop", err);
@@ -163,7 +163,7 @@ export default function FieldUpdateForm({
   </select>
   {activeCrop && (
     <p className="text-xs text-gray-400 italic">
-      Current baseline database stage: {activeCrop.growthStage}
+      Current baseline database stage: {activeCrop.actualGrowthStage}
     </p>
   )}
 

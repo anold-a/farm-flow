@@ -23,7 +23,7 @@ export const notificationService = {
   },
 
   markAllAsRead() {
-    return apiFetch<void>(
+    return apiFetch<Notification>(
       "/notifications/read-all",
       {
         method: "PATCH",
