@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div className={`${fraunces.variable} ${plexSans.variable} h-full antialiased`}>
     <HomeNav />
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans ">
+    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans w-full p-0">
       <HeroSection />
       <FeatureStrip />
       <SystemFactsSection />

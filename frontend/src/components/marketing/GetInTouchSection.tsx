@@ -63,7 +63,7 @@ return (
                 onChange={handleChange}
                 rows={5}
                 placeholder="Yes,you.Tell me what you're thinking..."
-                className="w-full rounded-md border bg-slate-800 px-4 py-2 text-sm outline-none focus:border-emerald-600"
+                className="w-full rounded-md border border-slate-700 bg-white px-4 py-2 text-sm outline-none focus:border-emerald-600 text-gray-900"
               />
             </div>
 

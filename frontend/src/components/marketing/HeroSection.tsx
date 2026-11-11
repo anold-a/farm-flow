@@ -18,9 +18,9 @@ const statusColor: Record<string, string> = {
 export default function HeroSection() {
   return (
     
-    <section className="w-full bg-[url('/hero.jpg')] bg-size-[1270px_600px] bg-no-repeat bg-center px-6 py-19 text-gray-900 lg:px-8">
-      <div className="mx-auto mt-10 max-w-9xl rounded-3xl border border-white/20 bg-white/70 backdrop-blur-md px-8 py-2 text-center shadow-md sm:px-16">
-        <h1 className="font-display text-4xl font-medium leading-[1.1] tracking-tight sm:text-6xl">
+    <section className="w-full bg-[url('/hero.jpg')] bg-size-[100%_600px] bg-no-repeat bg-center  py-10 text-gray-900 px-6 lg:px-8">
+      <div className="mx-auto mt-15 max-w-9xl rounded-sm border border-white/20 bg-white/70 backdrop-blur-md px-8 py-2 text-center shadow-md sm:px-16">
+        <h1 className="font-serif text-4xl font-normal leading-[1.1] tracking-tight sm:text-6xl">
           Track field conditions before they become a problem.
         </h1>
 
