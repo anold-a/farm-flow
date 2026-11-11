@@ -28,9 +28,9 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <AuthCard title ="Sign in to your account">
+      <AuthCard className="p-20" title ="Sign in to your account">
         <LoginForm />
-      </AuthCard>
+     </AuthCard>
     </AuthLayout>
   );
 }
