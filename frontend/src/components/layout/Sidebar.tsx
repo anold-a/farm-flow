@@ -1,100 +1,142 @@
 "use client";
 
+
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useAlerts } from "@/hooks/useAlerts";
 import { usePathname } from "next/navigation";
-import {  CloudSun, BarChart3,Siren, FileSpreadsheet  } from "lucide-react";
 
-const icons = { 
-  dashboard: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>,
-  fields: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5"><path d="M3 12h18M3 6h18M3 18h18"/></svg>,
-  users: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2M17 11l2 2 4-4"/></svg>,
-  cropStages: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5"><path d="M4 19h16M4 15h10M4 11h6M4 7h3"/></svg>,
-  analytics: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5"><path d="M3 3v18h18M7 15l4-4 4 4 5-5"/></svg>,
-  alerts: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>,
-  settings: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>,
-};
+import {
+  FiGrid,
+  FiMap,
+  FiCloud,
+  FiLayers,
+  FiAlertTriangle,
+  FiFileText,
+  FiUsers,
+  FiBarChart2,
+  FiClipboard,
+  FiSettings,
+  
+  FiExternalLink,
+} from "react-icons/fi";
 
+type NavItem = { href: string; label: string; icon: ReactNode; badge?: number };
+type NavSection = { title: string; items: NavItem[] };
 
 export default function Sidebar() {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const role = user?.role ?? "AGENT";
-  const {
-  unreadCount,
-} = useNotifications();
+  const { unreadCount } = useNotifications();
 
-const { criticalCount } = useAlerts();
-const pathname = usePathname();
+  const { criticalCount } = useAlerts();
+  const pathname = usePathname();
 
-const navigationLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: icons.dashboard },
-    
-    
-    role === "ADMIN"
-      ? { href: "/fields", label: "Fields", icon: icons.fields }
-      : { href: "/my-fields", label: "My Fields", icon: icons.fields },
 
-    { href: "/weather", label: "Weather", icon: <CloudSun className="h-5 w-5" />},
-    { href: "/reports", label: "Reports", icon: <BarChart3 className="h-5 w-5" />},
 
-    
-    ...(role === "ADMIN" 
+  const sections: NavSection[] = [
+    {
+      title: "Overview",
+      items: [
+        { href: "/dashboard", label: "Dashboard", icon: <FiGrid className="h-4 w-4" /> },
+        role === "ADMIN"
+          ? { href: "/fields", label: "Fields", icon: <FiMap className="h-4 w-4" /> }
+          : { href: "/my-fields", label: "My Fields", icon: <FiMap className="h-4 w-4" /> },
+        { href: "/weather", label: "Weather", icon: <FiCloud className="h-4 w-4" /> },
+      ],
+    },
+    {
+      title: "Monitoring",
+      items: [
+        { href: "/crop-stages", label: "Crop Stages", icon: <FiLayers className="h-4 w-4" /> },
+        { href: "/alerts", label: "Alerts", icon: <FiAlertTriangle className="h-4 w-4" />, badge: criticalCount },
+        { href: "/reports", label: "Reports", icon: <FiFileText className="h-4 w-4" /> },
+      ],
+    },
+    ...(role === "ADMIN"
       ? [
-          { href: "/users", label: "Users", icon: icons.users},
-          { href: "/analytics", label: "Analytics", icon: icons.analytics },
-          { href: "/audit-logs", label: "Audit Logs", icon: <FileSpreadsheet className="h-5 w-5" /> },
+          {
+            title: "Admin",
+            items: [
+              { href: "/users", label: "Users", icon: <FiUsers className="h-4 w-4" /> },
+              { href: "/analytics", label: "Analytics", icon: <FiBarChart2 className="h-4 w-4" /> },
+              { href: "/audit-logs", label: "Audit Logs", icon: <FiClipboard className="h-4 w-4" /> },
+            ],
+          },
         ]
-      : []
-    ),
-    { href: "/crop-stages", label: "Crop Stages", icon: icons.cropStages },
-    { href: "/alerts", label: "Alerts", icon: <Siren className="h-5 w-5" />, badge: criticalCount },
-
-    { href: "/settings", label: "Settings", icon:icons.settings},
+      : []),
+    {
+      title: "Account",
+      items: [{ href: "/settings", label: "Settings", icon: <FiSettings className="h-4 w-4" /> }],
+    },
   ];
 
-
-
-
-function isActive(href: string) { 
-    return pathname === href;
+  function isActive(href: string) {
+    return pathname === href || pathname.startsWith(href + "/");
   }
 
-  function linkClass(href: string) { 
-    return `flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-      isActive(href)
-        ? "bg-emerald-500/15 text-emerald-400"
-        : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-    }`;
-  }
+ 
+
+  const initial = (user?.fullName ?? "U").charAt(0).toUpperCase();
+
   return (
-    <aside className="sticky top-0 h-screen  w-64 shrink-0 border-r border-slate-800 bg-slate-900 p-6 flex flex-col  overflow-y-auto">
-      <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-emerald-500 text-sm font-display text-slate-900">S</div>
-        <span className="font-display text-lg text-slate-100">SmartSeason</span>
+    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-gray-200 bg-[#FAF7F0]">
+     
+      <div className="flex items-center gap-3 px-5 pb-2 pt-5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 text-sm font-semibold text-white">
+          {initial}
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-gray-900">{user?.fullName ?? "SmartSeason"}</p>
+          <p className="truncate text-[11px] text-gray-500">{user?.email}</p>
+        </div>
       </div>
 
-      <nav className="mt-2 flex flex-col gap-4">
-        {navigationLinks.map((item) => (
-          <Link 
-            key={item.href} 
-            href={item.href} 
-            className={linkClass(item.href)} 
-            aria-current={isActive(item.href) ? "page" : undefined}
-          >
-            <span aria-hidden="true" className="flex items-center justify-center">{item.icon}</span>
-            <span>{item.label}</span>
-           
-            {"badge" in item && item.badge !== undefined && item.badge > 0 && (
-              <span className="ml-auto rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
-                {item.badge}
-              </span>
-            )}
-          </Link>
+      
+
+      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+        
+        {sections.map((section) => (
+          <div key={section.title} className="mt-4">
+            <p className="px-3 pb-1 text-[11px] font-medium text-gray-400">{section.title}</p>
+
+            {section.items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                  isActive(item.href)
+                    ? "bg-white font-medium text-gray-900 shadow-sm"
+                    : "text-gray-600 hover:bg-black/5"
+                }`}
+              >
+                <span aria-hidden="true" className="flex items-center justify-center">{item.icon}</span>
+                <span>{item.label}</span>
+
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span className="ml-auto rounded-md bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                    {item.badge}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
         ))}
       </nav>
+
+      <div className="p-4">
+        <Link
+          href="/"
+          className="flex items-center justify-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-medium text-gray-800 shadow-sm transition hover:bg-gray-50"
+        >
+          Visit site
+          <FiExternalLink className="h-3.5 w-3.5" aria-hidden />
+        </Link>
+      </div>
     </aside>
   );
 }
