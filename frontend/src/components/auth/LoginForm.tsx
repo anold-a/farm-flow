@@ -55,7 +55,7 @@ export default function LoginForm() {
   }
 
   const inputClass =
-    "w-full rounded-lg border border-gray-200 bg-white py-3 pl-10 pr-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20";
+    "w-full rounded-lg border border-gray-200 bg-white py-3 pl-5 pr-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20";
 
   return (
     <div className="w-full space-y-4">

@@ -27,7 +27,7 @@ export default function RegisterPage() {
 
   return (
     <AuthLayout>
-      <AuthCard title="Create SmartSeason Account">
+      <AuthCard title ="Welcome!" subtitle="Register to start your  journey">
         <RegisterForm />
       </AuthCard>
     </AuthLayout>

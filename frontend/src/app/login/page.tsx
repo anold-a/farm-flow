@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <AuthCard  title ="Wecome Back!" subtitle="Login to continue your journey">
+      <AuthCard  title ="Welcome Back!" subtitle="Login to continue your journey">
         <LoginForm />
      </AuthCard>
     </AuthLayout>
