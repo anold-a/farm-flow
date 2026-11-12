@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
-import Card from "@/components/ui/Card";
-import Link from "next/link";
+import Image from "next/image";
+
 
 interface Props {
   title:string,
+  subtitle?: string;
   children: ReactNode;
   className?:string,
 }
@@ -11,25 +12,35 @@ interface Props {
 export default function AuthCard({
    title,
   children,
-  className
+  className ="",
+  subtitle
 }: Props) {
   return (
-    <Card>
-      <div className="mx-auto w-full  max-w-md space-y-6">
-        <div className="absolute top-6 left-6 z-10">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 rounded bg-emerald-500 px-3 py-2.5 text-xs font-medium text-white transition hover:bg-emerald-700 backdrop-blur-sm"
-            >
-              ← Back to Website
-            </Link>
-          </div>
+    
+      <div className={`mx-auto w-full border rounded-sm bg-emerald-50 px-4 py-6 max-w-lg ${className}`}>
+        <div className="flex justify-between">
+       <div className="flex flex-col items-center text-center">
+        <Image src="/farmflow-logo.svg" alt="FarmFlow logo" width={64} height={64} priority />
+        <p className="mt-3 font-serif text-3xl font-semibold tracking-tight text-emerald-900">
+          Farm<span className="text-emerald-600">Flow</span>
+        </p>
+        
+        <p className="mt-1 text-xs tracking-wide text-gray-500">Plan. Monitor. Harvest.</p>
+        <div className="mt-4 h-0.5 w-10 rounded bg-emerald-800" />
+      </div>
 
-        <p className="font-display text-3xl font-bold tracking-tight text-emerald-500 sm:text-2xl">{title}</p>
+      
+      <div className="mt-20 text-center">
+        <h1 className="font-serif text-2xl font-bold text-emerald-950">{title}</h1>
+        {subtitle && <p className="mt-1 text-sm text-gray-600">{subtitle}</p>}
+      </div>
+      </div>
 
-        {children}
+        
+
+        <div className="mt-6">{children}</div>
 
       </div>
-    </Card>
+    
   );
 }

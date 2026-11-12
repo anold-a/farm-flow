@@ -8,7 +8,7 @@ export default function HomeNav() {
     <nav className="rounded-lg fixed top-2 inset-x-0 z-50 flex h-16 w-[94%] max-w-9xl mx-auto items-center justify-between bg-white px-6 text-black shadow-md">
      
      <Image
-     src="/agri1.svg"
+     src="/farmflow-logo.svg"
      alt="logo"
      width={50}
      height={50}

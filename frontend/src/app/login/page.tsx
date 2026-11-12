@@ -2,7 +2,7 @@
 
 
 import AuthLayout from "@/components/auth/AuthLayout";
-import { redirect } from "next/navigation";
+
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,6 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
   const { isAuthenticated,loading } = useAuth();
-
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +27,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <AuthCard className="p-20" title ="Sign in to your account">
+      <AuthCard  title ="Wecome Back!" subtitle="Login to continue your journey">
         <LoginForm />
      </AuthCard>
     </AuthLayout>
