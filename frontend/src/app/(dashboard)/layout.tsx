@@ -14,13 +14,13 @@ export default function DashboardLayout({
   console.log("[DashboardLayout] rendering");
   return (
     <ProtectedRoute>
-    <div className="flex min-h-screen bg-slate-950 text-slate-200">
+    <div className="flex min-h-screen bg-emerald-50 text-slate-200">
       <Sidebar/>
 
       <div className="relative flex flex-1 bg-slate-900 flex-col min-w-0">
         <Navbar />
 
-        <main className="pt-6 flex-1 bg-slate-950  p-6">
+        <main className="pt-6 flex-1 bg-emerald-50  p-6">
           {children}
         </main>
       </div>
