@@ -5,8 +5,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
 
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import {useState,useMemo,useEffect } from "react";
 import GlobalSearch from "../dashboard/GlobalSearch";
 
 const Icon2 = ({ children }: { children: React.ReactNode }) => (
@@ -29,21 +29,30 @@ const CloseIcon = () => (
   </svg>
 );
 
-const DEFAULT_TABS = [
-  { href: "/fields/create", label: "Register Field" },
-  { href: "/register", label: "Create a new user" },
-  { href: "/crops", label: "Add a new crop" },
+const ALL_TABS = [
+  { href: "/fields/create", label: "Register Field", roles: ["ADMIN"] },
+  { href: "/register", label: "Create a new user", roles: ["ADMIN"] },
+  { href: "/crops", label: "Add a new crop", roles: ["ADMIN", "AGENT"] },
 ];
 
 export default function Navbar() {
   const { user } = useAuth();
+  const role = user?.role ?? "AGENT";
   const { unreadCount } = useNotifications();
 
   const router = useRouter();
   const pathname = usePathname();
   
 
-  const [tabs, setTabs] = useState(DEFAULT_TABS);
+  const [closed, setClosed] = useState<string[]>([]);
+
+  const tabs = useMemo(
+    () =>
+      ALL_TABS.filter(
+        (t) => (!t.roles || t.roles.includes(role)) && !closed.includes(t.href)
+      ),
+    [role, closed]
+  );
   
 
 
@@ -55,7 +64,7 @@ export default function Navbar() {
     e.preventDefault();
     e.stopPropagation();
     const remaining = tabs.filter((t) => t.href !== href);
-    setTabs(remaining);
+    setClosed((c) => [...c, href]); 
     if (isActive(href)) router.push(remaining[0]?.href ?? "/dashboard");
   }
 

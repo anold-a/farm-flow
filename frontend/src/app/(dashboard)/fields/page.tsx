@@ -6,7 +6,7 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 
 import FieldCard from "@/components/field/FieldCard";
-import FieldSearch from "@/components/field/FieldSearch";
+
 import FieldEmptyState from "@/components/field/FieldEmptyState";
 
 import { useFields } from "@/hooks/useFields";
@@ -81,20 +81,11 @@ export default function FieldsPage() {
 
         </div>
 
-        {role === "ADMIN" && (
-        <Link href="/fields/create">
-          <Button>
-            Register Field
-          </Button>
-        </Link>
-        )}
+        
 
       </div>
 
-      <FieldSearch
-        value={search}
-        onChange={setSearch}
-      />
+      
 
       {loading && (
         <p className="text-gray-500">Loading fields...</p>
