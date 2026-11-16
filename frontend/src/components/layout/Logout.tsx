@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { FiLogOut } from "react-icons/fi";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -15,9 +16,11 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="rounded bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
+      className="flex items-center text-emerald-600 gap-1"
     >
-      Logout
+      <FiLogOut size={16} aria-hidden="true" />
+  <span>Log out</span>
+
     </button>
   );
 }
