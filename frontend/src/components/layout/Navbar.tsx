@@ -3,10 +3,11 @@
 import UserMenu from "./UserMenu";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
-import useDebounce  from "@/hooks/useDebounce"; 
+
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import {useState } from "react";
+import GlobalSearch from "../dashboard/GlobalSearch";
 
 const Icon2 = ({ children }: { children: React.ReactNode }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -14,7 +15,7 @@ const Icon2 = ({ children }: { children: React.ReactNode }) => (
     {children}
   </svg>
 );
-const SearchIcon = () => <Icon2><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></Icon2>;
+
 
 const HomeIcon = () => <Icon2><path d="M3 11l9-8 9 8" /><path d="M5 10v10h14V10" /></Icon2>;
 const BellIcon = () => (
@@ -40,11 +41,13 @@ export default function Navbar() {
 
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  
 
   const [tabs, setTabs] = useState(DEFAULT_TABS);
-  const [query, setQuery] = useState(searchParams.get("q") ?? "");
-  const debouncedQuery = useDebounce(query, 500);
+  
+
+
+ 
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
@@ -56,16 +59,7 @@ export default function Navbar() {
     if (isActive(href)) router.push(remaining[0]?.href ?? "/dashboard");
   }
 
-  useEffect(() => {
-    const current = searchParams.get("q") ?? "";
-    if (debouncedQuery === current) return;
-    const params = new URLSearchParams(searchParams.toString());
-    if (debouncedQuery) params.set("q", debouncedQuery);
-    else params.delete("q");
-    const qs = params.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-    
-  }, [debouncedQuery]);
+ 
 
   return (
     <header className="sticky top-0 z-50 flex h-13.5 w-full shrink-0 items-center gap-2  px-3">
@@ -102,16 +96,7 @@ export default function Navbar() {
       </div>
 
       <div className="flex  items-center gap-2">
-      <label className="flex h-9 w-80 items-center gap-2 rounded-md border border-black/10 bg-[#F8F7F4] px-3 text-neutral-500 focus-within:border-black/25">
-        <SearchIcon />
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Filter…"
-          className="w-full bg-transparent text-[13px] text-neutral-800 outline-none placeholder:text-neutral-500"
-        />
-      </label>
+      <GlobalSearch />
 
       
       <Link href="/notifications" aria-label="Notifications"
