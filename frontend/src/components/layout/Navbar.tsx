@@ -3,11 +3,13 @@
 import UserMenu from "./UserMenu";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
-
+import FieldForm from "../field/FieldForm";
+import CreateUserForm from "@/components/users/CreateUserForm";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {useState,useMemo,useEffect } from "react";
 import GlobalSearch from "../dashboard/GlobalSearch";
+import Modal from "./Modal";
 
 const Icon2 = ({ children }: { children: React.ReactNode }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -29,9 +31,20 @@ const CloseIcon = () => (
   </svg>
 );
 
-const ALL_TABS = [
-  { href: "/fields/create", label: "Register Field", roles: ["ADMIN"] },
-  { href: "/register", label: "Create a new user", roles: ["ADMIN"] },
+type ModalKey = "registerField" | "createUser" ;
+
+const MODALS: Record<
+  ModalKey,
+  { label: string; Form: React.ComponentType<{ onSuccess?: () => void; onCancel?: () => void;}> }
+> = {
+  registerField: { label: "Register field", Form: FieldForm },
+  createUser: { label: "Create a new user", Form: CreateUserForm},
+  
+};
+
+const ALL_TABS: { href: string; label: string; roles?: string[]; modal?: ModalKey }[] = [
+  { href: "/fields/create", label: "Register Field", roles: ["ADMIN"], modal: "registerField" },
+  { href: "/register", label: "Create a new user", roles: ["ADMIN"], modal:"createUser" },
   { href: "/crops", label: "Add a new crop", roles: ["ADMIN", "AGENT"] },
 ];
 
@@ -39,6 +52,8 @@ export default function Navbar() {
   const { user } = useAuth();
   const role = user?.role ?? "AGENT";
   const { unreadCount } = useNotifications();
+  const [openModal, setOpenModal] = useState<ModalKey | null>(null);
+const closeModal = () => setOpenModal(null);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -85,6 +100,19 @@ export default function Navbar() {
       <div className="flex min-w-0 grow items-center gap-1 overflow-x-auto">
         {tabs.map((tab) => {
           const active = isActive(tab.href);
+          const tabClass = `flex h-8 shrink-0 items-center gap-2 rounded-sm px-3 text-[13px] font-medium transition-colors ${
+    active ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:bg-black/5 hover:text-neutral-800"
+  }`;
+
+  
+  if (tab.modal) {
+  return (
+    <button key={tab.href} type="button" onClick={() => setOpenModal(tab.modal!)}
+      aria-haspopup="dialog" className={tabClass}>
+      <span>{tab.label}</span>
+    </button>
+  );
+}
           return (
             <Link key={tab.href} href={tab.href} aria-current={active ? "page" : undefined}
               className={`flex h-8 shrink-0 items-center gap-2 rounded-sm px-3 text-[13px] font-medium transition-colors ${
@@ -120,6 +148,14 @@ export default function Navbar() {
 
         <UserMenu />
     </div>
+  {openModal && (() => {
+  const { label, Form } = MODALS[openModal];
+  return (
+    <Modal label={label} onClose={closeModal}>
+      <Form onSuccess={closeModal} onCancel={closeModal} />
+    </Modal>
+  );
+})()}
     </header>
   );
 }

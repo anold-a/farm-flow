@@ -4,15 +4,16 @@ import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-
+import { userService } from "@/services/user.service"; 
 import { CreateUserDto, UserRole,User } from "@/types/user";
 
 interface Props {
-  onCreate: (data: CreateUserDto) => Promise<User>; // CHANGED — was Promise<void>
-  onClose: () => void;
+  onCreate?: (data: CreateUserDto) => Promise<User>; 
+  onCancel?: () => void;
+  onSuccess?: () => void;
 }
 
-export default function CreateUserForm({ onCreate, onClose }: Props) {
+export default function CreateUserForm({ onCreate, onCancel,onSuccess }: Props) {
   const [formData, setFormData] = useState<CreateUserDto>({
     fullName: "",
     email: "",
@@ -61,8 +62,8 @@ export default function CreateUserForm({ onCreate, onClose }: Props) {
 
     try {
       setSubmitting(true);
-      await onCreate(formData);
-      onClose();
+       await (onCreate ? onCreate(formData) : userService.create(formData));
+      onSuccess?.();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -130,7 +131,7 @@ export default function CreateUserForm({ onCreate, onClose }: Props) {
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" onClick={onClose} disabled={submitting}>
+            <Button type="button" onClick={onCancel} disabled={submitting}>
               Cancel
             </Button>
 

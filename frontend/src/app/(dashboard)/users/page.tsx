@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+
 
 import UserTable from "@/components/users/UserTable";
 import { useUsers } from "@/hooks/useUsers";
-import CreateUserForm from "@/components/users/CreateUserForm";
+
 import RoleGuard from "@/components/auth/RoleGuard";
 import { useAuth } from "@/hooks/useAuth";
 
 
 export default function UsersPage() {
-  const { users, loading, error,createUser } = useUsers();
-  const [showCreateForm, setShowCreateForm] = useState(false); 
+  const { users, loading, error} = useUsers();
+  
 
   const { user } = useAuth();
   const role = user?.role ?? "AGENT";
@@ -36,24 +36,11 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold">User Management</h1>
           <p className="text-gray-500">Manage admin and agent accounts.</p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => setShowCreateForm(true)}
-          className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
-        >
-          + Add User
-        </button>
       </div>
 
       <UserTable users={users} role={role} />
 
-      {showCreateForm && ( 
-        <CreateUserForm
-          onCreate={createUser}
-          onClose={() => setShowCreateForm(false)}
-        />
-      )}
+     
     </div>
     </RoleGuard>
   );

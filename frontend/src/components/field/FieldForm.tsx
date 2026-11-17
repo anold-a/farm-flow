@@ -9,7 +9,12 @@ import Input from "@/components/ui/Input";
 import { fieldService } from "@/services/field.service";
 import { CreateFieldDto } from "@/types/field";
 
-export default function FieldForm() {
+type FieldFormProps = {
+  onSuccess?: () => void;
+  onCancel?: () => void;
+};
+
+export default function FieldForm({onCancel,onSuccess}:FieldFormProps) {
   const router = useRouter();
 
   const [formData, setFormData] =
@@ -96,7 +101,8 @@ export default function FieldForm() {
       );
 
       setTimeout(() => {
-        router.push("/fields");
+        if(onSuccess) onSuccess();
+        else router.push("/fields");
       }, 1000);
     } catch (err) {
       if (err instanceof Error) {
@@ -114,7 +120,7 @@ export default function FieldForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6"
+      className="space-y-6 p-6"
     >
       {error && (
         <div className="rounded-lg bg-red-100 p-4 text-red-700">
@@ -127,6 +133,7 @@ export default function FieldForm() {
           {success}
         </div>
       )}
+      
 
       <Input
         label="Field Name"
@@ -173,14 +180,24 @@ export default function FieldForm() {
         className=""
       />
 
-      <Button
-        type="submit"
-        disabled={loading}
-      >
-        {loading
-          ? "Registering..."
-          : "Register Field"}
-      </Button>
+
+
+     <div className="flex items-center gap-3">
+        <Button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register Field"}
+        </Button>
+
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={loading}
+            className="rounded-md px-4 py-2 text-sm text-neutral-600 hover:bg-black/5"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }
