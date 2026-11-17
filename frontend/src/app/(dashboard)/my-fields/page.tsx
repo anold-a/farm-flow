@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 
 import FieldCard from "@/components/field/FieldCard";
-import FieldSearch from "@/components/field/FieldSearch";
+
 import FieldEmptyState from "@/components/field/FieldEmptyState";
 
 import { useMyFields } from "@/hooks/useMyFields";
@@ -30,7 +30,7 @@ export default function MyFieldsPage() {
         <p className="text-gray-500">Fields assigned to you.</p>
       </div>
 
-      <FieldSearch value={search} onChange={setSearch} />
+      
 
       {loading && <p>Loading fields...</p>}
 
