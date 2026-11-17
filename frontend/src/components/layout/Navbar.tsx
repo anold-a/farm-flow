@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {useState,useMemo,useEffect } from "react";
 import GlobalSearch from "../dashboard/GlobalSearch";
 import Modal from "./Modal";
+import AddCropFlow from "@/components/crop/AddCropFlow"; 
 
 const Icon2 = ({ children }: { children: React.ReactNode }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -31,7 +32,7 @@ const CloseIcon = () => (
   </svg>
 );
 
-type ModalKey = "registerField" | "createUser" ;
+type ModalKey = "registerField" | "createUser" | "addCrop";
 
 const MODALS: Record<
   ModalKey,
@@ -39,13 +40,13 @@ const MODALS: Record<
 > = {
   registerField: { label: "Register field", Form: FieldForm },
   createUser: { label: "Create a new user", Form: CreateUserForm},
-  
+   addCrop: { label: "Add a new crop", Form: AddCropFlow },
 };
 
 const ALL_TABS: { href: string; label: string; roles?: string[]; modal?: ModalKey }[] = [
   { href: "/fields/create", label: "Register Field", roles: ["ADMIN"], modal: "registerField" },
   { href: "/register", label: "Create a new user", roles: ["ADMIN"], modal:"createUser" },
-  { href: "/crops", label: "Add a new crop", roles: ["ADMIN", "AGENT"] },
+  { href: "/crops", label: "Add a new crop", roles: ["ADMIN", "AGENT"],modal: "addCrop"  },
 ];
 
 export default function Navbar() {

@@ -14,9 +14,11 @@ interface CropFormData {
   expectedHarvestDate: string;
 }
 
-interface CropFormProps { fieldId: string; }
+interface CropFormProps { fieldId: string;
+  onSuccess?: () => void;
+  onCancel?: () => void; }
 
-export default function CropForm({fieldId}:CropFormProps){
+export default function CropForm({fieldId,onSuccess,onCancel}:CropFormProps){
   const router = useRouter();
 
   const [formData,setFormData] = useState<CropFormData>({
@@ -100,7 +102,8 @@ export default function CropForm({fieldId}:CropFormProps){
       );
 
       setTimeout(() => {
-        router.push(`/fields/${fieldId}`);
+         if (onSuccess) onSuccess();
+        else router.push(`/fields/${fieldId}`);
       }, 1000);
     } catch (err) {
       if (err instanceof Error) {
@@ -118,7 +121,7 @@ export default function CropForm({fieldId}:CropFormProps){
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6"
+      className="space-y-6 p-6"
     >
       {error && (
         <div className="rounded-lg bg-red-100 p-4 text-red-700">
@@ -168,14 +171,22 @@ export default function CropForm({fieldId}:CropFormProps){
         className=""
       />
 
-      <Button
-        type="submit"
-        disabled={loading}
-      >
-        {loading
-          ? "Registering..."
-          : "Register Crop"}
-      </Button>
+     <div className="flex items-center gap-3">
+        <Button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register Crop"}
+        </Button>
+
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={loading}
+            className="rounded-md px-4 py-2 text-sm text-neutral-600 hover:bg-black/5"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 
