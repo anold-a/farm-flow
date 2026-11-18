@@ -46,9 +46,9 @@ export default function AboutCreatorSection() {
 
           <div className="flex flex-col justify-center gap-4 text-gray-700">
             <p>
-           Hi, Amani Arnold - a passionate full-stack developer from swahili world. I combine technical expertise with creative problem-solving to build impactful digital solutions.
+           Hello,I am Amani Arnold  a passionate full-stack developer from Nyeri,Kenya. My builds are a  combination of technical expertism and creative problem-solving aimed for impactful digital solutions.
 
-Beyond coding & learning, I enjoy experimenting with new technologies that push the boundaries of what's possible.After,I recharge on outdoor walks. For me, a true legacy is/will be built in code, so is in the environment we appreciate and the community we help grow.
+Beyond coding & learning, I enjoy experimenting with new technologies that push the boundaries of what's possible.
             </p>
             
           </div>
