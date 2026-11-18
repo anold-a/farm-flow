@@ -2,6 +2,9 @@
 
 import { Sprout } from "lucide-react"; 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import FieldsSection from "./FieldsSection";
+import FieldOverviewGrid from "./FieldOverviewGrid";
+import SystemAlertsPanel from "../alerts/SystemAlertsPanel";
 
 
 type DashboardHeaderProps = {
@@ -98,16 +101,14 @@ export default function DashboardHeader({
       </div>
 
       
-      {activeView === "" && stages.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {stages.map((stage) => (
-            <span
-              key={stage}
-              className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-800"
-            >
-              {clean(stage)} · {stageCounts[stage] ?? 0}
-            </span>
-          ))}
+      {activeView === "" && (
+        
+        <div >
+          <div className="mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+           <FieldOverviewGrid />
+           <SystemAlertsPanel />
+         </div>
+        <FieldsSection />
         </div>
       )}
     </div>
