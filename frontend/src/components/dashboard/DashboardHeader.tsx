@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FieldsSection from "./FieldsSection";
 import FieldOverviewGrid from "./FieldOverviewGrid";
 import SystemAlertsPanel from "../alerts/SystemAlertsPanel";
+import FieldsPage from "@/app/(dashboard)/fields/page";
 
 import { useAuth } from "@/hooks/useAuth";
 import UsersPage from "@/app/(dashboard)/users/page";
@@ -119,6 +120,12 @@ export default function DashboardHeader({
         <div>
 
           {user?.role === "ADMIN" && <UsersPage />}
+        </div>
+      )}
+      {activeView === "fields" && (
+        <div>
+
+          <FieldsPage />
         </div>
       )}
     </div>

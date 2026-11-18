@@ -6,7 +6,7 @@ import CropStagesTimeline from "@/components/dashboard/CropStagesTimeline";
 
 
 import SensorDataSummary from "@/components/dashboard/SensorDataSummary";
-import DashboardWeatherWidget from "@/components/dashboard/DashboardWeatherWidget";
+
 import FieldPerformanceChart from "@/components/dashboard/FieldPerformanceChart";
 
 import { useFieldOverview } from "@/hooks/useFieldOverview";
@@ -54,7 +54,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
          
           <SensorDataSummary overview={overview} />
-          <DashboardWeatherWidget />
+          
         </div>
       </div>
     </div>

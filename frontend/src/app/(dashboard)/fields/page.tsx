@@ -1,9 +1,7 @@
 "use client";
 
 import {useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 
-import Button from "@/components/ui/Button";
 
 import FieldCard from "@/components/field/FieldCard";
 
@@ -64,6 +62,13 @@ export default function FieldsPage() {
     }
   }
 
+  async function handleStatusChange(id: string, status: string) {
+  await fieldService.update(id, { status }); 
+  setLocalFields((current) =>
+    current.map((f) => (f.id === id ? { ...f, status } : f)),
+  );
+}
+
   return (
     <div className="space-y-8">
 
@@ -71,11 +76,9 @@ export default function FieldsPage() {
 
         <div>
 
-          <h1 className="text-3xl font-display text-white">
-            Fields
-          </h1>
+         
 
-          <p className="text-white">
+          <p className=" mt-10 text-neutral-950">
             Manage registered farm fields.
           </p>
 
@@ -102,13 +105,11 @@ export default function FieldsPage() {
           <FieldEmptyState />
       )}
 
-      <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full">
-
-        {filteredFields.map((field) => (
-          <FieldCard key={field.id} field={field} role={role} onDelete={handleDeleteField} />
-        ))}
-
-      </div>
+     <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {filteredFields.map((field) => (
+    <FieldCard key={field.id} field={field} role={role} onDelete={handleDeleteField} onStatusChange={handleStatusChange}/>
+  ))}
+</div>
 
     </div>
   );
