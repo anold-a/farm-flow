@@ -21,7 +21,10 @@ export default function DashboardPage() {
 
   return (
     <div >
-     
+     <div className="mb-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <FieldOverviewGrid />
+  <SystemAlertsPanel />
+</div>
 
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
@@ -42,15 +45,13 @@ export default function DashboardPage() {
   ))}
         </div>
 
-        <div className="space-y-6">
-          <FieldOverviewGrid />
-        </div>
+        
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
           <FieldPerformanceChart />
-          <SystemAlertsPanel />
+         
         </div>
 
         <div className="space-y-6">

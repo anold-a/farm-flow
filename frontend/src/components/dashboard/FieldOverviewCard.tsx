@@ -1,34 +1,49 @@
+import Link from "next/link";
+import { Sprout } from "lucide-react";
 import { FieldOverview } from "@/hooks/useFieldOverview";
+import { timeAgo } from "@/lib/timeAgo";
 
-const cardTint: Record<string, string> = { 
-  Healthy: "border-emerald-500/30 bg-emerald-500/10",
-  "Needs Attention": "border-amber-500/30 bg-amber-500/10",
-  Critical: "border-red-500/30 bg-red-500/10",
-  Harvested: "border-slate-700 bg-slate-800/50",
-};
+
+
 
 export default function FieldOverviewCard({ item }: { item: FieldOverview }) {
-  const tint = cardTint[item.field.status] ?? cardTint.Harvested;
+  const { field, crop, latestUpdate } = item;
+
+  
+  const stage = crop?.actualGrowthStage?.replace(/_/g, " ") ?? "No crop";
 
   return (
-    <div className={`rounded-xl border p-4 ${tint}`}>
-      <div className="flex items-center justify-between">
-        <p className="font-display text-slate-100">{item.field.name}</p>
-        <span className="text-xs text-slate-400">{item.crop?.actualGrowthStage.replace("_", " ") ?? "No crop"}</span>
-      </div>
+    
+    <li>
+      <Link
+        href={`/fields/${field.id}`}
+        className="flex items-start gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-black/3"
+      >
+        
+        <Sprout size={16} className="mt-0.5 shrink-0 text-neutral-500" aria-hidden="true" />
 
-      <p className="mt-1 text-xs text-slate-500">{item.crop?.name ?? "—"}</p>
+        <div className="min-w-0 flex-1">
+          
+          <p className="flex items-center gap-2 truncate text-[14px] text-neutral-900">
+            
+            <span className="truncate">
+              {field.name}
+              <span className="text-neutral-400"> · </span>
+              {crop?.name ?? "No crop"}
+            </span>
+          </p>
 
-      <div className="mt-4 flex gap-4 text-sm">
-        <div>
-          <p className="text-xs text-slate-500">Moisture</p>
-          <p className="font-display text-lg text-slate-100">{item.latestUpdate?.moisture ?? "—"}%</p>
+
+          <p className="mt-0.5 text-xs text-neutral-500">
+            <span className="uppercase">{stage}</span>
+            {" · "}Moisture {latestUpdate?.moisture ?? "—"}%
+            {" · "}Temp {latestUpdate?.temperature ?? "—"}°C
+          </p>
         </div>
-        <div>
-          <p className="text-xs text-slate-500">Temp</p>
-          <p className="font-display text-lg text-slate-100">{item.latestUpdate?.temperature ?? "—"}°C</p>
-        </div>
-      </div>
-    </div>
+
+        
+        <span className="shrink-0 text-xs text-neutral-400">{timeAgo(latestUpdate?.createdAt)}</span>
+      </Link>
+    </li>
   );
 }
