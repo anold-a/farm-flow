@@ -6,6 +6,9 @@ import FieldsSection from "./FieldsSection";
 import FieldOverviewGrid from "./FieldOverviewGrid";
 import SystemAlertsPanel from "../alerts/SystemAlertsPanel";
 
+import { useAuth } from "@/hooks/useAuth";
+import UsersPage from "@/app/(dashboard)/users/page";
+
 
 type DashboardHeaderProps = {
   stages: string[]; 
@@ -33,6 +36,7 @@ export default function DashboardHeader({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const {user} = useAuth();
 
   
   const tabs = [
@@ -109,6 +113,12 @@ export default function DashboardHeader({
            <SystemAlertsPanel />
          </div>
         <FieldsSection />
+        </div>
+      )}
+      {activeView === "users" && (
+        <div>
+
+          {user?.role === "ADMIN" && <UsersPage />}
         </div>
       )}
     </div>

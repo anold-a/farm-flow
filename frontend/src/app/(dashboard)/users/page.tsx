@@ -30,13 +30,8 @@ export default function UsersPage() {
 
   return (
     <RoleGuard allowedRoles={["ADMIN"]}>
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">User Management</h1>
-          <p className="text-gray-500">Manage admin and agent accounts.</p>
-        </div>
-      </div>
+    <div className="space-y-6 mt-10">
+      
 
       <UserTable users={users} role={role} />
 

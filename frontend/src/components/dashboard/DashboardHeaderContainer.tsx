@@ -1,16 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DashboardHeader from "./DashboardHeader";
 import { useFieldOverview } from "@/hooks/useFieldOverview";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
+import { userService } from "@/services/user.service";
+import { User } from "@/types/user";
 
 
 export default function DashboardHeaderContainer() {
   const { overview } = useFieldOverview();
   const { user } = useAuth();
   const { unreadCount } = useNotifications();
+   const [users, setUsers] = useState<User[]>([]);
 
   
   const { fieldCounts, stageCounts, stages } = useMemo(() => {
@@ -27,6 +30,10 @@ export default function DashboardHeaderContainer() {
     };
   }, [overview]);
 
+   useEffect(() => {
+      userService.getAll().then(setUsers).catch(() => setUsers([]));
+    }, []);
+
   return (
     <DashboardHeader
       stages={stages}
@@ -34,7 +41,7 @@ export default function DashboardHeaderContainer() {
       stageCounts={stageCounts}
       alertCount={unreadCount}
       isAdmin={user?.role === "ADMIN"}
-      userCount={undefined}
+      userCount={users.length}
     />
   );
 }

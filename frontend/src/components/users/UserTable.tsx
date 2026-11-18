@@ -1,30 +1,30 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { FiArrowDown, FiEdit2, FiMail, FiShield, FiUser } from "react-icons/fi"; 
 
-
-import { User } from "@/types/user";
+import { CreateUserDto, User } from "@/types/user"; 
 import DeleteUserButton from "./DeleteUserButton";
 import { userService } from "@/services/user.service";
 import EditUserForm from "./EditUserForm";
-
 
 interface Props {
   users: User[];
   role: "ADMIN" | "AGENT";
 }
 
-export default function UserTable({users, role }: Props) {
-
+export default function UserTable({ users, role }: Props) {
   const [localUsers, setLocalUsers] = useState<User[]>(users);
-   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+
+  
+  const sortedUsers = useMemo(
+    () => [...localUsers].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)),
+    [localUsers],
+  );
 
   const handleDeleteUser = async (id: string | number) => {
     try {
-     
       await userService.delete(id);
-      
-     
-    setLocalUsers(localUsers.filter(user => user.id !== id));
-      
+      setLocalUsers(localUsers.filter((user) => user.id !== id));
       alert("User deleted successfully.");
     } catch (error) {
       console.error("Failed to delete user:", error);
@@ -32,80 +32,105 @@ export default function UserTable({users, role }: Props) {
     }
   };
 
-  const handleUpdateUser = async (id: string, data: Partial<import("@/types/user").CreateUserDto>) => { // NEW
+  const handleUpdateUser = async (id: string, data: Partial<CreateUserDto>) => { // CHANGED: uses the imported type
     const updatedUser = await userService.update(id, data);
-    setLocalUsers((current) =>
-      current.map((u) => (u.id === id ? updatedUser : u)),
-    );
+    setLocalUsers((current) => current.map((u) => (u.id === id ? updatedUser : u)));
   };
 
   if (localUsers.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed p-8 text-center">
+     
+      <div className="rounded-2xl bg-[#F8F7F4] p-8 text-center text-sm text-neutral-500 shadow-sm">
         No users found.
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border">
-      <table className="w-full">
+    
+    <div className="overflow-x-auto rounded-2xl bg-[#F8F7F4] shadow-sm">
+      <table className="w-full min-w-160 table-fixed text-left">
         <thead>
-          <tr className="border-b bg-gray-50 text-left">
-            <th className="p-3">Name</th>
-            <th className="p-3">Email</th>
-            <th className="p-3">Role</th>
-            <th className="p-6">Actions</th>
-            <th className="p-3">Created</th>
+          
+          <tr className="border-b border-black/5 text-xs text-neutral-400">
+            <th className="w-[34%] px-4 py-3 font-normal">Name</th>
+            <th className="w-[30%] px-4 py-3 font-normal">Email</th>
+            <th className="w-[14%] px-4 py-3 font-normal">Role</th>
+            
+            <th className="w-[14%] px-4 py-3 font-medium text-neutral-800">
+              <span className="inline-flex items-center gap-1">
+                Created <FiArrowDown size={12} aria-hidden="true" />
+              </span>
+            </th>
+            
+            {role === "ADMIN" && <th className="w-[8%] px-4 py-3"><span className="sr-only">Actions</span></th>}
           </tr>
         </thead>
 
         <tbody>
-          {localUsers.map((user) => (
-            <tr key={user.id} className="border-b">
-              <td className="p-3 font-medium">{user.fullName}</td>
-              <td className="p-3">{user.email}</td>
-              <td className="p-3">
-                <span
-                  className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                    user.role === "ADMIN"
-                      ? "bg-purple-100 text-purple-700"
-                      : "bg-green-100 text-green-700"
-                  }`}
-                >
+          {sortedUsers.map((user) => (
+            
+            <tr
+              key={user.id}
+              className="group border-b border-black/5 text-[13px] text-neutral-500 transition-colors last:border-0 hover:bg-black/3"
+            >
+              
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-black/5 bg-white text-xs font-medium text-neutral-700">
+                    {user.fullName?.[0]?.toUpperCase() ?? "?"}
+                  </span>
+                  <span className="truncate text-[14px] text-neutral-900">{user.fullName}</span>
+                </div>
+              </td>
+
+             
+              <td className="px-4 py-3">
+                <span className="flex items-center gap-1.5">
+                  <FiMail size={12} className="shrink-0" aria-hidden="true" />
+                  <span className="truncate">{user.email}</span>
+                </span>
+              </td>
+
+              
+              <td className="px-4 py-3">
+                <span className="flex items-center gap-1.5">
+                  {user.role === "ADMIN" ? (
+                    <FiShield size={12} className="text-purple-600" aria-hidden="true" />
+                  ) : (
+                    <FiUser size={12} className="text-emerald-600" aria-hidden="true" />
+                  )}
                   {user.role}
                 </span>
               </td>
-              <td className="p-3">
-                <div className="flex justify-center gap-3">
-    {role === "ADMIN" && ( 
-      <button
+
+
+              <td className="px-4 py-3">
+                {new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              </td>
+
+              {role === "ADMIN" && (
+                <td className="px-4 py-3">
+                  
+                  <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+                    <button
                       type="button"
                       onClick={() => setEditingUser(user)}
-                      className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label={`Edit ${user.fullName}`}
+                      className="rounded-md p-1.5 text-neutral-400 hover:bg-black/5 hover:text-neutral-800"
                     >
-                      Edit
+                      <FiEdit2 size={14} aria-hidden="true" />
                     </button>
-      
-                  )}
 
-    {role === "ADMIN" && (
-      <DeleteUserButton
-      userId={user.id}
-       onDelete={handleDeleteUser} 
-      
-      />
-    )}
-  </div>
-                
+                    <DeleteUserButton userId={user.id} onDelete={handleDeleteUser} />
+                  </div>
                 </td>
-              <td className="p-3 text-gray-500">
-                {new Date(user.createdAt).toLocaleDateString()}
-              </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
+
       {editingUser && (
         <EditUserForm
           user={editingUser}
