@@ -9,6 +9,10 @@ import FieldsPage from "@/app/(dashboard)/fields/page";
 
 import { useAuth } from "@/hooks/useAuth";
 import UsersPage from "@/app/(dashboard)/users/page";
+import CropStagesTimeline from "./CropStagesTimeline";
+import { useFieldOverview } from "@/hooks/useFieldOverview";
+import SensorDataSummary from "./SensorDataSummary";
+import FieldPerformanceChart from "./FieldPerformanceChart";
 
 
 type DashboardHeaderProps = {
@@ -38,6 +42,7 @@ export default function DashboardHeader({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const {user} = useAuth();
+  const { overview, loading } = useFieldOverview();
 
   
   const tabs = [
@@ -127,6 +132,44 @@ export default function DashboardHeader({
 
           <FieldsPage />
         </div>
+      )}
+      {activeView === "crops" && (
+           <div className="grid grid-cols-3 gap-6">
+                <div className="col-span-2 space-y-6">
+                 
+                  {overview
+          .filter((item) => item.crop)
+          .map((item) => (
+            <CropStagesTimeline
+              key={item.crop!.id}
+              cropName={item.crop!.name}
+              plantingDate={
+                item.crop!.plantingDate
+                  ? String(item.crop!.plantingDate)
+                  : ""
+              }
+              currentStage={item.crop!.actualGrowthStage}
+            />
+          ))}
+                </div>
+        
+                
+              </div>
+      )}
+      {activeView === "data" && (
+        <div>
+                 <div className="space-y-6">
+                  <SensorDataSummary overview={overview} />
+                 </div>
+                 <div className="mt-6 grid grid-cols-3 gap-6">
+                         <div className="col-span-2 space-y-6">
+                           <FieldPerformanceChart />
+                          
+                         </div>
+                       </div>
+                  
+</div>
+                
       )}
     </div>
   );
