@@ -6,6 +6,7 @@ import FieldsSection from "./FieldsSection";
 import FieldOverviewGrid from "./FieldOverviewGrid";
 import SystemAlertsPanel from "../alerts/SystemAlertsPanel";
 import FieldsPage from "@/app/(dashboard)/fields/page";
+import Alerts from "../alerts/Alerts";
 
 import { useAuth } from "@/hooks/useAuth";
 import UsersPage from "@/app/(dashboard)/users/page";
@@ -131,6 +132,12 @@ export default function DashboardHeader({
         <div>
 
           <FieldsPage />
+        </div>
+      )}
+      {activeView === "alerts" && (
+        <div>
+
+         <Alerts />
         </div>
       )}
       {activeView === "crops" && (

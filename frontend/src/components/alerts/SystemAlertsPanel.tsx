@@ -12,7 +12,7 @@ const severity: Record<string, { icon: React.ReactNode; pill: string }> = {
 
 export default function SystemAlertsPanel() {
   const { alerts, loading } = useAlerts();
-  const recent = alerts.slice(0, 3);
+  const recent = alerts.slice(0, 2);
 
   return (
     <section>
