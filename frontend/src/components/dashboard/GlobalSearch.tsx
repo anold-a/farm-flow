@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import useDebounce from "@/hooks/useDebounce";
 import { useFields } from "@/hooks/useFields";
 
-// NEW: one shape for every kind of result so the dropdown can render them the same way
+
 type Result = {
   id: string;
   title: string;
@@ -15,7 +15,7 @@ type Result = {
   type: "Page" | "Field";
 };
 
-// NEW: static pages that should also be searchable
+
 const PAGES: Result[] = [
   { id: "p-register-field", title: "Register Field", href: "/fields/create", type: "Page" },
   { id: "p-new-user", title: "Create a new user", href: "/register", type: "Page" },
@@ -81,7 +81,7 @@ export default function GlobalSearch() {
   return (
     
     <div ref={wrapperRef} className="relative">
-      <label className="flex h-9 w-80 items-center gap-2 rounded-md border border-black/10 bg-[#F8F7F4] px-3 text-neutral-500 focus-within:border-black/25">
+      <label className="flex h-9 w-36 items-center gap-2 rounded-md border border-black/10 bg-[#F8F7F4] px-3 text-neutral-500 focus-within:border-black/25 sm:w-56 lg:w-80">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
@@ -99,7 +99,7 @@ export default function GlobalSearch() {
 
       
       {open && query.trim() && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-96 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl">
+        <div className="fixed inset-x-3 top-14 z-50 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96">
           {results.length === 0 ? (
             <p className="p-4 text-sm text-neutral-500">No results for “{query}”</p>
           ) : (

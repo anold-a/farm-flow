@@ -11,6 +11,7 @@ import {useState,useMemo,useEffect } from "react";
 import GlobalSearch from "../dashboard/GlobalSearch";
 import Modal from "./Modal";
 import AddCropFlow from "@/components/crop/AddCropFlow"; 
+import { FiMenu } from "react-icons/fi";
 
 const Icon2 = ({ children }: { children: React.ReactNode }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -49,7 +50,7 @@ const ALL_TABS: { href: string; label: string; roles?: string[]; modal?: ModalKe
   { href: "/crops", label: "Add a new crop", roles: ["ADMIN", "AGENT"],modal: "addCrop"  },
 ];
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
   const { user } = useAuth();
   const role = user?.role ?? "AGENT";
   const { unreadCount } = useNotifications();
@@ -87,8 +88,15 @@ const closeModal = () => setOpenModal(null);
  
 
   return (
-    <header className="sticky top-0 z-50 flex h-13.5 w-full shrink-0 items-center gap-2  px-3">
-      
+    <header className="fixed inset-x-0 top-0 z-50 flex h-15 items-center gap-2 bg-emerald-50 px-3 md:left-64 md:right-0 md:inset-x-auto">
+       <button
+    type="button"
+    aria-label="Open menu"
+    onClick={onMenuClick}
+    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-neutral-800 hover:bg-black/5 md:hidden"
+  >
+    <FiMenu size={18} aria-hidden="true" />
+  </button>
       
 
       
@@ -98,7 +106,7 @@ const closeModal = () => setOpenModal(null);
       </Link>
 
       
-      <div className="flex min-w-0 grow items-center gap-1 overflow-x-auto">
+      <div className="hidden  min-w-0 grow items-center gap-1 overflow-x-auto md:flex">
         {tabs.map((tab) => {
           const active = isActive(tab.href);
           const tabClass = `flex h-8 shrink-0 items-center gap-2 rounded-sm px-3 text-[13px] font-medium transition-colors ${
@@ -132,6 +140,7 @@ const closeModal = () => setOpenModal(null);
           );
         })}
       </div>
+      <div className="grow md:hidden" />
 
       <div className="flex  items-center gap-2">
       <GlobalSearch />
