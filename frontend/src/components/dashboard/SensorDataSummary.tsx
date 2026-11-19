@@ -11,13 +11,13 @@ export default function SensorDataSummary({ overview }: { overview: FieldOvervie
   ];
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-      <h2 className="text-sm font-medium text-slate-400">Sensor Data Summary</h2>
+    <div className=" p-6">
+      <h2 className="text-sm font-medium text-neutral-950">Field's Weather Data Summary</h2>
       <div className="mt-4 grid grid-cols-3 gap-3">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-lg bg-slate-800/50 p-3 text-center">
-            <p className="font-display text-lg text-emerald-400">{s.value ?? "—"}{s.unit}</p>
-            <p className="mt-1 text-xs text-slate-500">{s.label}</p>
+          <div key={s.label} className=" bg-emerald-600 p-3 text-center">
+            <p className="font-display text-lg text-white">{s.value ?? "—"}{s.unit}</p>
+            <p className="mt-1 text-xs text-white">{s.label}</p>
           </div>
         ))}
       </div>
