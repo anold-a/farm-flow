@@ -19,9 +19,9 @@ export default function CropStagesTimeline({ cropName, plantingDate, currentStag
   const currentIndex = STAGE_SEQUENCE.findIndex((s) => s.key === currentStage);
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-      <h2 className="text-sm font-medium text-slate-400">Crop Stages Timeline</h2>
-      <p className="mt-1 font-display text-lg text-slate-100">{cropName}</p>
+    <div className="mt-10 overflow-x-auto  bg-[#F8F7F4] shadow-sm p-6">
+      <h2 className="text-sm font-medium text-neutral-800">Crop Stage Timeline</h2>
+      <p className="mt-1 font-display text-lg text-neutral-950">{cropName}</p>
 
       <div className="relative mt-8 flex justify-between">
         <div className="absolute left-0 right-0 top-2 h-px bg-slate-800" aria-hidden /> 
@@ -35,12 +35,12 @@ export default function CropStagesTimeline({ cropName, plantingDate, currentStag
             <div key={stage.key} className="relative z-10 flex flex-col items-center">
               <span
                 className={`h-4 w-4 rounded-full border-2 ${
-                  reached ? "border-emerald-400 bg-emerald-400" : "border-slate-700 bg-slate-900"
+                  reached ? "border-emerald-400 bg-emerald-400" : "border-slate-700 bg-neutral-950"
                 }`}
                 aria-hidden
               />
-              <p className={`mt-2 text-xs ${reached ? "text-slate-200" : "text-slate-600"}`}>{stage.label}</p>
-              <p className="text-[10px] text-slate-600">
+              <p className={`mt-2 text-xs ${reached ? "text-neutral-950" : "text-neutral-600"}`}>{stage.label}</p>
+              <p className="text-[10px] text-neutral-950">
                 {stageDate.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
               </p>
             </div>

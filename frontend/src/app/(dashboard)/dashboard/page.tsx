@@ -13,7 +13,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex justify-end text-2xl" >
-   <ArrowBigUp className="text-neutral-950 " size={16} />
+  
 
       
     </div>
