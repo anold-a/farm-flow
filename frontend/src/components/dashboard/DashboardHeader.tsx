@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FieldsSection from "./FieldsSection";
 import FieldOverviewGrid from "./FieldOverviewGrid";
 import SystemAlertsPanel from "../alerts/SystemAlertsPanel";
-import FieldsPage from "@/app/(dashboard)/fields/page";
+
 import Alerts from "../alerts/Alerts";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -14,6 +14,7 @@ import CropStagesTimeline from "./CropStagesTimeline";
 import { useFieldOverview } from "@/hooks/useFieldOverview";
 import SensorDataSummary from "./SensorDataSummary";
 import FieldPerformanceChart from "./FieldPerformanceChart";
+import FieldsList from "./FieldsList";
 
 
 type DashboardHeaderProps = {
@@ -29,12 +30,11 @@ type DashboardHeaderProps = {
   alertCount?: number;
 };
 
-const clean = (v: string) => v.replace(/_/g, " ");
+
 
 export default function DashboardHeader({
-  stages,
   fieldCounts,
-  stageCounts,
+  
   isAdmin = false,
   userCount,
   alertCount,
@@ -130,8 +130,8 @@ export default function DashboardHeader({
       )}
       {activeView === "fields" && (
         <div>
-
-          <FieldsPage />
+          
+          <FieldsList limit={1} />
         </div>
       )}
       {activeView === "alerts" && (
@@ -173,10 +173,8 @@ export default function DashboardHeader({
                            <FieldPerformanceChart />
                           
                          </div>
-                       </div>
-                  
-</div>
-                
+                       </div>            
+</div>             
       )}
     </div>
   );

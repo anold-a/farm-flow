@@ -35,6 +35,7 @@ const CloseIcon = () => (
 
 type ModalKey = "registerField" | "createUser" | "addCrop";
 
+
 const MODALS: Record<
   ModalKey,
   { label: string; Form: React.ComponentType<{ onSuccess?: () => void; onCancel?: () => void;}> }
