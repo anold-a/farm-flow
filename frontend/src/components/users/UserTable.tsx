@@ -1,10 +1,15 @@
-import { useMemo, useState } from "react";
+"use client"
+
+import { useMemo, useState,useEffect } from "react";
 import { FiArrowDown, FiEdit2, FiMail, FiShield, FiUser } from "react-icons/fi"; 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { CreateUserDto, User } from "@/types/user"; 
 import DeleteUserButton from "./DeleteUserButton";
 import { userService } from "@/services/user.service";
 import EditUserForm from "./EditUserForm";
+import Modal from "@/components/layout/Modal";   
+import AssignFieldsModal from "./AssignFieldsModal";
 
 interface Props {
   users: User[];
@@ -14,6 +19,27 @@ interface Props {
 export default function UserTable({ users, role }: Props) {
   const [localUsers, setLocalUsers] = useState<User[]>(users);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+
+
+    useEffect(() => {
+    setLocalUsers(users);
+  }, [users]);
+
+  
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const assignId = searchParams.get("assign");
+  const assigningUser = localUsers.find((u) => u.id === assignId) ?? null;
+
+  function setAssign(id: string | null) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (id) params.set("assign", id);
+    else params.delete("assign");
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }
 
   
   const sortedUsers = useMemo(
@@ -32,7 +58,7 @@ export default function UserTable({ users, role }: Props) {
     }
   };
 
-  const handleUpdateUser = async (id: string, data: Partial<CreateUserDto>) => { // CHANGED: uses the imported type
+  const handleUpdateUser = async (id: string, data: Partial<CreateUserDto>) => { 
     const updatedUser = await userService.update(id, data);
     setLocalUsers((current) => current.map((u) => (u.id === id ? updatedUser : u)));
   };
@@ -53,11 +79,11 @@ export default function UserTable({ users, role }: Props) {
         <thead>
           
           <tr className="border-b border-black/5 text-xs text-neutral-400">
-            <th className="w-[34%] px-4 py-3 font-normal">Name</th>
-            <th className="w-[30%] px-4 py-3 font-normal">Email</th>
-            <th className="w-[14%] px-4 py-3 font-normal">Role</th>
+            <th className="w-[30%] px-4 py-3 font-normal">Name</th>
+            <th className="w-[28%] px-4 py-3 font-normal">Email</th>
+            <th className="w-[12%] px-4 py-3 font-normal">Role</th>
             
-            <th className="w-[14%] px-4 py-3 font-medium text-neutral-800">
+            <th className="w-[12%] px-4 py-3 font-medium text-neutral-800">
               <span className="inline-flex items-center gap-1">
                 Created <FiArrowDown size={12} aria-hidden="true" />
               </span>
@@ -109,10 +135,20 @@ export default function UserTable({ users, role }: Props) {
                 {new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
               </td>
 
-              {role === "ADMIN" && (
+              {role === "ADMIN" && ( 
                 <td className="px-4 py-3">
                   
                   <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+                    {user.role === "AGENT" && (
+                      <button
+                        type="button"
+                        onClick={() => setAssign(user.id)}
+                        aria-label={`Assign fields to ${user.fullName}`}
+                        className="rounded-md px-2 py-1 text-xs text-emerald-700 hover:bg-emerald-50"
+                      >
+                        Assign
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => setEditingUser(user)}
@@ -121,6 +157,7 @@ export default function UserTable({ users, role }: Props) {
                     >
                       <FiEdit2 size={14} aria-hidden="true" />
                     </button>
+                  
 
                     <DeleteUserButton userId={user.id} onDelete={handleDeleteUser} />
                   </div>
@@ -137,6 +174,16 @@ export default function UserTable({ users, role }: Props) {
           onUpdate={handleUpdateUser}
           onClose={() => setEditingUser(null)}
         />
+      )}
+
+      {assigningUser && (
+        <Modal label="Assign fields" onClose={() => setAssign(null)}>
+          <AssignFieldsModal
+            user={assigningUser}
+            onCancel={() => setAssign(null)}
+            onSuccess={() => setAssign(null)}
+          />
+        </Modal>
       )}
     </div>
   );

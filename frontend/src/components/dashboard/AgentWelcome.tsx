@@ -1,6 +1,7 @@
 "use client";
 
-
+import { useState } from "react";
+import { accessService } from "@/services/access.service";
 import { FiCheck, FiSend } from "react-icons/fi";
 
 
@@ -11,14 +12,22 @@ type Props = {
 };
 
 export default function AgentWelcome({ name, sent, onRequested }: Props) {
-  
+  const [loading, setLoading] = useState(false);
 
 
-   function requestAccess() {
-   
-    onRequested();
+
+   async function requestAccess() {
+    try {
+      setLoading(true);
+      await accessService.request(); 
+      onRequested();
+    } catch {
+      alert("Could not send the request. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
-  
+
 
   return (
     <div className="rounded-2xl bg-[#F8F7F4] p-6 shadow-sm">
@@ -36,7 +45,7 @@ export default function AgentWelcome({ name, sent, onRequested }: Props) {
       <button
         type="button"
         onClick={requestAccess}
-        disabled={sent}
+        disabled={loading || sent}
         className="mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
       >
         {sent ? <FiCheck size={14} aria-hidden="true" /> : <FiSend size={14} aria-hidden="true" />}

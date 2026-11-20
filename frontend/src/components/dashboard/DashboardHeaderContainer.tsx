@@ -13,7 +13,7 @@ export default function DashboardHeaderContainer() {
   const { overview } = useFieldOverview();
   const { user } = useAuth();
   const { unreadCount } = useNotifications();
-   const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   
   const { fieldCounts, stageCounts, stages } = useMemo(() => {
@@ -31,7 +31,9 @@ export default function DashboardHeaderContainer() {
   }, [overview]);
 
    useEffect(() => {
+    if (user?.role === 'ADMIN') {
       userService.getAll().then(setUsers).catch(() => setUsers([]));
+    }
     }, []);
 
   return (
