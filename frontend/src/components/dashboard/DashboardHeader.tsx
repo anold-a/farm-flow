@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Sprout } from "lucide-react"; 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FieldsSection from "./FieldsSection";
 import FieldOverviewGrid from "./FieldOverviewGrid";
 import SystemAlertsPanel from "../alerts/SystemAlertsPanel";
+import AgentWelcome from "./AgentWelcome";       
+import { useFields } from "@/hooks/useFields";
 
 import Alerts from "../alerts/Alerts";
 
@@ -44,6 +47,7 @@ export default function DashboardHeader({
   const searchParams = useSearchParams();
   const {user} = useAuth();
   const { overview, loading } = useFieldOverview();
+  const { fields, loading: fieldsLoading } = useFields();
 
   
   const tabs = [
@@ -64,9 +68,46 @@ export default function DashboardHeader({
     const qs = params.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
+  const showWelcome =
+  user?.role === "AGENT" &&
+  !fieldsLoading &&
+  fields.filter((f) => !f.isDemo).length === 0;
+
+  const storageKey = user ? `access-requested:${user.id}` : null;
+const [requested, setRequested] = useState(false);
+const [requestedReady, setRequestedReady] = useState(false);
+
+useEffect(() => {
+  if (!storageKey) return;
+  try {
+    setRequested(localStorage.getItem(storageKey) === "1");
+  } catch {}
+  setRequestedReady(true);
+}, [storageKey]);
+
+function handleRequested() {
+  setRequested(true);
+  try {
+    if (storageKey) localStorage.setItem(storageKey, "1");
+  } catch {}
+}
+
+
+const hideRest = showWelcome && !requested;
+
+
+if (showWelcome && !requestedReady) return null;
 
   return (
     <div className="mb-6">
+       {hideRest && (
+      <div className="mb-5">
+        <AgentWelcome name={user?.fullName} sent={requested} onRequested={handleRequested} />
+      </div>
+    )}
+      {!hideRest && (
+      <>
+
       <p className="flex items-center gap-1.5 text-xs text-neutral-500">
         <Sprout size={13} aria-hidden="true" />
         Summary
@@ -80,7 +121,7 @@ export default function DashboardHeader({
       <p className="mt-2 text-[13px] text-neutral-500">
         Every field, crop and alert in one place.
       </p>
-
+      
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <div
           role="group"
@@ -176,6 +217,10 @@ export default function DashboardHeader({
                        </div>            
 </div>             
       )}
+
+      </>
+    )}
+
     </div>
   );
 }

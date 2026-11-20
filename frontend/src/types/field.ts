@@ -16,6 +16,8 @@ export interface Field {
   location: string;
   acreage: number;
   status: FieldStatus;
+  isDemo?: boolean;
+
 
   createdById: string;
   createdBy: FieldUser;
