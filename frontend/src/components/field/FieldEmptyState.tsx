@@ -5,17 +5,17 @@ export default function FieldEmptyState() {
   return (
     <div className="rounded-lg border border-dashed p-10 text-center">
       <h2 className="text-2xl font-display text-gray-900">
-        No fields found
+        No active fields found
       </h2>
 
       <p className="mt-3 text-gray-600">
-        Register your first field to begin monitoring crops.
+       Your request access is underway.A farm field will be assigned to you.
       </p>
 
       <div className="mt-6">
-        <Link href="/fields/create">
+        <Link href="#">
           <Button>
-            Register Field
+            Watch Demo
           </Button>
         </Link>
       </div>
