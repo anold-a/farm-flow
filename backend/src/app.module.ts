@@ -27,10 +27,43 @@ import { AuditModule } from './audit/audit.module';
 import { SecurityService } from './security/security.service';
 import { SecurityController } from './security/security.controller';
 import { SecurityModule } from './security/security.module';
+import { AccessRequestsModule } from './access-requests/access-requests.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, FieldsModule, FieldUpdatesModule, WeatherModule, ReportsModule, NotificationsModule, DashboardModule,CropsModule, CropIntelligenceModule, AnalyticsModule, RecommendationsModule, AlertsModule, AuditModule, SecurityModule],
-  controllers: [AppController, WeatherController, AnalyticsController, AuditController, SecurityController],
-  providers: [AppService, PrismaService, WeatherService, CropIntelligenceService, AnalyticsService, AuditService, SecurityService],
+  imports: [
+    PrismaModule,
+    UsersModule,
+    AuthModule,
+    FieldsModule,
+    FieldUpdatesModule,
+    WeatherModule,
+    ReportsModule,
+    NotificationsModule,
+    DashboardModule,
+    CropsModule,
+    CropIntelligenceModule,
+    AnalyticsModule,
+    RecommendationsModule,
+    AlertsModule,
+    AuditModule,
+    SecurityModule,
+    AccessRequestsModule,
+  ],
+  controllers: [
+    AppController,
+    WeatherController,
+    AnalyticsController,
+    AuditController,
+    SecurityController,
+  ],
+  providers: [
+    AppService,
+    PrismaService,
+    WeatherService,
+    CropIntelligenceService,
+    AnalyticsService,
+    AuditService,
+    SecurityService,
+  ],
 })
 export class AppModule {}

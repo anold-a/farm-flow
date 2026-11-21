@@ -56,7 +56,7 @@ export class FieldsService {
       assignedAgentId = agent.id;
     }
 
-        const createdField = await this.prisma.field.create({
+    const createdField = await this.prisma.field.create({
       data: {
         name: data.name,
         crop: data.crop,
@@ -90,15 +90,15 @@ export class FieldsService {
       },
     });
 
-    await this.auditService.log(userId, 'CREATE', 'FIELD', createdField.id); 
-     return createdField;
+    await this.auditService.log(userId, 'CREATE', 'FIELD', createdField.id);
+    return createdField;
   }
 
   async findAll(currentUser: { id: string; role: 'ADMIN' | 'AGENT' }) {
     const where =
       currentUser.role === Role.ADMIN
         ? {}
-        : { assignedAgentId: currentUser.id };
+        : await this.agentWhere(currentUser.id);
 
     return this.prisma.field.findMany({
       where,
@@ -136,7 +136,8 @@ export class FieldsService {
 
     if (
       currentUser.role !== Role.ADMIN &&
-      field.assignedAgentId !== currentUser.id
+      field.assignedAgentId !== currentUser.id &&
+      !field.isDemo
     ) {
       throw new ForbiddenException('You do not have access to this field');
     }
@@ -207,13 +208,13 @@ export class FieldsService {
     }
 
     await this.prisma.field.delete({ where: { id } });
-     await this.auditService.log(currentUser.id, 'DELETE', 'FIELD', id); 
-     return field;
+    await this.auditService.log(currentUser.id, 'DELETE', 'FIELD', id);
+    return field;
   }
 
   async findMyFields(currentUser: { id: string; role: 'ADMIN' | 'AGENT' }) {
     return this.prisma.field.findMany({
-      where: { assignedAgentId: currentUser.id },
+      where: await this.agentWhere(currentUser.id),
       include: {
         createdBy: {
           select: { id: true, fullName: true, email: true, role: true },
@@ -242,7 +243,7 @@ export class FieldsService {
       },
     });
 
-    if (!field || field.assignedAgentId !== currentUser.id) {
+    if (!field || (field.assignedAgentId !== currentUser.id && !field.isDemo)) {
       throw new NotFoundException('Field not found');
     }
 
@@ -298,7 +299,7 @@ export class FieldsService {
       'FIELD_ASSIGNED',
     );
 
-      await this.auditService.log(currentUser.id, 'ASSIGN', 'FIELD', fieldId);
+    await this.auditService.log(currentUser.id, 'ASSIGN', 'FIELD', fieldId);
 
     return updatedField;
   }
@@ -319,7 +320,7 @@ export class FieldsService {
       throw new NotFoundException('Field not found');
     }
 
-     const updatedField = await this.prisma.field.update({
+    const updatedField = await this.prisma.field.update({
       where: { id: fieldId },
       data: { assignedAgentId: null },
       include: {
@@ -332,6 +333,15 @@ export class FieldsService {
       },
     });
     await this.auditService.log(currentUser.id, 'REMOVE', 'FIELD', fieldId);
-     return updatedField;
+    return updatedField;
+  }
+
+  private async agentWhere(userId: string) {
+    const hasReal = await this.prisma.field.count({
+      where: { assignedAgentId: userId, isDemo: false },
+    });
+    return hasReal > 0
+      ? { assignedAgentId: userId }
+      : { OR: [{ assignedAgentId: userId }, { isDemo: true }] };
   }
 }

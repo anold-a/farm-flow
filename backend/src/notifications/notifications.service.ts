@@ -43,13 +43,20 @@ export class NotificationsService {
     });
   }
 
-  async create(userId: string, title: string, message: string, type: string) {
+  async create(
+    userId: string,
+    title: string,
+    message: string,
+    type: string,
+    link?: string,
+  ) {
     return this.prisma.notification.create({
       data: {
         userId,
         title,
         message,
         type,
+        link,
       },
     });
   }

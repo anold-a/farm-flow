@@ -50,6 +50,7 @@ model Field {
 
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  isDemo Boolean @default(false)
   fieldUpdates FieldUpdate[]
 
   crops  Crop[]
@@ -86,6 +87,7 @@ model Notification {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link String?
 
   createdAt DateTime @default(now())
 }
