@@ -44,4 +44,8 @@ export const userService = {
     token: getAccessToken() ?? undefined,
   });
 },
+
+async updateMe(fullName: string) {
+  return apiFetch<{ id: string; fullName: string; email: string; role: string }>("/users/me", { method: "PATCH", body: JSON.stringify({ fullName }),token: getAccessToken() ?? undefined, });
+},
 };

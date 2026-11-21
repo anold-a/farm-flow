@@ -13,6 +13,7 @@ import {
   saveAuth,
   clearAuth,
   getUser,
+   getAccessToken,
 } from "@/lib/auth";
 
 import {
@@ -36,7 +37,9 @@ interface AuthContextType {
   logout(): void;
 
   isAuthenticated: boolean;
+  updateUser(patch: Partial<User>): void;
 }
+
 
 const AuthContext =
   createContext<AuthContextType | null>(
@@ -99,6 +102,16 @@ console.log("[AuthContext mount] storedUser:", storedUser);
     setUser(null);
   }
 
+   function updateUser(patch: Partial<User>) {
+    if (!user) return;
+    const next = { ...user, ...patch };
+    setUser(next);
+
+    
+    const token = getAccessToken();
+    if (token) saveAuth(token, next);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -107,6 +120,7 @@ console.log("[AuthContext mount] storedUser:", storedUser);
         login,
         register,
         logout,
+        updateUser,
         isAuthenticated:
           user !== null,
       }}

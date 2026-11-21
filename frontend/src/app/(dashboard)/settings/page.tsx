@@ -2,8 +2,7 @@
 
 import { SecurityResponse } from "@/types/security";
 import { useSecurity } from "@/hooks/useSecurity";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+
 import Card from "@/components/ui/Card";
 
 
@@ -15,17 +14,14 @@ const permissionLabels: Record<keyof SecurityResponse["permissions"], string> = 
   manageAssignedFields: "Manage assigned fields",
 };
 
-const tabs = [
-  { label: "Profile", href: "/settings" },
-  { label: "Security", href: "/settings/security" },
-  { label: "Notifications", href: "/settings/notifications" },
-];
+
+
 
 
 export default function SecurityPage() {
 
   const { data, loading, error } = useSecurity();
-  const pathname = usePathname();
+  
 
    if (loading) return <p>Loading security overview...</p>;
   if (error) return <div className="rounded-lg bg-red-100 p-4 text-red-700">{error}</div>;
@@ -33,29 +29,7 @@ export default function SecurityPage() {
 
   return (
     <div >
-      <div className="border-b border-gray-200 pb-4">
-        <h1 className="text-3xl font-display text-gray-900">Security</h1>
-        <p className="text-gray-500 text-sm mt-1">Manage your account settings and preferences.</p>
-      </div>
-
-          <nav className="mt-6 flex gap-1 rounded-lg bg-gray-50 p-1">
-        {tabs.map((tab) => {
-          const active = pathname === tab.href; 
-          return (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={`flex-1 rounded-md px-4 py-2 text-center text-sm transition ${
-                active
-                  ? "border-b-2 border-gray-900 bg-white font-medium text-gray-900"
-                  : "text-gray-500 hover:text-gray-900"
-              }`}
-            >
-              {tab.label}
-            </Link>
-          );
-        })}
-      </nav>
+    
 
       <Card title="Account Security" description="Your sign-in method and role." >
        
