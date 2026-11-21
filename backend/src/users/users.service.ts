@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -168,6 +169,27 @@ export class UsersService {
       'USER',
       updatedUser.id,
     );
+    return updatedUser;
+  }
+
+  async updateProfile(id: string, fullName?: string) {
+    if (!fullName?.trim()) {
+      throw new BadRequestException('Name is required');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: { fullName: fullName.trim() }, 
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+
+    await this.auditService.log(id, 'UPDATE', 'USER', id);
     return updatedUser;
   }
 

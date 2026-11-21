@@ -21,37 +21,54 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('ADMIN')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @Roles('ADMIN')
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get('agents')
+  @Roles('ADMIN')
   findAgents() {
     return this.usersService.findAgents();
   }
 
   @Get(':id')
+  @Roles('ADMIN')
   findOne(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
 
   @Post()
+  @Roles('ADMIN')
   create(@Body() data: CreateUserDto, @CurrentUser() user: AuthenticatedUser) {
-     return this.usersService.create(data, user);
+    return this.usersService.create(data, user);
+  }
+
+  @Patch('me')
+  updateMe(
+    @Body() body: { fullName?: string },
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.usersService.updateProfile(user.id, body.fullName);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: Partial<CreateUserDto> , @CurrentUser() user: AuthenticatedUser) {
-    return this.usersService.update(id, data,user);
+  @Roles('ADMIN')
+  update(
+    @Param('id') id: string,
+    @Body() data: Partial<CreateUserDto>,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.usersService.update(id, data, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string,@CurrentUser() user: AuthenticatedUser,) {
-    return this.usersService.remove(id,user);
+  @Roles('ADMIN')
+  remove(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+    return this.usersService.remove(id, user);
   }
 }
