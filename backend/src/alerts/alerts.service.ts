@@ -163,7 +163,7 @@ export class AlertsService {
     const fieldIds = fields.map((f) => f.id);
 
     return this.prisma.alert.findMany({
-      where: { fieldId: { in: fieldIds }, resolved: false },
+      where: {  fieldId: { in: fieldIds }, resolved: false, field:{isDemo:false}},
       include: { field: { select: { id: true, name: true } } },
       orderBy: { createdAt: 'desc' },
     });

@@ -6,16 +6,22 @@ import { UsersService } from '../users/users.service';
 
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { createDemoData } from './demo-data';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private prisma: PrismaService,
   ) {}
 
   async register(registerDto: RegisterDto) {
     const user = await this.usersService.register(registerDto);
+    if (user.role === 'AGENT') {
+      await createDemoData(this.prisma, user.id);
+    }
 
     const payload = {
       sub: user.id,

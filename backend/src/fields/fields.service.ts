@@ -101,7 +101,7 @@ export class FieldsService {
         : await this.agentWhere(currentUser.id);
 
     return this.prisma.field.findMany({
-      where,
+       where: { isDemo: false }, 
       include: {
         createdBy: {
           select: { id: true, fullName: true, email: true, role: true },
