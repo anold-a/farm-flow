@@ -195,18 +195,41 @@ export class UsersService {
 
   async remove(id: string, currentUser: AuthenticatedUser) {
     await this.findById(id);
+    if (id === currentUser.id) {
+      throw new BadRequestException('You cannot delete your own account.');
+    }
 
-    const removedUser = await this.prisma.user.delete({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
-        fullName: true,
-        email: true,
-        role: true,
-      },
+    const removedUser = await this.prisma.$transaction(async (tx) => {
+     
+      await tx.field.deleteMany({ where: { createdById: id, isDemo: true } });
+
+      
+      await tx.field.updateMany({
+        where: { assignedAgentId: id },
+        data: { assignedAgentId: null },
+      });
+
+      
+      const createdFields = await tx.field.count({
+        where: { createdById: id },
+      });
+      const updates = await tx.fieldUpdate.count({ where: { userId: id } });
+      if (createdFields > 0 || updates > 0) {
+        throw new ConflictException(
+          'This user has real fields or updates. Reassign them before deleting.',
+        );
+      }
+
+     
+      await tx.auditLog.deleteMany({ where: { userId: id } });
+
+      
+      return tx.user.delete({
+        where: { id },
+        select: { id: true, fullName: true, email: true, role: true },
+      });
     });
+
     await this.auditService.log(currentUser.id, 'DELETE', 'USER', id);
 
     return removedUser;
