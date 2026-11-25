@@ -1,75 +1,51 @@
-# SmartSeason
+# SmartSeason (farm-flow)
 
-A role-based crop field monitoring system for farm cooperatives and agronomy teams. Admins manage fields, crops, and agents across the whole farm; field agents log conditions and manage what's assigned to them — with alerts, recommendations, and crop intelligence built from real field data, not guesswork.
+A field monitoring app for farm admins and field agents. Admins register fields, crops and users and assign fields to agents. Agents track the fields assigned to them, log updates, and watch crop stages and alerts in one place.
 
-**Live demo:** [smartseason.vercel.app](coming soon)
+**Live demo:** https://farm-flow-mu.vercel.app
+**Backend API:** hosted on Render (free tier, so the first request after idle can take about a minute)
 
----
 
-## What it does
 
-- **Role-based access** — Admins see and manage the whole farm; agents only see their assigned fields, enforced on the backend, not just hidden in the UI.
-- **Field & crop management** — register fields, assign agents, track crops through seven growth stages calculated automatically from planting date.
-- **Field updates** — agents log soil moisture, temperature, and humidity per field, building a real history over time.
-- **Weather integration** — live current conditions and 5-day forecast per field, cached to reduce external API calls.
-- **Crop intelligence** — combines growth stage, recent updates, and weather to produce a health status (Healthy / Needs Attention / At Risk) with plain-language insights.
-- **Recommendations** — a rule-based engine that turns conditions into concrete advice ("irrigate now," "delay watering," "inspect in person"). High and medium-priority recommendations surface directly on the Alerts page; low-priority ones stay on the field's own detail page, so urgent items aren't buried among routine ones.
-- **Alerts** — automatic detection of critical moisture, extreme temperature, declining trends, and overdue updates, with duplicate prevention so the same issue doesn't spam repeatedly.
-- **Dark control-room dashboard** — a real-time overview combining field status, crop growth-stage timelines, recent alerts, sensor averages, and moisture trends in one view, built entirely from live data (no fabricated stats).
-- **Notifications** — in-app notifications tied to real events (a field assignment, a new update, an alert).
-- **Analytics & reporting** — farm-wide or agent-scoped statistics, crop distribution, moisture trends, and CSV export for fields, crops, alerts, and analytics.
-- **Audit logging** — every meaningful mutation (user created, field reassigned, crop added) is recorded with who did it and when.
-- **Security overview page** — a per-user view of authentication status, permissions, and recent account activity, computed server-side so the frontend never has to guess what a user is allowed to do.
+## Features
 
----
+- **Role-based access:** `ADMIN` and `AGENT` roles, enforced on the server with JWT authentication
+- **Fields:** register fields with crop, location, acreage and status, and assign or unassign agents
+- **Crops and growth stages:** track expected vs actual stage (planted to harvested)
+- **Alerts:** severity levels (info, warning, critical) per field, with resolve state
+- **Field updates:** agents log notes, moisture, temperature and humidity
+- **Notifications:** in-app notifications for assignments and access requests
+- **User management:** admins create and delete users
+- **Audit logs:** create, update, delete and assign actions are recorded
+- **Sample data for new agents:** every new agent gets one sample field with a crop, alerts and updates, so no page is blank on first login. Admin views hide sample data.
+- **Responsive layout** with a mobile drawer navigation
 
 ## Tech stack
 
-**Frontend:** Next.js (App Router), React, TypeScript, Tailwind CSS, Recharts
-**Backend:** NestJS, TypeScript, Prisma ORM
-**Database:** PostgreSQL
-**Auth:** JWT-based authentication with role guards (`ADMIN` / `AGENT`)
-**External APIs:** OpenWeatherMap (current weather + forecast)
+| Layer | Tools |
+|---|---|
+| Frontend | Next.js, TypeScript, Tailwind CSS v4 |
+| Backend | NestJS, TypeScript, Passport JWT, class-validator |
+| Database | PostgreSQL with Prisma 7 (driver adapter `@prisma/adapter-pg`) |
+| Hosting | Vercel (frontend), Render (backend), Neon (database) |
 
----
-
-## Architecture
+## Project structure
 
 ```
-Next.js (frontend)
-      │
-      ▼
-service layer (fetch + JWT)
-      │
-      ▼
-NestJS controllers
-      │
-      ▼
-JwtAuthGuard → RolesGuard
-      │
-      ▼
-services (business logic)
-      │
-      ▼
-Prisma
-      │
-      ▼
-PostgreSQL
+farm-flow/
+├── backend/     NestJS API + Prisma schema and migrations
+└── frontend/    Next.js app
 ```
 
-Every protected route checks two things in order: **is this user authenticated** (JWT valid), then **is this user authorized** (role and, where relevant, resource ownership — e.g. an agent can only touch fields assigned to them). Authorization is enforced server-side; the frontend's role checks are for UX only.
-
----
-
-## Getting started
+## Getting started locally
 
 ### Prerequisites
-- Node.js 20+
-- pnpm (or npm)
-- A PostgreSQL database
-- An OpenWeatherMap API key (free tier)
 
-### Backend
+- Node.js 20 or newer
+- pnpm
+- A PostgreSQL database (local, or a free Neon project)
+
+### 1. Backend
 
 ```bash
 cd backend
@@ -77,20 +53,24 @@ pnpm install
 ```
 
 Create `backend/.env`:
-```
-DATABASE_URL="postgresql://user:password@host:port/database"
-JWT_SECRET="your-secret-here"
-OPENWEATHER_API_KEY="your-key-here"
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require"
+JWT_SECRET="a-long-random-string"
+FRONTEND_URL="http://localhost:3000"
 PORT=4000
 ```
 
+Apply the migrations and start the API:
+
 ```bash
-npx prisma migrate dev
-npx prisma generate
-pnpm run start:dev
+pnpm prisma migrate dev
+pnpm start:dev
 ```
 
-### Frontend
+The API runs at `http://localhost:4000/api`.
+
+### 2. Frontend
 
 ```bash
 cd frontend
@@ -98,71 +78,75 @@ pnpm install
 ```
 
 Create `frontend/.env.local`:
-```
+
+```env
 NEXT_PUBLIC_API_URL="http://localhost:4000/api"
 ```
 
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
----
+Open `http://localhost:3000`.
 
-## Roles & permissions
+### 3. Create an admin
 
-| Action | Admin | Agent |
+New accounts register as `AGENT`. To make yourself an admin, register first, then run in your database:
+
+```sql
+UPDATE "User" SET role = 'ADMIN' WHERE email = 'you@example.com';
+```
+
+Log out and back in so your token picks up the new role.
+
+## Environment variables
+
+| Variable | Where | Purpose |
 |---|---|---|
-| Manage users | ✅ | ❌ |
-| View audit logs | ✅ | ❌ |
-| Manage all fields | ✅ | ❌ |
-| View/update assigned fields | ✅ | ✅ (assigned only) |
-| Assign agents to fields | ✅ | ❌ |
-| Create/view crops | ✅ | View active crop only |
-| View farm-wide analytics | ✅ | Assigned-field analytics only |
-| Export reports | ✅ (full) | ✅ (assigned-only) |
+| `DATABASE_URL` | backend | PostgreSQL connection string |
+| `JWT_SECRET` | backend | Secret used to sign login tokens (never expose it) |
+| `FRONTEND_URL` | backend | Exact frontend origin for CORS, with no trailing slash |
+| `PORT` | backend | Port to listen on (set by the host in production) |
+| `NEXT_PUBLIC_API_URL` | frontend | Base URL of the API, including `/api` |
 
----
+## Scripts (backend)
 
-## Known limitations
+| Command | What it does |
+|---|---|
+| `pnpm start:dev` | Run the API in watch mode |
+| `pnpm build` | Compile to `dist/` |
+| `pnpm start:prod` | Run the compiled app (`node dist/src/main`) |
+| `pnpm db:seed` | Run the seed script |
+| `pnpm prisma migrate deploy` | Apply migrations in production |
 
-- **Database sleep (if hosted on a free tier):** some free-tier PostgreSQL hosts power off after a period of inactivity. If the live demo shows a connection error, the database may need a moment to wake up.
-- **Backend cold starts (if hosted on a free tier):** the first request after a period of idle time may take 30–60 seconds while a free-tier host spins back up.
-- **No real geographic field map:** the dashboard's field overview uses a stylized plot visualization rather than a real satellite/GPS map, since the `Field` model doesn't currently store coordinates or boundary data.
-- **Contact form (marketing site):** currently frontend-only; submissions aren't yet sent anywhere.
+## Deployment
 
----
+1. **Database:** create a Postgres database on Neon and copy its connection string.
+2. **Backend (Render):**
+   - Root directory: `backend`
+   - Build command: `pnpm install --prod=false && pnpm prisma migrate deploy && pnpm build`
+   - Start command: `pnpm start:prod`
+   - Environment: `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_URL`, `NODE_ENV=production`
+3. **Frontend (Vercel):** set `NEXT_PUBLIC_API_URL` to the Render URL plus `/api`, then redeploy. `NEXT_PUBLIC_` values are baked in at build time.
 
-## Project structure
+## Data model
 
-```
-backend/
-  src/
-    auth/              JWT strategy, guards, decorators
-    users/             user management (admin only)
-    fields/            field CRUD, assignment
-    field-updates/     agent-submitted field conditions
-    crops/             crop model, growth-stage calculation
-    crop-intelligence/ health status + insights
-    recommendations/   rule-based advice engine
-    alerts/            automatic alert detection
-    notifications/     in-app notifications
-    weather/           OpenWeatherMap integration
-    reports/           CSV export
-    analytics/         role-scoped statistics
-    audit/             action logging
-    security/          per-user security overview
+Main models: `User`, `Field`, `Crop`, `FieldUpdate`, `Alert`, `Notification` and `AuditLog`. A field belongs to the admin who created it and can be assigned to one agent. Crops, alerts and field updates are removed automatically when their field is deleted. The `isDemo` flag on `Field` marks the per-agent sample data.
 
-frontend/
-  src/
-    app/               Next.js App Router pages
-    components/        UI components, organized by feature
-    hooks/             data-fetching hooks per feature
-    services/          API client functions
-    types/             shared TypeScript types
-```
+## What I learned
 
----
+- Designing a role-based API with NestJS guards and Prisma relations
+- Deploying a split stack (Vercel, Render, Neon) and fixing real production issues: CORS origins, build paths, environment variables and Prisma 7 driver adapters
+- Handling empty states with seeded sample data so first-time users see how the app works
+
+## Roadmap
+
+- Move the login token from localStorage to an HttpOnly cookie
+- Automated tests for the services
+- Delete-sample-data button for agents
+- Weather forecasts connected to field locations
 
 ## Author
 
-Built by **Amani Arnold** — [github.com/amanidy](https://github.com/iam-amani)
+**Arnold Amani**, Nyeri, Kenya
+GitHub: [anold-a](https://github.com/anold-a)
