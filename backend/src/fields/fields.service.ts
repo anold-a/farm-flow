@@ -97,11 +97,11 @@ export class FieldsService {
   async findAll(currentUser: { id: string; role: 'ADMIN' | 'AGENT' }) {
     const where =
       currentUser.role === Role.ADMIN
-        ? {}
-        : await this.agentWhere(currentUser.id);
+        ? { isDemo: false }
+        : { assignedAgentId: currentUser.id };
 
     return this.prisma.field.findMany({
-       where: { isDemo: false }, 
+      where,
       include: {
         createdBy: {
           select: { id: true, fullName: true, email: true, role: true },
@@ -136,8 +136,7 @@ export class FieldsService {
 
     if (
       currentUser.role !== Role.ADMIN &&
-      field.assignedAgentId !== currentUser.id &&
-      !field.isDemo
+      field.assignedAgentId !== currentUser.id
     ) {
       throw new ForbiddenException('You do not have access to this field');
     }
@@ -243,7 +242,7 @@ export class FieldsService {
       },
     });
 
-    if (!field || (field.assignedAgentId !== currentUser.id && !field.isDemo)) {
+    if (!field || (field.assignedAgentId !== currentUser.id )) {
       throw new NotFoundException('Field not found');
     }
 
@@ -337,11 +336,6 @@ export class FieldsService {
   }
 
   private async agentWhere(userId: string) {
-    const hasReal = await this.prisma.field.count({
-      where: { assignedAgentId: userId, isDemo: false },
-    });
-    return hasReal > 0
-      ? { assignedAgentId: userId }
-      : { OR: [{ assignedAgentId: userId }, { isDemo: true }] };
+    return { assignedAgentId: userId };
   }
 }
